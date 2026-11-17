@@ -17,7 +17,7 @@ from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parent
-QUESTIONS_PATH = ROOT / "data" / "questions.json"
+PROBLEMS_PATH = ROOT / "data" / "problems.json"
 MAX_REQUEST_BYTES = 1_000_000
 
 
@@ -39,40 +39,53 @@ def load_dotenv(path: Path) -> None:
 load_dotenv(ROOT / ".env")
 
 
-def load_questions() -> list[dict[str, Any]]:
-    questions = json.loads(QUESTIONS_PATH.read_text(encoding="utf-8"))
-    if not isinstance(questions, list):
-        raise ValueError("data/questions.json must contain a JSON array")
-    required = {"id", "topic", "difficulty", "question", "core_points"}
+def load_problems() -> list[dict[str, Any]]:
+    problems = json.loads(PROBLEMS_PATH.read_text(encoding="utf-8"))
+    if not isinstance(problems, list):
+        raise ValueError("data/problems.json must contain a JSON array")
+    required = {"id", "title", "category", "difficulty", "description", "review_points"}
     seen: set[str] = set()
-    for question in questions:
-        missing = required - set(question)
+    for problem in problems:
+        missing = required - set(problem)
         if missing:
-            raise ValueError(f"Question is missing fields: {sorted(missing)}")
-        if question["id"] in seen:
-            raise ValueError(f"Duplicate question id: {question['id']}")
-        seen.add(question["id"])
-    return questions
+            raise ValueError(f"Problem is missing fields: {sorted(missing)}")
+        if problem["id"] in seen:
+            raise ValueError(f"Duplicate problem id: {problem['id']}")
+        seen.add(problem["id"])
+    return problems
 
 
-QUESTIONS = load_questions()
-QUESTION_INDEX = {question["id"]: question for question in QUESTIONS}
+PROBLEMS = load_problems()
+PROBLEM_INDEX = {problem["id"]: problem for problem in PROBLEMS}
 
 
-def public_question(question: dict[str, Any]) -> dict[str, Any]:
-    """Do not send rubrics or reference outlines to the browser before review."""
-    return {
-        key: question[key]
-        for key in ("id", "type", "topic", "difficulty", "question", "tags")
-        if key in question
-    }
+def public_problem(problem: dict[str, Any]) -> dict[str, Any]:
+    """Return the problem statement without hidden review points or reference notes."""
+    hidden = {"review_points", "reference_notes", "hints"}
+    return {key: value for key, value in problem.items() if key not in hidden}
+
+
+def resolve_api_key() -> str:
+    """Resolve a key from the environment or a private local credential note."""
+    direct = os.getenv("AIBAG_API_KEY", "").strip()
+    if direct:
+        return direct
+    credential_doc = os.getenv("AIBAG_CREDENTIAL_DOC", "").strip()
+    if not credential_doc:
+        return ""
+    doc_path = Path(credential_doc).expanduser()
+    if not doc_path.is_file():
+        return ""
+    content = doc_path.read_text(encoding="utf-8")
+    match = re.search(r"(?im)^\s*key\s*:\s*([^\s`]+)\s*$", content)
+    return match.group(1).strip() if match else ""
 
 
 def api_config() -> dict[str, Any]:
     return {
-        "model": os.getenv("AIBAG_MODEL", "gpt-4o-mini"),
-        "base_url": os.getenv("AIBAG_BASE_URL", "https://api.openai.com/v1"),
-        "has_api_key": bool(os.getenv("AIBAG_API_KEY", "")),
+        "model": os.getenv("AIBAG_MODEL", "deepseek-flash"),
+        "base_url": os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com"),
+        "has_api_key": bool(resolve_api_key()),
     }
 
 
@@ -94,9 +107,9 @@ def extract_json_object(content: str) -> dict[str, Any]:
 
 
 def call_llm(messages: list[dict[str, str]]) -> dict[str, Any]:
-    base_url = os.getenv("AIBAG_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-    model = os.getenv("AIBAG_MODEL", "gpt-4o-mini")
-    api_key = os.getenv("AIBAG_API_KEY", "")
+    base_url = os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    model = os.getenv("AIBAG_MODEL", "deepseek-flash")
+    api_key = resolve_api_key()
     endpoint = f"{base_url}/chat/completions"
     payload: dict[str, Any] = {
         "model": model,
@@ -171,15 +184,15 @@ def normalize_review(raw: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def judge_answer(question: dict[str, Any], answer: str) -> dict[str, Any]:
+def judge_code(problem: dict[str, Any], code: str) -> dict[str, Any]:
     system = (ROOT / "prompts" / "judge.txt").read_text(encoding="utf-8")
     context = {
-        "question": question["question"],
-        "topic": question["topic"],
-        "difficulty": question["difficulty"],
-        "core_points": question["core_points"],
-        "reference_outline": question.get("reference_outline", []),
-        "candidate_answer": answer,
+        "title": problem["title"],
+        "description": problem["description"],
+        "constraints": problem.get("constraints", []),
+        "review_points": problem["review_points"],
+        "reference_notes": problem.get("reference_notes", []),
+        "candidate_code": code,
     }
     raw = call_llm(
         [
@@ -190,7 +203,7 @@ def judge_answer(question: dict[str, Any], answer: str) -> dict[str, Any]:
     return normalize_review(raw)
 
 
-def coach_reply(question: dict[str, Any], payload: dict[str, Any]) -> dict[str, str]:
+def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, str]:
     system = (ROOT / "prompts" / "coach.txt").read_text(encoding="utf-8")
     action = str(payload.get("action", "chat"))
     if action not in {"hint", "optimize", "follow_up", "chat"}:
@@ -206,9 +219,11 @@ def coach_reply(question: dict[str, Any], payload: dict[str, Any]) -> dict[str, 
             )
     context = {
         "action": action,
-        "question": question["question"],
-        "core_points": question["core_points"],
-        "candidate_answer": str(payload.get("answer", ""))[:8_000],
+        "title": problem["title"],
+        "description": problem["description"],
+        "review_points": problem["review_points"],
+        "hints": problem.get("hints", []),
+        "candidate_code": str(payload.get("code", ""))[:16_000],
         "latest_review": payload.get("review", {}),
         "candidate_message": str(payload.get("message", ""))[:2_000],
         "conversation": safe_history,
@@ -257,13 +272,13 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
         if path == "/api/health":
-            self.send_json({"ok": True, "questions": len(QUESTIONS), **api_config()})
+            self.send_json({"ok": True, "problems": len(PROBLEMS), **api_config()})
             return
         if path == "/api/config":
             self.send_json(api_config())
             return
-        if path == "/api/questions":
-            self.send_json([public_question(question) for question in QUESTIONS])
+        if path == "/api/problems":
+            self.send_json([public_problem(problem) for problem in PROBLEMS])
             return
         if path not in self.STATIC_PATHS:
             self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
@@ -285,18 +300,18 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
             return
         try:
             payload = self.read_json()
-            question_id = str(payload.get("question_id", ""))
-            question = QUESTION_INDEX.get(question_id)
-            if question is None:
-                self.send_json({"error": "Unknown question_id"}, HTTPStatus.NOT_FOUND)
+            problem_id = str(payload.get("problem_id", ""))
+            problem = PROBLEM_INDEX.get(problem_id)
+            if problem is None:
+                self.send_json({"error": "Unknown problem_id"}, HTTPStatus.NOT_FOUND)
                 return
             if path == "/api/judge":
-                answer = str(payload.get("answer", "")).strip()
-                if len(answer) < 2:
-                    raise ValueError("Please provide an answer before submitting")
-                result = judge_answer(question, answer[:8_000])
+                code = str(payload.get("code", "")).strip()
+                if len(code) < 8:
+                    raise ValueError("Please provide code before submitting")
+                result = judge_code(problem, code[:16_000])
             else:
-                result = coach_reply(question, payload)
+                result = coach_reply(problem, payload)
             self.send_json(result)
         except (ValueError, json.JSONDecodeError) as error:
             self.send_json({"error": str(error)}, HTTPStatus.BAD_REQUEST)
@@ -311,7 +326,7 @@ def main() -> None:
     port = int(os.getenv("AIBAG_PORT", "8787"))
     server = ThreadingHTTPServer(("127.0.0.1", port), AIBaGHandler)
     print(f"AIBaG is running at http://127.0.0.1:{port}")
-    print(f"Loaded {len(QUESTIONS)} questions; model: {api_config()['model']}")
+    print(f"Loaded {len(PROBLEMS)} problems; model: {api_config()['model']}")
     try:
         server.serve_forever()
     except KeyboardInterrupt:

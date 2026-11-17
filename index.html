@@ -3,94 +3,199 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="AIBaG - AI 面试核心思路判断与多轮追问助手" />
-    <title>AIBaG · AI 面试助手</title>
+    <meta name="description" content="AIBaG - AI Infra 与经典算法面试训练场" />
+    <title>AIBaG · Algorithm Interview Lab</title>
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="题库">
-        <div class="brand">
-          <div class="brand-mark">AB</div>
-          <div>
-            <strong>AIBaG</strong>
-            <span>AI Interview Coach</span>
-          </div>
-        </div>
+    <header class="site-header">
+      <a class="wordmark" href="#/problems" aria-label="AIBaG 首页">
+        <span class="wordmark-main">AIBaG</span>
+        <span class="wordmark-sub">ALGORITHM INTERVIEW LAB</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a class="active" href="#/problems">题库</a>
+        <span class="nav-disabled">复习册 · soon</span>
+      </nav>
+      <div class="api-badge">
+        <span id="api-dot" class="status-dot"></span>
+        <span id="api-status">连接本地后端…</span>
+      </div>
+    </header>
 
-        <div class="library-heading">
-          <div>
-            <span class="eyebrow">QUESTION BANK</span>
-            <h2>面试题库</h2>
-          </div>
-          <button id="random-question" class="icon-button" title="随机一题" aria-label="随机一题">↻</button>
-        </div>
-
-        <label class="search-box">
-          <span aria-hidden="true">⌕</span>
-          <input id="question-search" type="search" placeholder="搜索主题或题目" />
-        </label>
-        <select id="topic-filter" aria-label="按主题筛选">
-          <option value="">全部主题</option>
-        </select>
-
-        <div id="question-list" class="question-list"></div>
-
-        <div class="sidebar-footer">
-          <span id="api-dot" class="status-dot"></span>
-          <span id="api-status">正在检查本地服务…</span>
-        </div>
-      </aside>
-
-      <main class="workspace">
-        <header class="topbar">
-          <button id="sidebar-toggle" class="mobile-menu" aria-label="打开题库">☰</button>
-          <div>
-            <span class="eyebrow">PRACTICE SESSION</span>
-            <h1 id="session-title">核心思路训练</h1>
-          </div>
-          <div class="session-meta">
-            <span id="question-topic" class="pill">—</span>
-            <span id="question-difficulty" class="pill pill-muted">—</span>
-          </div>
-        </header>
-
-        <section id="chat-feed" class="chat-feed" aria-live="polite"></section>
-
-        <section class="composer-wrap">
-          <div id="quick-actions" class="quick-actions" hidden>
-            <button data-action="hint">给我一点提示</button>
-            <button data-action="optimize">哪里还能优化？</button>
-            <button data-action="follow_up">继续追问我</button>
-          </div>
-          <div class="composer">
-            <textarea
-              id="answer-input"
-              rows="4"
-              maxlength="8000"
-              placeholder="用自己的话解释核心思路，不需要写完整标准答案…"
-            ></textarea>
-            <div class="composer-footer">
-              <span class="keyboard-hint">⌘ / Ctrl + Enter 提交判断</span>
-              <div class="composer-actions">
-                <button id="chat-button" class="button button-secondary" disabled>发送给面试官</button>
-                <button id="judge-button" class="button button-primary">提交并判断</button>
-              </div>
+    <main>
+      <section id="catalog-view" class="catalog-view">
+        <div class="hero">
+          <div class="hero-copy">
+            <span class="eyebrow">AI INTERVIEW FIELD NOTES · 001</span>
+            <h1>把核心算法，<br />写到真正能解释。</h1>
+            <p class="hero-subtitle">从 Attention kernel 到经典数据结构：先实现，再让 AI 面试官只 review 最关键的部分。</p>
+            <div class="hero-meta">
+              <span><strong id="problem-count">05</strong> curated problems</span>
+              <span><strong>2</strong> learning tracks</span>
+              <span><strong>∞</strong> follow-up rounds</span>
             </div>
           </div>
-        </section>
-      </main>
-    </div>
 
-    <template id="message-template">
-      <article class="message">
-        <div class="avatar"></div>
-        <div class="message-body">
-          <div class="message-label"></div>
-          <div class="message-content"></div>
+          <figure class="hero-diagram" aria-label="AIBaG 训练闭环">
+            <figcaption>THE AIBAG PRACTICE LOOP</figcaption>
+            <div class="diagram-flow">
+              <div class="diagram-node"><strong>Problem</strong><span>MHA / RoPE / DSA</span></div>
+              <b>→</b>
+              <div class="diagram-node emphasized"><strong>Implement</strong><span>write the core code</span></div>
+              <b>→</b>
+              <div class="diagram-node"><strong>AI Review</strong><span>shape / logic / edge</span></div>
+              <b>→</b>
+              <div class="diagram-node"><strong>Follow-up</strong><span>hint / optimize</span></div>
+            </div>
+            <p>代码与 review 形成闭环；模型负责指出关键缺口，不替你完成整道题。</p>
+          </figure>
         </div>
-      </article>
-    </template>
+
+        <aside class="principle-callout">
+          <strong>CORE PRINCIPLE</strong>
+          <p>面试不要求背出唯一实现，但必须让关键 tensor shape、算法不变量和复杂度经得起追问。</p>
+        </aside>
+
+        <section class="problem-library">
+          <div class="section-heading">
+            <div>
+              <span class="eyebrow">CURATED SET · V0.1</span>
+              <h2>经典题库</h2>
+            </div>
+            <div class="filters">
+              <label>
+                <span>Track</span>
+                <select id="category-filter"><option value="">全部方向</option></select>
+              </label>
+              <label>
+                <span>Level</span>
+                <select id="difficulty-filter">
+                  <option value="">全部难度</option>
+                  <option value="Easy">Easy</option>
+                  <option value="Medium">Medium</option>
+                  <option value="Hard">Hard</option>
+                </select>
+              </label>
+              <label class="search-field">
+                <span>Search</span>
+                <input id="problem-search" type="search" placeholder="题目 / tag" />
+              </label>
+            </div>
+          </div>
+
+          <div class="problem-table-wrap">
+            <table class="problem-table">
+              <thead>
+                <tr>
+                  <th class="status-col">状态</th>
+                  <th>题目</th>
+                  <th>方向</th>
+                  <th>难度</th>
+                  <th class="action-col"></th>
+                </tr>
+              </thead>
+              <tbody id="problem-list"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section id="problem-view" class="problem-view" hidden>
+        <div class="problem-topbar">
+          <button id="back-button" class="text-button">← 返回题库</button>
+          <div class="problem-identity">
+            <span id="problem-number" class="problem-number">01</span>
+            <div>
+              <span id="problem-category" class="eyebrow"></span>
+              <h1 id="problem-title"></h1>
+            </div>
+          </div>
+          <div class="problem-meta">
+            <span id="problem-difficulty" class="difficulty-pill"></span>
+            <span id="problem-language" class="language-pill"></span>
+          </div>
+        </div>
+
+        <div class="workbench">
+          <article class="problem-document">
+            <section class="document-intro">
+              <span class="document-label">PROBLEM STATEMENT</span>
+              <p id="problem-description"></p>
+            </section>
+
+            <section>
+              <h2><span>01</span> 示例</h2>
+              <div id="problem-examples" class="examples"></div>
+            </section>
+
+            <section>
+              <h2><span>02</span> 约束</h2>
+              <ul id="problem-constraints" class="constraint-list"></ul>
+            </section>
+
+            <section>
+              <h2><span>03</span> 训练目标</h2>
+              <div id="problem-tags" class="tag-list"></div>
+              <p class="training-note">提交后，AI 只检查核心实现、明显错误、边界条件和复杂度，不要求与参考代码逐行一致。</p>
+            </section>
+
+            <section class="source-section">
+              <h2><span>04</span> 题型来源</h2>
+              <div id="problem-sources"></div>
+            </section>
+          </article>
+
+          <section class="coding-panel">
+            <div class="editor-toolbar">
+              <div>
+                <span class="editor-dot red"></span><span class="editor-dot amber"></span><span class="editor-dot green"></span>
+                <strong>solution.py</strong>
+              </div>
+              <div class="editor-actions">
+                <span id="draft-status">本地草稿</span>
+                <button id="reset-code" class="small-button">重置</button>
+              </div>
+            </div>
+            <div class="code-editor-wrap">
+              <pre id="line-numbers" aria-hidden="true">1</pre>
+              <textarea id="code-editor" spellcheck="false" aria-label="代码编辑器"></textarea>
+            </div>
+            <div class="submit-bar">
+              <p>当前为 AI Review，不执行代码。</p>
+              <button id="submit-code" class="primary-button">提交 AI Review</button>
+            </div>
+
+            <div class="coach-panel">
+              <div class="coach-heading">
+                <div>
+                  <span class="eyebrow">DEEPSEEK INTERVIEWER</span>
+                  <h2>面试官 Review</h2>
+                </div>
+                <span id="review-state" class="review-state">WAITING</span>
+              </div>
+              <div id="coach-log" class="coach-log">
+                <p class="coach-empty">提交代码后，这里只展示最关键的实现反馈。你也可以先请求一层提示。</p>
+              </div>
+              <div class="coach-quick-actions">
+                <button data-action="hint">给我一点提示</button>
+                <button data-action="optimize">哪里还能优化？</button>
+                <button data-action="follow_up">继续追问我</button>
+              </div>
+              <div class="coach-input-row">
+                <input id="coach-input" type="text" maxlength="2000" placeholder="向面试官提问…" />
+                <button id="send-coach" class="small-button dark">发送</button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <span>AIBaG / Local-first interview practice</span>
+      <span>Question data → JSON · Review → DeepSeek</span>
+    </footer>
 
     <script src="/app.js" defer></script>
   </body>

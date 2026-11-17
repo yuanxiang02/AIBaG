@@ -1,119 +1,91 @@
 # AIBaG
 
-AIBaG 是一个本地优先的 AI 面试助手。它不要求候选人背出完整标准答案，而是判断回答是否解释了核心思路，并通过短提示、优化建议和追问完成多轮练习。
+AIBaG 是一个本地优先的算法与 AI Infra 面试训练场。产品采用两级页面：
 
-当前 MVP 包含两条独立链路：
+1. **题库首页**：像 LeetCode 一样浏览、筛选题目和查看练习状态。
+2. **题目工作台**：左侧题面，右侧代码编辑器和 DeepSeek 面试官 Review。
 
-1. **Core Judge**：基于题库中的核心评分点，返回 `pass / partial / retry`、已覆盖内容和少量关键缺口。
-2. **Interview Coach**：围绕同一道题提供一层提示、一个优化方向，或者继续追问一个问题。
+当前 Review 只关注核心实现、tensor shape、算法不变量、边界条件和复杂度，不要求候选人写出唯一标准答案。
 
-## 快速开始
+## 当前题库
 
-项目只依赖 Python 3 标准库。
+题目持久化在 [`data/problems.json`](data/problems.json)：
+
+1. 从零实现多头自注意力（MHA）
+2. 实现 Rotary Position Embedding（RoPE）
+3. 实现稳定归并排序
+4. 原地三路快速排序
+5. 出现频率最高的 K 个元素
+
+每道题包含题面、示例、约束、starter code、隐藏 review points、分层提示及来源说明。浏览器接口不会返回隐藏评分点和提示。
+
+## 启动
+
+项目只依赖 Python 3 标准库：
 
 ```bash
 git clone https://github.com/yuanxiang02/AIBaG.git
 cd AIBaG
 cp .env.example .env
-```
-
-编辑 `.env`，配置一个 OpenAI-compatible Chat Completions API：
-
-```dotenv
-AIBAG_API_KEY=your-api-key
-AIBAG_BASE_URL=https://api.openai.com/v1
-AIBAG_MODEL=gpt-4o-mini
-AIBAG_PORT=8787
-```
-
-启动：
-
-```bash
 python3 server.py
 ```
 
 浏览器打开 <http://127.0.0.1:8787>。
 
-也可以连接本地 Ollama 等兼容服务：
+## DeepSeek 配置
+
+默认使用 DeepSeek 的 OpenAI-compatible API：
 
 ```dotenv
-AIBAG_API_KEY=ollama
-AIBAG_BASE_URL=http://127.0.0.1:11434/v1
-AIBAG_MODEL=qwen3:8b
+AIBAG_API_KEY=your-private-key
+AIBAG_BASE_URL=https://api.deepseek.com
+AIBAG_MODEL=deepseek-flash
+AIBAG_PORT=8787
 ```
 
-> API Key 仅由本地 Python 后端读取，不会发送给浏览器，也不要提交 `.env`。
+如果密钥保存在本机私有 Markdown 中，可以不复制密钥，只配置文件路径：
 
-## 使用流程
-
-1. 从左侧题库选择题目。
-2. 用自己的话解释核心思路，点击“提交并判断”。
-3. 查看核心点覆盖、关键缺口和下一步建议。
-4. 选择“给我一点提示”“哪里还能优化”或“继续追问我”。
-5. 在输入框继续回答；需要重新判分时再次点击“提交并判断”。
-
-练习结果仅保存在浏览器 `localStorage`，当前版本没有账号和数据库。
-
-## 题库格式
-
-题库位于 [`data/questions.json`](data/questions.json)。浏览器只能获取公开题面；`core_points` 和 `reference_outline` 只在后端评审时使用。
-
-```json
-{
-  "id": "rag-evaluation",
-  "type": "scenario",
-  "topic": "RAG",
-  "difficulty": "medium",
-  "question": "如何评估一个 RAG 系统？",
-  "tags": ["RAG", "Evaluation"],
-  "core_points": [
-    {
-      "label": "分阶段评估",
-      "required": true,
-      "description": "区分检索、生成和端到端效果"
-    }
-  ],
-  "reference_outline": ["retrieval eval", "generation eval", "人工校准"]
-}
+```dotenv
+AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 ```
 
-`required: true` 表示面试中应覆盖的核心点。题库应优先写“判断标准”，而不是堆砌完整答案。
+私有文档需要包含单独一行 `key:YOUR_KEY`。后端在运行时读取，`/api/config` 只返回 `has_api_key` 布尔值。`.env`、密钥、文档路径均不应提交。
+
+## 两条 AI 链路
+
+- `POST /api/judge`：输入 `problem_id + code`，返回 `pass / partial / retry`、关键缺口和简短追问。
+- `POST /api/chat`：提供一层提示、一个优化方向、继续追问或自由对话。
+
+提示词位于：
+
+- [`prompts/judge.txt`](prompts/judge.txt)
+- [`prompts/coach.txt`](prompts/coach.txt)
 
 ## API
 
 | Endpoint | Method | 用途 |
 |---|---|---|
-| `/api/questions` | GET | 获取不含评分标准的公开题库 |
+| `/api/problems` | GET | 获取公开题面与 starter code |
 | `/api/config` | GET | 获取不含密钥的模型配置摘要 |
 | `/api/health` | GET | 本地服务健康检查 |
-| `/api/judge` | POST | 对候选人答案进行核心思路判断 |
-| `/api/chat` | POST | 提示、优化建议、继续追问或自由对话 |
+| `/api/judge` | POST | 对代码进行核心实现 Review |
+| `/api/chat` | POST | 提示、优化建议与多轮追问 |
 
-两套提示词分别位于 [`prompts/judge.txt`](prompts/judge.txt) 和 [`prompts/coach.txt`](prompts/coach.txt)，可以独立迭代。
+## 安全边界
 
-## 项目结构
+本地 HTTP 服务采用静态文件白名单，只允许访问 `index.html`、`app.js` 和 `style.css`。以下内容无法通过浏览器静态 URL 读取：
 
-```text
-AIBaG/
-├── index.html
-├── app.js
-├── style.css
-├── server.py
-├── data/questions.json
-├── prompts/
-│   ├── judge.txt
-│   └── coach.txt
-└── tests/test_server.py
-```
+- `.env` 与 API Key
+- 私有凭据文档
+- 后端源码和提示词
+- JSON 中的隐藏 review points、参考说明与提示
 
 ## 测试
 
 ```bash
 python3 -m unittest discover -s tests -v
+node --check app.js
+python3 -m json.tool data/problems.json >/dev/null
 ```
 
-单元测试不会调用外部模型 API。
-
-## MVP 边界
-
-当前版本刻意不包含账号、数据库、语音、RAG、多 Agent 和代码沙箱。后续的 vibe coding 判题需要可重复运行的测试或隔离沙箱；在此之前，LLM 对代码的结论只应标记为 review，而不是确定性的 pass/fail。
+单元测试不会调用外部模型 API。当前“提交”是 AI Review，不执行用户代码；后续如需确定性 Accepted/Rejected，应增加隔离测试执行器。

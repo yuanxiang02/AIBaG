@@ -1,0 +1,228 @@
+[
+  {
+    "id": "implement-mha",
+    "number": 1,
+    "title": "从零实现多头自注意力（MHA）",
+    "slug": "implement-mha",
+    "category": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": ["Transformer", "Attention", "Tensor Shape"],
+    "summary": "实现标准 scaled dot-product multi-head self-attention。",
+    "description": "给定输入 x，形状为 [batch, seq_len, d_model]，实现一个多头自注意力层。你需要完成 Q/K/V 投影、拆分多头、scaled dot-product attention、可选 causal mask、合并多头和输出投影。不要调用 nn.MultiheadAttention 或 F.scaled_dot_product_attention。",
+    "examples": [
+      {
+        "input": "x.shape = [2, 16, 128], num_heads = 8",
+        "output": "y.shape = [2, 16, 128]",
+        "explanation": "每个 head 的维度是 16，最终重新合并为 d_model=128。"
+      }
+    ],
+    "constraints": [
+      "d_model 能被 num_heads 整除",
+      "1 ≤ seq_len ≤ 2048",
+      "causal=True 时，位置 i 不能关注位置 j > i",
+      "保留 batch 维度并支持反向传播"
+    ],
+    "starter_code": "import math\nimport torch\nimport torch.nn as nn\n\n\nclass MultiHeadSelfAttention(nn.Module):\n    def __init__(self, d_model: int, num_heads: int, causal: bool = False):\n        super().__init__()\n        assert d_model % num_heads == 0\n        self.d_model = d_model\n        self.num_heads = num_heads\n        self.head_dim = d_model // num_heads\n        self.causal = causal\n        self.qkv = nn.Linear(d_model, 3 * d_model)\n        self.out_proj = nn.Linear(d_model, d_model)\n\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        # x: [batch, seq_len, d_model]\n        # TODO: implement multi-head self-attention\n        raise NotImplementedError\n",
+    "review_points": [
+      {"label": "QKV 投影与拆头", "required": true, "description": "正确变换为 [batch, heads, seq_len, head_dim]"},
+      {"label": "缩放点积", "required": true, "description": "QK^T 除以 sqrt(head_dim)"},
+      {"label": "Causal mask", "required": true, "description": "在 softmax 前屏蔽未来位置"},
+      {"label": "权重聚合", "required": true, "description": "softmax 后与 V 相乘"},
+      {"label": "合并多头", "required": true, "description": "transpose/reshape 后通过 out_proj"}
+    ],
+    "hints": [
+      "先让 qkv 变成 [B, T, 3, H, D]，再调整维度顺序。",
+      "mask 应该作用在 attention logits 上，而不是 softmax 之后。"
+    ],
+    "reference_notes": ["重点检查 tensor shape", "缩放因子来自单个 head 的维度", "mask 需兼容设备与 dtype"],
+    "sources": [
+      {
+        "title": "Grok-1 model attention implementation",
+        "url": "https://github.com/xai-org/grok-1/blob/7050ed204b8206bb8645c7b7bbef7252f79561b0/model.py",
+        "license": "Apache-2.0",
+        "note": "仅作为实现模式参考；题面与 starter code 为 AIBaG 原创整理。"
+      }
+    ]
+  },
+  {
+    "id": "implement-rope",
+    "number": 2,
+    "title": "实现 Rotary Position Embedding（RoPE）",
+    "slug": "implement-rope",
+    "category": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": ["RoPE", "Position Encoding", "Tensor Shape"],
+    "summary": "将预计算的旋转位置编码应用到 Q 和 K。",
+    "description": "实现 apply_rope。q 和 k 的形状为 [batch, heads, seq_len, head_dim]，head_dim 为偶数。cos 和 sin 的形状为 [seq_len, head_dim / 2]，分别对应相邻偶/奇维度组成的二维旋转平面。请在不构造完整旋转矩阵的情况下返回旋转后的 q 和 k。",
+    "examples": [
+      {
+        "input": "q, k: [2, 8, 128, 64]; cos, sin: [128, 32]",
+        "output": "q_rot, k_rot: [2, 8, 128, 64]",
+        "explanation": "每对相邻维度执行二维旋转，输出 shape 与 dtype 不变。"
+      }
+    ],
+    "constraints": [
+      "head_dim 必须为偶数",
+      "cos/sin 需要广播到 batch 和 heads",
+      "不得构造 [head_dim, head_dim] 的稠密旋转矩阵",
+      "返回值应保留 q/k 的 dtype 与 device"
+    ],
+    "starter_code": "import torch\n\n\ndef apply_rope(\n    q: torch.Tensor,\n    k: torch.Tensor,\n    cos: torch.Tensor,\n    sin: torch.Tensor,\n) -> tuple[torch.Tensor, torch.Tensor]:\n    \"\"\"Apply RoPE to q and k.\n\n    q, k: [batch, heads, seq_len, head_dim]\n    cos, sin: [seq_len, head_dim // 2]\n    \"\"\"\n    # TODO: rotate even/odd feature pairs\n    raise NotImplementedError\n",
+    "review_points": [
+      {"label": "偶奇维配对", "required": true, "description": "正确提取 (..., 0::2) 与 (..., 1::2)"},
+      {"label": "二维旋转公式", "required": true, "description": "x_even*cos - x_odd*sin 与 x_even*sin + x_odd*cos"},
+      {"label": "维度复原", "required": true, "description": "交错合并回原 head_dim 顺序"},
+      {"label": "广播", "required": true, "description": "cos/sin 正确扩展到 batch/head 维"},
+      {"label": "设备与精度", "required": false, "description": "避免无意迁移 device 或破坏 dtype"}
+    ],
+    "hints": [
+      "把最后一维看成 head_dim/2 个二维向量。",
+      "torch.stack 后需要 flatten 最后两个维度才能恢复交错顺序。"
+    ],
+    "reference_notes": ["接受 rotate_half 的等价写法", "不要求生成频率，只要求应用已有 cos/sin"],
+    "sources": [
+      {
+        "title": "OLMo rotary embedding implementation",
+        "url": "https://github.com/allenai/OLMo/blob/090253dac6688f2532509daa7aa2eb5fae50e956/olmo/model.py",
+        "license": "Apache-2.0",
+        "note": "用于核对常见 shape 处理；题面为 AIBaG 原创整理。"
+      }
+    ]
+  },
+  {
+    "id": "stable-merge-sort",
+    "number": 3,
+    "title": "实现稳定归并排序",
+    "slug": "stable-merge-sort",
+    "category": "经典算法",
+    "difficulty": "Easy",
+    "language": "Python 3",
+    "tags": ["Sorting", "Divide and Conquer", "Stability"],
+    "summary": "按 key 对记录排序，并保持相同 key 的原始相对顺序。",
+    "description": "实现 merge_sort(items)。每个元素是 (key, value) 二元组，只按照整数 key 升序排列。算法必须稳定：当两个元素的 key 相同，它们在输出中的相对顺序应与输入一致。不要调用 sorted 或 list.sort。",
+    "examples": [
+      {
+        "input": "[(2, 'a'), (1, 'x'), (2, 'b'), (1, 'y')]",
+        "output": "[(1, 'x'), (1, 'y'), (2, 'a'), (2, 'b')]",
+        "explanation": "x 仍在 y 前面，a 仍在 b 前面。"
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(items) ≤ 100000",
+      "-10^9 ≤ key ≤ 10^9",
+      "目标时间复杂度 O(n log n)",
+      "不得使用内置排序"
+    ],
+    "starter_code": "from typing import Any\n\n\ndef merge_sort(items: list[tuple[int, Any]]) -> list[tuple[int, Any]]:\n    # TODO: return a new, stably sorted list\n    raise NotImplementedError\n",
+    "review_points": [
+      {"label": "分治", "required": true, "description": "递归或迭代地拆分并归并有序子序列"},
+      {"label": "线性归并", "required": true, "description": "双指针完成 O(n) merge"},
+      {"label": "稳定性", "required": true, "description": "key 相等时优先取左侧元素"},
+      {"label": "边界", "required": true, "description": "空数组和单元素数组正确"},
+      {"label": "复杂度", "required": true, "description": "总体 O(n log n)，额外空间 O(n)"}
+    ],
+    "hints": ["稳定性的关键发生在 merge 中两个 key 相等的时候。"],
+    "reference_notes": ["允许自顶向下或自底向上实现", "返回新列表，不要求原地"],
+    "sources": [
+      {
+        "title": "TheAlgorithms/Python sorting collection",
+        "url": "https://github.com/TheAlgorithms/Python/blob/master/sorts/merge_sort.py",
+        "license": "MIT",
+        "note": "经典算法参考；AIBaG 题目额外强调记录稳定性。"
+      }
+    ]
+  },
+  {
+    "id": "three-way-quick-sort",
+    "number": 4,
+    "title": "原地三路快速排序",
+    "slug": "three-way-quick-sort",
+    "category": "经典算法",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": ["Sorting", "Quick Sort", "Partition"],
+    "summary": "使用三路 partition 处理包含大量重复值的数组。",
+    "description": "实现 quick_sort(nums)，原地将整数数组升序排列并返回 nums。请使用三路 partition，将当前区间划分为小于 pivot、等于 pivot、大于 pivot 三段，以避免大量重复元素导致无意义递归。不要调用内置排序。",
+    "examples": [
+      {
+        "input": "[3, 5, 3, 2, 3, 1]",
+        "output": "[1, 2, 3, 3, 3, 5]",
+        "explanation": "所有等于 pivot 的元素在一次 partition 后无需再次处理。"
+      }
+    ],
+    "constraints": [
+      "0 ≤ len(nums) ≤ 100000",
+      "数组可能包含大量重复值",
+      "必须原地修改主要数组",
+      "不得使用内置排序"
+    ],
+    "starter_code": "def quick_sort(nums: list[int]) -> list[int]:\n    # TODO: sort nums in place with a 3-way partition\n    raise NotImplementedError\n",
+    "review_points": [
+      {"label": "三段不变量", "required": true, "description": "维护 < pivot、== pivot、> pivot 的区间"},
+      {"label": "指针更新", "required": true, "description": "交换到右侧的未知元素必须重新检查"},
+      {"label": "递归边界", "required": true, "description": "只递归小于和大于 pivot 的区间"},
+      {"label": "原地", "required": true, "description": "不创建与输入同规模的排序副本"},
+      {"label": "退化风险", "required": false, "description": "随机 pivot 或其他策略降低有序输入退化风险"}
+    ],
+    "hints": ["考虑维护 lt、i、gt 三个指针；i 只在当前元素已确定归属时前进。"],
+    "reference_notes": ["接受 Dutch National Flag 等价实现", "建议随机选择 pivot，但不作为核心通过条件"],
+    "sources": [
+      {
+        "title": "TheAlgorithms/Python quick sort implementations",
+        "url": "https://github.com/TheAlgorithms/Python/tree/master/sorts",
+        "license": "MIT",
+        "note": "经典排序模式参考；题面和三路约束由 AIBaG 重新设计。"
+      }
+    ]
+  },
+  {
+    "id": "top-k-frequent",
+    "number": 5,
+    "title": "出现频率最高的 K 个元素",
+    "slug": "top-k-frequent",
+    "category": "经典算法",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": ["Hash Map", "Heap", "Bucket Sort"],
+    "summary": "在线性或 O(n log k) 时间内找到 Top-K 高频元素。",
+    "description": "给定整数数组 nums 和整数 k，返回出现频率最高的 k 个不同元素，返回顺序不限。你可以使用最小堆或桶排序，但整体复杂度必须优于对所有不同元素按频率完整排序。",
+    "examples": [
+      {
+        "input": "nums = [1, 1, 1, 2, 2, 3], k = 2",
+        "output": "[1, 2]",
+        "explanation": "1 出现 3 次，2 出现 2 次。"
+      },
+      {
+        "input": "nums = [4], k = 1",
+        "output": "[4]",
+        "explanation": "只有一个不同元素。"
+      }
+    ],
+    "constraints": [
+      "1 ≤ len(nums) ≤ 100000",
+      "1 ≤ k ≤ 不同元素个数",
+      "返回顺序不限",
+      "复杂度应为 O(n) 期望时间或 O(n log k)"
+    ],
+    "starter_code": "def top_k_frequent(nums: list[int], k: int) -> list[int]:\n    # TODO: use a size-k heap or frequency buckets\n    raise NotImplementedError\n",
+    "review_points": [
+      {"label": "频次统计", "required": true, "description": "使用哈希表正确统计每个元素频次"},
+      {"label": "Top-K 策略", "required": true, "description": "使用大小为 k 的堆或按频率分桶"},
+      {"label": "复杂度", "required": true, "description": "避免对全部 distinct 元素做完整排序"},
+      {"label": "结果规模", "required": true, "description": "恰好返回 k 个不同元素"},
+      {"label": "边界", "required": false, "description": "正确处理单元素与 k 等于不同元素数"}
+    ],
+    "hints": ["如果使用桶，最大频率不会超过 len(nums)，可以把频率作为下标。"],
+    "reference_notes": ["min-heap 为 O(n log k)", "bucket 解法为 O(n) 期望时间和 O(n) 空间"],
+    "sources": [
+      {
+        "title": "LeetCode 347 pattern reference",
+        "url": "https://leetcode.com/problems/top-k-frequent-elements/",
+        "license": "External reference",
+        "note": "仅引用经典题型；AIBaG 题面与评审点为重新表述。"
+      }
+    ]
+  }
+]
