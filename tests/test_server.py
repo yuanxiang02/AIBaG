@@ -23,17 +23,18 @@ class ReviewNormalizationTests(unittest.TestCase):
             {
                 "verdict": "unknown",
                 "score": 180,
-                "summary": "summary",
-                "covered": ["a", "b", "c", "d", "e"],
-                "key_gaps": ["1", "2", "3", "4"],
-                "incorrect_points": ["x", "y", "z"],
+                "interviewer_response": "这个方向没问题，我们再看一个细节。",
+                "strengths": ["a", "b", "c"],
+                "focus_issue": "shape 不匹配",
+                "nudge": "先写一下每一步的 shape。",
+                "follow_up": "拆完 head 后 q 是什么形状？",
             }
         )
         self.assertEqual(review["verdict"], "partial")
         self.assertEqual(review["score"], 100)
-        self.assertEqual(len(review["covered"]), 4)
-        self.assertEqual(len(review["key_gaps"]), 3)
-        self.assertEqual(len(review["incorrect_points"]), 2)
+        self.assertEqual(len(review["strengths"]), 2)
+        self.assertIn("方向", review["interviewer_response"])
+        self.assertIn("shape", review["focus_issue"])
 
     def test_json_extraction_accepts_fenced_json(self):
         parsed = server.extract_json_object('```json\n{"verdict":"pass"}\n```')
@@ -46,16 +47,16 @@ class ModelFlowTests(unittest.TestCase):
         call_llm.return_value = {
             "verdict": "pass",
             "score": 88,
-            "summary": "核心思路正确",
-            "covered": ["核心点"],
-            "key_gaps": [],
-            "incorrect_points": [],
-            "next_focus": "补充一个权衡",
-            "interviewer_follow_up": "这个方案有什么代价？",
+            "interviewer_response": "整体方向是对的，这段实现已经把核心逻辑接上了。",
+            "strengths": ["核心点"],
+            "focus_issue": "",
+            "nudge": "可以再想想显存开销。",
+            "follow_up": "这个方案有什么代价？",
         }
         result = server.judge_code(server.PROBLEMS[0], "def solution():\n    return 1")
         self.assertEqual(result["verdict"], "pass")
         self.assertEqual(result["score"], 88)
+        self.assertIn("方向", result["interviewer_response"])
         context = call_llm.call_args.args[0][1]["content"]
         self.assertIn("candidate_code", context)
         self.assertIn("review_points", context)

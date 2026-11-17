@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="AIBaG 算法题作答工作台" />
+    <title>题目作答 · AIBaG</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body class="problem-page">
+    <header class="site-header">
+      <a class="wordmark" href="/" aria-label="返回 AIBaG 题库">
+        <span class="wordmark-main">AIBaG</span>
+        <span class="wordmark-sub">ALGORITHM INTERVIEW LAB</span>
+      </a>
+      <nav class="site-nav" aria-label="主导航">
+        <a href="/">题库</a>
+        <span class="nav-disabled">正在作答</span>
+      </nav>
+      <div class="api-badge">
+        <span id="api-dot" class="status-dot"></span>
+        <span id="api-status">连接本地后端…</span>
+      </div>
+    </header>
+
+    <main class="problem-view">
+      <div class="problem-topbar">
+        <a class="text-button" href="/">← 返回题库</a>
+        <div class="problem-identity">
+          <span id="problem-number" class="problem-number">--</span>
+          <div>
+            <span id="problem-category" class="eyebrow">LOADING</span>
+            <h1 id="problem-title">正在读取题目…</h1>
+          </div>
+        </div>
+        <div class="problem-meta">
+          <span id="problem-difficulty" class="difficulty-pill">—</span>
+          <span id="problem-language" class="language-pill">—</span>
+        </div>
+      </div>
+
+      <div class="workbench">
+        <article class="problem-document">
+          <section class="document-intro">
+            <span class="document-label">PROBLEM STATEMENT</span>
+            <p id="problem-description"></p>
+          </section>
+
+          <section>
+            <h2><span>01</span> 示例</h2>
+            <div id="problem-examples" class="examples"></div>
+          </section>
+
+          <section>
+            <h2><span>02</span> 约束</h2>
+            <ul id="problem-constraints" class="constraint-list"></ul>
+          </section>
+
+          <section>
+            <h2><span>03</span> 训练目标</h2>
+            <div id="problem-tags" class="tag-list"></div>
+            <p class="training-note">不需要背标准说法。只要核心实现成立，你用自己的方式解释就可以。</p>
+          </section>
+
+          <section class="source-section">
+            <h2><span>04</span> 题型来源</h2>
+            <div id="problem-sources"></div>
+          </section>
+        </article>
+
+        <section class="coding-panel">
+          <div class="editor-toolbar">
+            <div>
+              <span class="editor-dot red"></span><span class="editor-dot amber"></span><span class="editor-dot green"></span>
+              <strong>solution.py</strong>
+            </div>
+            <div class="editor-actions">
+              <span id="draft-status">本地草稿</span>
+              <button id="reset-code" class="small-button">重置</button>
+            </div>
+          </div>
+          <div class="code-editor-wrap">
+            <pre id="line-numbers" aria-hidden="true">1</pre>
+            <textarea id="code-editor" spellcheck="false" aria-label="代码编辑器"></textarea>
+          </div>
+          <div class="submit-bar">
+            <p>先看核心实现，不纠结表达是否“标准”。</p>
+            <button id="submit-code" class="primary-button">请面试官看一下</button>
+          </div>
+
+          <div class="coach-panel">
+            <div class="coach-heading">
+              <div>
+                <span class="eyebrow">DEEPSEEK INTERVIEWER</span>
+                <h2>和面试官聊聊</h2>
+              </div>
+              <span id="review-state" class="review-state">还没提交</span>
+            </div>
+            <div id="coach-log" class="coach-log">
+              <p class="coach-empty">你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。</p>
+            </div>
+            <div class="coach-quick-actions">
+              <button data-action="hint">给我一点提示</button>
+              <button data-action="optimize">这块还能怎么改？</button>
+              <button data-action="follow_up">继续问我</button>
+            </div>
+            <div class="coach-input-row">
+              <input id="coach-input" type="text" maxlength="2000" placeholder="比如：我这里想先拆 head，这样可以吗？" />
+              <button id="send-coach" class="small-button dark">发送</button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script src="/problem.js" defer></script>
+  </body>
+</html>

@@ -2,10 +2,10 @@
 
 AIBaG 是一个本地优先的算法与 AI Infra 面试训练场。产品采用两级页面：
 
-1. **题库首页**：像 LeetCode 一样浏览、筛选题目和查看练习状态。
-2. **题目工作台**：左侧题面，右侧代码编辑器和 DeepSeek 面试官 Review。
+1. **题库首页 `/index.html`**：像 LeetCode 一样浏览、筛选题目和查看练习状态。
+2. **独立题目页 `/problem.html?id=...`**：点击题目后发生真实页面跳转，左侧题面，右侧代码编辑器和 DeepSeek 面试官对话。
 
-当前 Review 只关注核心实现、tensor shape、算法不变量、边界条件和复杂度，不要求候选人写出唯一标准答案。
+当前 Review 只关注核心实现、tensor shape、算法不变量、边界条件和复杂度，不要求候选人写出唯一标准答案。口语化解释、朴素变量名或不够标准的术语不会单独扣分，只要表达的意思和实现成立即可。
 
 ## 当前题库
 
@@ -53,8 +53,8 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 
 ## 两条 AI 链路
 
-- `POST /api/judge`：输入 `problem_id + code`，返回 `pass / partial / retry`、关键缺口和简短追问。
-- `POST /api/chat`：提供一层提示、一个优化方向、继续追问或自由对话。
+- `POST /api/judge`：输入 `problem_id + code`，内部保留 `pass / partial / retry` 用于进度，但界面展示自然语言面试反馈。
+- `POST /api/chat`：像真人面试官一样提供一层提示、一个优化方向、继续追问或自由对话。
 
 提示词位于：
 
@@ -73,7 +73,7 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 
 ## 安全边界
 
-本地 HTTP 服务采用静态文件白名单，只允许访问 `index.html`、`app.js` 和 `style.css`。以下内容无法通过浏览器静态 URL 读取：
+本地 HTTP 服务采用静态文件白名单，只允许访问两个 HTML 页面、各自的 JavaScript 和 `style.css`。以下内容无法通过浏览器静态 URL 读取：
 
 - `.env` 与 API Key
 - 私有凭据文档
@@ -85,6 +85,7 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 ```bash
 python3 -m unittest discover -s tests -v
 node --check app.js
+node --check problem.js
 python3 -m json.tool data/problems.json >/dev/null
 ```
 

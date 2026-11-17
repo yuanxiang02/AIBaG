@@ -175,12 +175,13 @@ def normalize_review(raw: dict[str, Any]) -> dict[str, Any]:
     return {
         "verdict": verdict,
         "score": score,
-        "summary": str(raw.get("summary", "已完成核心思路检查。"))[:500],
-        "covered": as_short_list(raw.get("covered"), 4),
-        "key_gaps": as_short_list(raw.get("key_gaps"), 3),
-        "incorrect_points": as_short_list(raw.get("incorrect_points"), 2),
-        "next_focus": str(raw.get("next_focus", ""))[:500],
-        "interviewer_follow_up": str(raw.get("interviewer_follow_up", ""))[:500],
+        "interviewer_response": str(
+            raw.get("interviewer_response", raw.get("summary", "我看过你的实现了，我们接着聊最关键的一点。"))
+        )[:1_000],
+        "strengths": as_short_list(raw.get("strengths", raw.get("covered")), 2),
+        "focus_issue": str(raw.get("focus_issue", ""))[:500],
+        "nudge": str(raw.get("nudge", raw.get("next_focus", "")))[:500],
+        "follow_up": str(raw.get("follow_up", raw.get("interviewer_follow_up", "")))[:500],
     }
 
 
@@ -243,7 +244,14 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, s
 
 class AIBaGHandler(SimpleHTTPRequestHandler):
     server_version = "AIBaG/0.1"
-    STATIC_PATHS = {"/", "/index.html", "/app.js", "/style.css"}
+    STATIC_PATHS = {
+        "/",
+        "/index.html",
+        "/app.js",
+        "/problem.html",
+        "/problem.js",
+        "/style.css",
+    }
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(ROOT), **kwargs)
