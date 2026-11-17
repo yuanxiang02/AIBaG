@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="AIBaG - AI 面试核心思路判断与多轮追问助手" />
+    <title>AIBaG · AI 面试助手</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="题库">
+        <div class="brand">
+          <div class="brand-mark">AB</div>
+          <div>
+            <strong>AIBaG</strong>
+            <span>AI Interview Coach</span>
+          </div>
+        </div>
+
+        <div class="library-heading">
+          <div>
+            <span class="eyebrow">QUESTION BANK</span>
+            <h2>面试题库</h2>
+          </div>
+          <button id="random-question" class="icon-button" title="随机一题" aria-label="随机一题">↻</button>
+        </div>
+
+        <label class="search-box">
+          <span aria-hidden="true">⌕</span>
+          <input id="question-search" type="search" placeholder="搜索主题或题目" />
+        </label>
+        <select id="topic-filter" aria-label="按主题筛选">
+          <option value="">全部主题</option>
+        </select>
+
+        <div id="question-list" class="question-list"></div>
+
+        <div class="sidebar-footer">
+          <span id="api-dot" class="status-dot"></span>
+          <span id="api-status">正在检查本地服务…</span>
+        </div>
+      </aside>
+
+      <main class="workspace">
+        <header class="topbar">
+          <button id="sidebar-toggle" class="mobile-menu" aria-label="打开题库">☰</button>
+          <div>
+            <span class="eyebrow">PRACTICE SESSION</span>
+            <h1 id="session-title">核心思路训练</h1>
+          </div>
+          <div class="session-meta">
+            <span id="question-topic" class="pill">—</span>
+            <span id="question-difficulty" class="pill pill-muted">—</span>
+          </div>
+        </header>
+
+        <section id="chat-feed" class="chat-feed" aria-live="polite"></section>
+
+        <section class="composer-wrap">
+          <div id="quick-actions" class="quick-actions" hidden>
+            <button data-action="hint">给我一点提示</button>
+            <button data-action="optimize">哪里还能优化？</button>
+            <button data-action="follow_up">继续追问我</button>
+          </div>
+          <div class="composer">
+            <textarea
+              id="answer-input"
+              rows="4"
+              maxlength="8000"
+              placeholder="用自己的话解释核心思路，不需要写完整标准答案…"
+            ></textarea>
+            <div class="composer-footer">
+              <span class="keyboard-hint">⌘ / Ctrl + Enter 提交判断</span>
+              <div class="composer-actions">
+                <button id="chat-button" class="button button-secondary" disabled>发送给面试官</button>
+                <button id="judge-button" class="button button-primary">提交并判断</button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <template id="message-template">
+      <article class="message">
+        <div class="avatar"></div>
+        <div class="message-body">
+          <div class="message-label"></div>
+          <div class="message-content"></div>
+        </div>
+      </article>
+    </template>
+
+    <script src="/app.js" defer></script>
+  </body>
+</html>
