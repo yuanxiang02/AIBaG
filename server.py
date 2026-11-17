@@ -19,6 +19,12 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parent
 PROBLEMS_PATH = ROOT / "data" / "problems.json"
 MAX_REQUEST_BYTES = 1_000_000
+INTERVIEW_MODE = {
+    "code_execution": False,
+    "debugger": False,
+    "runtime_prints": False,
+    "instruction": "Whiteboard interview: reason statically from shapes, invariants, boundaries, and complexity.",
+}
 
 
 def load_dotenv(path: Path) -> None:
@@ -203,6 +209,7 @@ def normalize_review(raw: dict[str, Any]) -> dict[str, Any]:
 def judge_code(problem: dict[str, Any], code: str) -> dict[str, Any]:
     system = (ROOT / "prompts" / "judge.txt").read_text(encoding="utf-8")
     context = {
+        "interview_mode": INTERVIEW_MODE,
         "title": problem["title"],
         "description": problem["description"],
         "constraints": problem.get("constraints", []),
@@ -214,8 +221,7 @@ def judge_code(problem: dict[str, Any], code: str) -> dict[str, Any]:
         [
             {"role": "system", "content": system},
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ],
-        plain_text_key="reply",
+        ]
     )
     return normalize_review(raw)
 
@@ -235,6 +241,7 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, s
                 {"role": turn["role"], "content": str(turn.get("content", ""))[:2_000]}
             )
     context = {
+        "interview_mode": INTERVIEW_MODE,
         "action": action,
         "title": problem["title"],
         "description": problem["description"],
@@ -249,7 +256,8 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, s
         [
             {"role": "system", "content": system},
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ]
+        ],
+        plain_text_key="reply",
     )
     return {
         "action": action,

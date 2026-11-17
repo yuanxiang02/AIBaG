@@ -103,6 +103,9 @@ button { cursor: pointer; }
 .problem-document { height: calc(100vh - 160px); overflow-y: auto; padding: 38px 42px 70px; border-right: 1px solid var(--border); }
 .document-intro { padding: 20px; border-left: 4px solid var(--blue); background: var(--blue-soft); }
 .document-intro p { margin: 10px 0 0; font-size: 16px; line-height: 1.8; }
+.interview-mode-note { margin-top: 14px; padding: 12px 15px; border-left: 4px solid var(--rust); background: #fff3e8; }
+.interview-mode-note strong { color: var(--rust); font: 800 10px/1 var(--sans); letter-spacing: .1em; }
+.interview-mode-note p { margin: 7px 0 0; color: var(--ink-soft); font: 12px/1.6 var(--sans); }
 .problem-document section > h2 { margin: 34px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 20px; }
 .problem-document section > h2 span { margin-right: 8px; color: var(--blue); font: 700 13px/1 var(--sans); }
 .example-card { margin: 12px 0; border: 1px solid var(--border); border-left: 4px solid var(--rust); background: white; }

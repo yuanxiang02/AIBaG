@@ -70,6 +70,8 @@ class ModelFlowTests(unittest.TestCase):
         context = call_llm.call_args.args[0][1]["content"]
         self.assertIn("candidate_code", context)
         self.assertIn("review_points", context)
+        self.assertIn('"code_execution": false', context)
+        self.assertNotIn("plain_text_key", call_llm.call_args.kwargs)
 
     @patch("server.call_llm")
     def test_coach_flow_keeps_requested_action(self, call_llm):
@@ -80,6 +82,9 @@ class ModelFlowTests(unittest.TestCase):
         )
         self.assertEqual(result["action"], "hint")
         self.assertIn("数据", result["reply"])
+        context = call_llm.call_args.args[0][1]["content"]
+        self.assertIn('"runtime_prints": false', context)
+        self.assertEqual(call_llm.call_args.kwargs["plain_text_key"], "reply")
 
 
 if __name__ == "__main__":
