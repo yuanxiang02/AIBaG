@@ -40,6 +40,16 @@ class ReviewNormalizationTests(unittest.TestCase):
         parsed = server.extract_json_object('```json\n{"verdict":"pass"}\n```')
         self.assertEqual(parsed["verdict"], "pass")
 
+    def test_coach_parser_accepts_plain_language(self):
+        parsed = server.parse_model_content(
+            "可以，先把 QKV 沿最后一维拆开。", plain_text_key="reply"
+        )
+        self.assertIn("QKV", parsed["reply"])
+
+    def test_judge_parser_still_requires_json(self):
+        with self.assertRaises(ValueError):
+            server.parse_model_content("这不是结构化评审")
+
 
 class ModelFlowTests(unittest.TestCase):
     @patch("server.call_llm")

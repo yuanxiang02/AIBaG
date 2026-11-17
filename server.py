@@ -106,7 +106,22 @@ def extract_json_object(content: str) -> dict[str, Any]:
     return parsed
 
 
-def call_llm(messages: list[dict[str, str]]) -> dict[str, Any]:
+def parse_model_content(content: str, plain_text_key: str | None = None) -> dict[str, Any]:
+    """Parse structured output, optionally accepting natural-language text."""
+    try:
+        return extract_json_object(content)
+    except (ValueError, json.JSONDecodeError):
+        text = content.strip()
+        if plain_text_key and text:
+            text = re.sub(r"^```(?:text|markdown)?\s*", "", text, count=1)
+            text = re.sub(r"\s*```$", "", text, count=1)
+            return {plain_text_key: text.strip()}
+        raise
+
+
+def call_llm(
+    messages: list[dict[str, str]], plain_text_key: str | None = None
+) -> dict[str, Any]:
     base_url = os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com").rstrip("/")
     model = os.getenv("AIBAG_MODEL", "deepseek-flash")
     api_key = resolve_api_key()
@@ -151,7 +166,7 @@ def call_llm(messages: list[dict[str, str]]) -> dict[str, Any]:
         content = response["choices"][0]["message"]["content"]
     except (KeyError, IndexError, TypeError):
         raise RuntimeError("Model API response does not contain choices[0].message.content") from None
-    return extract_json_object(content)
+    return parse_model_content(content, plain_text_key=plain_text_key)
 
 
 def as_short_list(value: Any, limit: int) -> list[str]:
@@ -199,7 +214,8 @@ def judge_code(problem: dict[str, Any], code: str) -> dict[str, Any]:
         [
             {"role": "system", "content": system},
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ]
+        ],
+        plain_text_key="reply",
     )
     return normalize_review(raw)
 
