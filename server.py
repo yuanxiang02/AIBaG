@@ -494,6 +494,11 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
+    def end_headers(self) -> None:
+        if urlsplit(self.path).path in self.STATIC_PATHS:
+            self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def send_json(self, data: Any, status: int = HTTPStatus.OK) -> None:
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
         use_gzip = len(body) >= 1_024 and "gzip" in self.headers.get("Accept-Encoding", "")
