@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/style.css" />
   </head>
   <body class="problem-page">
+    <button id="expand-chrome" class="chrome-expand" type="button">展开顶部</button>
     <header class="site-header">
       <a class="wordmark" href="/" aria-label="返回 AIBaG 题库">
         <span class="wordmark-main">AIBaG</span>
@@ -36,15 +37,19 @@
         <div class="problem-meta">
           <span id="problem-difficulty" class="difficulty-pill">—</span>
           <span id="problem-language" class="language-pill">—</span>
+          <button id="collapse-chrome" class="small-button" type="button">专注模式</button>
         </div>
       </div>
 
       <div class="workbench">
         <article class="problem-document">
-          <section class="document-intro">
-            <span id="document-label" class="document-label">PROBLEM STATEMENT</span>
+          <details id="description-panel" class="document-intro" open>
+            <summary>
+              <span id="document-label" class="document-label">PROBLEM STATEMENT</span>
+              <span class="details-action">收起 / 展开</span>
+            </summary>
             <p id="problem-description"></p>
-          </section>
+          </details>
 
           <aside class="interview-mode-note">
             <strong id="mode-note-title">WHITEBOARD MODE</strong>
@@ -70,6 +75,22 @@
           <section class="source-section">
             <h2><span>04</span> 题型来源</h2>
             <div id="problem-sources"></div>
+          </section>
+
+          <section class="answer-reveal-section">
+            <h2><span>05</span> 标准答案</h2>
+            <p>完成练习后，可以在这里查看一份完整实现。</p>
+            <button id="show-answer" class="primary-button" type="button">查看标准答案</button>
+            <div id="reference-answer" class="reference-answer" hidden>
+              <div class="reference-answer-heading">
+                <div>
+                  <span class="eyebrow">STANDARD SOLUTION</span>
+                  <h3>标准答案实现</h3>
+                </div>
+                <button id="close-answer" class="small-button" type="button">收起</button>
+              </div>
+              <pre id="reference-answer-content"></pre>
+            </div>
           </section>
         </article>
 

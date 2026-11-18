@@ -1,3 +1,4 @@
+import json
 import unittest
 from unittest.mock import patch
 
@@ -99,6 +100,40 @@ class ReviewNormalizationTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             server.parse_model_content("这不是结构化评审")
 
+    @patch("server.urlopen")
+    def test_deepseek_json_mode_repairs_one_invalid_response(self, urlopen):
+        class Response:
+            def __init__(self, content):
+                self.body = json.dumps(
+                    {"choices": [{"message": {"content": content}}]}
+                ).encode()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *_args):
+                return False
+
+            def read(self):
+                return self.body
+
+        urlopen.side_effect = [Response("不是 JSON"), Response('{"verdict":"partial"}')]
+        with patch.dict(
+            server.os.environ,
+            {"AIBAG_BASE_URL": "https://api.deepseek.com", "AIBAG_API_KEY": "test-key"},
+        ):
+            result = server.call_llm(
+                [{"role": "system", "content": "只返回 JSON object"}]
+            )
+        self.assertEqual(result["verdict"], "partial")
+        self.assertEqual(urlopen.call_count, 2)
+        for call in urlopen.call_args_list:
+            body = json.loads(call.args[0].data.decode())
+            self.assertEqual(body["response_format"], {"type": "json_object"})
+        retry_body = json.loads(urlopen.call_args_list[1].args[0].data.decode())
+        self.assertEqual(retry_body["temperature"], 0)
+        self.assertIn("合法 JSON", retry_body["messages"][-1]["content"])
+
 
 class ModelFlowTests(unittest.TestCase):
     @patch("server.call_llm")
@@ -136,6 +171,23 @@ class ModelFlowTests(unittest.TestCase):
         self.assertIn('"runtime_prints": false', context)
         self.assertIn("candidate_submission", context)
         self.assertEqual(call_llm.call_args.kwargs["plain_text_key"], "reply")
+
+    @patch("server.call_llm")
+    def test_reference_answer_is_generated_once_and_cached(self, call_llm):
+        problem = server.PROBLEMS[0]
+        server.ANSWER_CACHE.pop(problem["id"], None)
+        call_llm.return_value = {
+            "answer": "参考实现：\n```python\ndef solution():\n    return 1\n```\n关键点是保持 shape 一致。"
+        }
+        first = server.reference_answer(problem)
+        second = server.reference_answer(problem)
+        self.assertEqual(first, second)
+        self.assertEqual(first["source"], "deepseek-generated")
+        self.assertIn("参考实现", first["answer"])
+        self.assertEqual(call_llm.call_count, 1)
+        context = call_llm.call_args.args[0][1]["content"]
+        self.assertIn('"kind": "coding"', context)
+        self.assertIn("starter_code", context)
 
 
 if __name__ == "__main__":

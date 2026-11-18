@@ -3,6 +3,7 @@ const state = {
   latestReview: null,
   conversation: [],
   busy: false,
+  chromeAutoCollapsed: false,
   progress: JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}"),
   drafts: JSON.parse(localStorage.getItem("aibag_code_drafts_v1") || "{}"),
 };
@@ -28,6 +29,10 @@ const elements = {
   lineNumbers: document.querySelector("#line-numbers"),
   draftStatus: document.querySelector("#draft-status"),
   reset: document.querySelector("#reset-code"),
+  showAnswer: document.querySelector("#show-answer"),
+  closeAnswer: document.querySelector("#close-answer"),
+  referenceAnswer: document.querySelector("#reference-answer"),
+  referenceAnswerContent: document.querySelector("#reference-answer-content"),
   submit: document.querySelector("#submit-code"),
   submitNote: document.querySelector("#submit-note"),
   coachLog: document.querySelector("#coach-log"),
@@ -37,6 +42,8 @@ const elements = {
   quickActions: document.querySelector(".coach-quick-actions"),
   coachEmpty: document.querySelector("#coach-empty"),
   optimizeAction: document.querySelector("#optimize-action"),
+  collapseChrome: document.querySelector("#collapse-chrome"),
+  expandChrome: document.querySelector("#expand-chrome"),
 };
 
 async function request(endpoint, options = {}) {
@@ -82,10 +89,13 @@ function renderProblem(problem) {
     : "白板模式：只做静态推理，不运行代码。";
   elements.submit.textContent = isKnowledge ? "请面试官听一下" : "请面试官看一下";
   elements.reset.textContent = isKnowledge ? "清空" : "重置";
+  elements.showAnswer.textContent = isKnowledge ? "查看标准回答" : "查看标准答案";
   elements.optimizeAction.textContent = isKnowledge ? "这块还能怎么补？" : "这块还能怎么改？";
   elements.coachEmpty.textContent = isKnowledge
     ? "你可以先用自己的话回答，也可以要一点提示。面试官只看核心意思，不要求“标准答案腔”。"
     : "你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。";
+  elements.referenceAnswer.hidden = true;
+  elements.referenceAnswerContent.textContent = "";
 
   elements.examples.replaceChildren();
   (problem.examples || []).forEach((example, index) => {
@@ -131,7 +141,11 @@ function renderProblem(problem) {
 
   elements.editor.value = state.drafts[problem.id] ?? problem.starter_code;
   updateLineNumbers();
-  elements.editor.focus();
+}
+
+function setChromeCollapsed(collapsed) {
+  document.body.classList.toggle("chrome-collapsed", collapsed);
+  elements.expandChrome.setAttribute("aria-hidden", String(!collapsed));
 }
 
 function updateLineNumbers() {
@@ -183,7 +197,35 @@ function setBusy(busy) {
   state.busy = busy;
   elements.submit.disabled = busy;
   elements.sendCoach.disabled = busy;
+  elements.showAnswer.disabled = busy;
   elements.quickActions.querySelectorAll("button").forEach((button) => { button.disabled = busy; });
+}
+
+async function toggleReferenceAnswer() {
+  if (!state.problem || state.busy) return;
+  if (elements.referenceAnswerContent.textContent) {
+    elements.referenceAnswer.hidden = !elements.referenceAnswer.hidden;
+    return;
+  }
+  const confirmed = window.confirm("标准答案会直接揭示完整实现和核心思路。确定要看吗？");
+  if (!confirmed) return;
+  setBusy(true);
+  const originalLabel = elements.showAnswer.textContent;
+  elements.showAnswer.textContent = "读取中…";
+  try {
+    const result = await request("/api/answer", {
+      method: "POST",
+      body: JSON.stringify({ problem_id: state.problem.id }),
+    });
+    elements.referenceAnswerContent.textContent = result.answer;
+    elements.referenceAnswer.hidden = false;
+    elements.referenceAnswer.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  } catch (error) {
+    showRequestError(error);
+  } finally {
+    elements.showAnswer.textContent = originalLabel;
+    setBusy(false);
+  }
 }
 
 function showRequestError(error) {
@@ -290,6 +332,11 @@ async function initialize() {
 }
 
 elements.editor.addEventListener("input", () => { updateLineNumbers(); scheduleDraftSave(); });
+elements.editor.addEventListener("focus", () => {
+  if (state.chromeAutoCollapsed) return;
+  state.chromeAutoCollapsed = true;
+  setChromeCollapsed(true);
+});
 elements.editor.addEventListener("scroll", () => { elements.lineNumbers.scrollTop = elements.editor.scrollTop; });
 elements.editor.addEventListener("keydown", (event) => {
   if (event.key !== "Tab") return;
@@ -307,6 +354,16 @@ elements.reset.addEventListener("click", () => {
   localStorage.setItem("aibag_code_drafts_v1", JSON.stringify(state.drafts));
   elements.draftStatus.textContent = "已恢复模板";
   updateLineNumbers();
+});
+elements.showAnswer.addEventListener("click", toggleReferenceAnswer);
+elements.closeAnswer.addEventListener("click", () => { elements.referenceAnswer.hidden = true; });
+elements.collapseChrome.addEventListener("click", () => {
+  state.chromeAutoCollapsed = true;
+  setChromeCollapsed(true);
+});
+elements.expandChrome.addEventListener("click", () => {
+  state.chromeAutoCollapsed = true;
+  setChromeCollapsed(false);
 });
 elements.submit.addEventListener("click", submitCode);
 elements.quickActions.addEventListener("click", (event) => {

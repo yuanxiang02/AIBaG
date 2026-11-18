@@ -1,13 +1,14 @@
 const state = {
   problems: [],
+  activeKind: "",
   progress: JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}"),
 };
 
 const elements = {
   list: document.querySelector("#problem-list"),
   count: document.querySelector("#problem-count"),
-  category: document.querySelector("#category-filter"),
-  difficulty: document.querySelector("#difficulty-filter"),
+  trackTabs: document.querySelector(".track-tabs"),
+  trackTitle: document.querySelector("#track-title"),
   search: document.querySelector("#problem-search"),
   apiDot: document.querySelector("#api-dot"),
   apiStatus: document.querySelector("#api-status"),
@@ -21,13 +22,10 @@ async function request(endpoint) {
 }
 
 function filteredProblems() {
-  const category = elements.category.value;
-  const difficulty = elements.difficulty.value;
   const query = elements.search.value.trim().toLowerCase();
   return state.problems.filter((problem) => {
     const text = `${problem.title} ${problem.category} ${(problem.tags || []).join(" ")}`.toLowerCase();
-    return (!category || problem.category === category)
-      && (!difficulty || problem.difficulty === difficulty)
+    return (!state.activeKind || problem.kind === state.activeKind)
       && (!query || text.includes(query));
   });
 }
@@ -76,7 +74,11 @@ function renderProblems() {
 
     const categoryCell = document.createElement("td");
     categoryCell.className = "track-label";
-    categoryCell.textContent = problem.category;
+    categoryCell.textContent = {
+      coding: "AI Infra",
+      knowledge: "简答八股",
+      algorithm: "力扣手撕",
+    }[problem.kind] || problem.category;
     const difficultyCell = document.createElement("td");
     const badge = document.createElement("span");
     badge.className = `difficulty ${problem.difficulty.toLowerCase()}`;
@@ -98,12 +100,6 @@ async function initialize() {
     const [problems, config] = await Promise.all([request("/api/problems"), request("/api/config")]);
     state.problems = problems;
     elements.count.textContent = String(problems.length).padStart(2, "0");
-    [...new Set(problems.map((problem) => problem.category))].sort().forEach((category) => {
-      const option = document.createElement("option");
-      option.value = category;
-      option.textContent = category;
-      elements.category.appendChild(option);
-    });
     const provider = new URL(config.base_url).host;
     elements.apiStatus.textContent = `${config.model} · ${provider}`;
     elements.apiDot.className = config.has_api_key ? "status-dot ok" : "status-dot warn";
@@ -116,8 +112,14 @@ async function initialize() {
   }
 }
 
-elements.category.addEventListener("change", renderProblems);
-elements.difficulty.addEventListener("change", renderProblems);
+elements.trackTabs.addEventListener("click", (event) => {
+  const button = event.target.closest("button[data-kind]");
+  if (!button) return;
+  state.activeKind = button.dataset.kind;
+  elements.trackTabs.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
+  elements.trackTitle.textContent = button.textContent === "全部" ? "全部题目" : button.textContent;
+  renderProblems();
+});
 elements.search.addEventListener("input", renderProblems);
 window.addEventListener("pageshow", () => {
   state.progress = JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}");

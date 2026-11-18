@@ -89,6 +89,7 @@ def load_problems() -> list[dict[str, Any]]:
 
 PROBLEMS = load_problems()
 PROBLEM_INDEX = {problem["id"]: problem for problem in PROBLEMS}
+ANSWER_CACHE: dict[str, dict[str, str]] = {}
 
 
 def public_problem(problem: dict[str, Any]) -> dict[str, Any]:
@@ -155,6 +156,7 @@ def call_llm(
     messages: list[dict[str, str]], plain_text_key: str | None = None
 ) -> dict[str, Any]:
     base_url = os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    is_deepseek = urlsplit(base_url).hostname in {"api.deepseek.com", "api.deepseek.com.cn"}
     model = os.getenv("AIBAG_MODEL", "deepseek-flash")
     api_key = resolve_api_key()
     endpoint = f"{base_url}/chat/completions"
@@ -178,27 +180,61 @@ def call_llm(
         with urlopen(request, timeout=90) as response:
             return json.loads(response.read().decode("utf-8"))
 
-    try:
+    def request_with_json_mode(body: dict[str, Any]) -> dict[str, Any]:
         try:
-            response = make_request(payload)
+            return make_request(body)
         except HTTPError as error:
-            # Some OpenAI-compatible providers do not support response_format.
-            if error.code != HTTPStatus.BAD_REQUEST:
+            # DeepSeek supports json_object mode, so never silently downgrade it.
+            # A custom OpenAI-compatible endpoint may still need the old fallback.
+            if error.code != HTTPStatus.BAD_REQUEST or is_deepseek:
                 raise
-            fallback = dict(payload)
+            fallback = dict(body)
             fallback.pop("response_format", None)
-            response = make_request(fallback)
+            return make_request(fallback)
+
+    try:
+        response = request_with_json_mode(payload)
     except HTTPError as error:
         detail = error.read(2_000).decode("utf-8", errors="replace")
         raise RuntimeError(f"Model API returned HTTP {error.code}: {detail}") from None
     except URLError as error:
         raise RuntimeError(f"Cannot reach model API: {error.reason}") from None
 
+    def response_content(response_data: dict[str, Any]) -> str:
+        try:
+            return str(response_data["choices"][0]["message"]["content"])
+        except (KeyError, IndexError, TypeError):
+            raise RuntimeError(
+                "Model API response does not contain choices[0].message.content"
+            ) from None
+
+    content = response_content(response)
     try:
-        content = response["choices"][0]["message"]["content"]
-    except (KeyError, IndexError, TypeError):
-        raise RuntimeError("Model API response does not contain choices[0].message.content") from None
-    return parse_model_content(content, plain_text_key=plain_text_key)
+        return parse_model_content(content, plain_text_key=plain_text_key)
+    except (ValueError, json.JSONDecodeError):
+        # Structured judge/answer calls get one strict repair attempt. Chat still
+        # accepts plain text so a conversational reply never breaks the UI.
+        retry = dict(payload)
+        retry["temperature"] = 0
+        retry["messages"] = [
+            *messages,
+            {
+                "role": "user",
+                "content": "上一条输出不是合法 JSON。请重新回答，只输出一个可被 json.loads 解析的 JSON object，不要 Markdown。",
+            },
+        ]
+        try:
+            repaired = request_with_json_mode(retry)
+        except HTTPError as error:
+            detail = error.read(2_000).decode("utf-8", errors="replace")
+            raise RuntimeError(f"Model API returned HTTP {error.code}: {detail}") from None
+        except URLError as error:
+            raise RuntimeError(f"Cannot reach model API: {error.reason}") from None
+        repaired_content = response_content(repaired)
+        try:
+            return parse_model_content(repaired_content, plain_text_key=plain_text_key)
+        except (ValueError, json.JSONDecodeError):
+            raise RuntimeError("Model returned invalid JSON twice; please try again") from None
 
 
 def as_short_list(value: Any, limit: int) -> list[str]:
@@ -294,6 +330,36 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, s
     }
 
 
+def reference_answer(problem: dict[str, Any]) -> dict[str, str]:
+    """Generate and cache an explicitly revealed reference answer."""
+    cached = ANSWER_CACHE.get(problem["id"])
+    if cached is not None:
+        return cached
+    system = (ROOT / "prompts" / "answer.txt").read_text(encoding="utf-8")
+    context = {
+        "interview_mode": INTERVIEW_MODE,
+        "kind": problem["kind"],
+        "title": problem["title"],
+        "description": problem["description"],
+        "constraints": problem.get("constraints", []),
+        "starter_code": problem.get("starter_code", ""),
+        "review_points": problem["review_points"],
+        "reference_notes": problem.get("reference_notes", []),
+    }
+    raw = call_llm(
+        [
+            {"role": "system", "content": system},
+            {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
+        ]
+    )
+    answer = str(raw.get("answer", "")).strip()
+    if len(answer) < 20:
+        raise RuntimeError("Model did not return a usable reference answer")
+    result = {"answer": answer[:16_000], "source": "deepseek-generated"}
+    ANSWER_CACHE[problem["id"]] = result
+    return result
+
+
 class AIBaGHandler(SimpleHTTPRequestHandler):
     server_version = "AIBaG/0.1"
     STATIC_PATHS = {
@@ -355,7 +421,7 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
-        if path not in {"/api/judge", "/api/chat"}:
+        if path not in {"/api/judge", "/api/chat", "/api/answer"}:
             self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
             return
         try:
@@ -370,6 +436,8 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
                 if len(code) < 8:
                     raise ValueError("Please provide an answer before submitting")
                 result = judge_code(problem, code[:16_000])
+            elif path == "/api/answer":
+                result = reference_answer(problem)
             else:
                 result = coach_reply(problem, payload)
             self.send_json(result)

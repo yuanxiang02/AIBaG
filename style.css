@@ -37,6 +37,15 @@ button { cursor: pointer; }
 .status-dot.error { background: var(--red); box-shadow: 0 0 0 4px var(--red-soft); }
 
 .catalog-view { max-width: 1240px; margin: 0 auto; padding: 58px 36px 80px; }
+.catalog-simple { padding-top: 38px; }
+.catalog-intro { display: flex; align-items: end; justify-content: space-between; gap: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+.catalog-intro h1 { margin: 7px 0 0; font-size: 42px; line-height: 1; }
+.catalog-intro p { margin: 0; color: var(--muted); font: 12px/1.5 var(--sans); }
+.catalog-intro p strong { color: var(--blue); font-size: 18px; }
+.track-tabs { display: flex; gap: 6px; padding: 22px 0 30px; }
+.track-tabs button { padding: 9px 15px; border: 1px solid var(--border); border-radius: 3px; color: var(--ink-soft); background: white; font: 650 12px/1 var(--sans); }
+.track-tabs button:hover { border-color: var(--blue); color: var(--blue); }
+.track-tabs button.active { border-color: var(--blue); color: white; background: var(--blue); }
 .hero { display: grid; grid-template-columns: .95fr 1.15fr; gap: 64px; align-items: center; padding-bottom: 38px; border-bottom: 3px double var(--blue); }
 .eyebrow, .document-label { color: var(--rust); font: 700 11px/1.3 var(--sans); letter-spacing: .13em; }
 .hero h1 { margin: 17px 0 16px; font-size: clamp(40px, 5.2vw, 68px); line-height: 1.11; letter-spacing: -.04em; }
@@ -99,14 +108,17 @@ button { cursor: pointer; }
 .problem-meta { display: flex; gap: 8px; font-family: var(--sans); }
 .difficulty-pill, .language-pill { padding: 7px 10px; border: 1px solid var(--border); border-radius: 3px; color: var(--ink-soft); background: white; font-size: 11px; font-weight: 650; }
 
-.workbench { display: grid; grid-template-columns: minmax(420px, .84fr) minmax(560px, 1.16fr); min-height: calc(100vh - 160px); }
-.problem-document { height: calc(100vh - 160px); overflow-y: auto; padding: 38px 42px 70px; border-right: 1px solid var(--border); }
+.workbench { display: grid; grid-template-columns: minmax(340px, .618fr) minmax(560px, 1fr); min-height: calc(100vh - 160px); }
+.problem-document { height: calc(100vh - 160px); overflow-y: auto; padding: 24px 26px 54px; border-right: 1px solid var(--border); }
 .document-intro { padding: 20px; border-left: 4px solid var(--blue); background: var(--blue-soft); }
+.document-intro summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; list-style: none; }
+.document-intro summary::-webkit-details-marker { display: none; }
+.details-action { color: var(--muted); font: 10px/1 var(--sans); }
 .document-intro p { margin: 10px 0 0; font-size: 16px; line-height: 1.8; }
 .interview-mode-note { margin-top: 14px; padding: 12px 15px; border-left: 4px solid var(--rust); background: #fff3e8; }
 .interview-mode-note strong { color: var(--rust); font: 800 10px/1 var(--sans); letter-spacing: .1em; }
 .interview-mode-note p { margin: 7px 0 0; color: var(--ink-soft); font: 12px/1.6 var(--sans); }
-.problem-document section > h2 { margin: 34px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-size: 20px; }
+.problem-document section > h2 { margin: 24px 0 11px; padding-bottom: 7px; border-bottom: 1px solid var(--border); font-size: 18px; }
 .problem-document section > h2 span { margin-right: 8px; color: var(--blue); font: 700 13px/1 var(--sans); }
 .example-card { margin: 12px 0; border: 1px solid var(--border); border-left: 4px solid var(--rust); background: white; }
 .example-card dl { display: grid; grid-template-columns: 90px 1fr; margin: 0; }
@@ -141,6 +153,13 @@ button { cursor: pointer; }
 .knowledge-problem #code-editor { padding: 24px; font: 15px/1.8 var(--sans); white-space: pre-wrap; }
 .submit-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-top: 1px solid #303c37; background: #202725; }
 .submit-bar p { margin: 0; color: #92a099; font: 10px/1.4 var(--sans); }
+.answer-reveal-section { margin-top: 30px; padding-top: 2px; }
+.answer-reveal-section > p { margin: 0 0 12px; color: var(--muted); font: 12px/1.6 var(--sans); }
+.reference-answer { margin: 14px 0 0; padding: 15px; border: 1px solid #c7a68e; background: #fffaf1; }
+.reference-answer[hidden] { display: none; }
+.reference-answer-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.reference-answer-heading h3 { margin: 3px 0 0; font: 700 19px/1.2 var(--serif); }
+#reference-answer-content { overflow-x: auto; margin: 0; padding: 15px; border: 1px solid #d9d1c5; color: #27322e; background: #f6f1e8; white-space: pre-wrap; overflow-wrap: anywhere; font: 12px/1.7 var(--mono); }
 .primary-button { padding: 9px 14px; border: 0; border-radius: 3px; color: white; background: var(--rust); font: 750 11px/1 var(--sans); }
 .primary-button:hover { background: #96300e; }
 .primary-button:disabled, button:disabled { cursor: not-allowed; opacity: .55; }
@@ -178,6 +197,15 @@ button { cursor: pointer; }
 .site-footer { display: flex; justify-content: space-between; padding: 22px 42px; border-top: 1px solid var(--border); color: var(--muted); background: var(--paper-soft); font: 10px/1 var(--sans); letter-spacing: .05em; }
 .loading-row td, .empty-row td { padding: 40px !important; color: var(--muted); text-align: center; font-style: italic; }
 
+.chrome-expand { display: none; position: fixed; top: 9px; left: 10px; z-index: 30; padding: 7px 10px; border: 1px solid #48534f; border-radius: 3px; color: #e8ece9; background: #202725; font: 650 10px/1 var(--sans); opacity: .82; }
+.problem-page.chrome-collapsed .site-header,
+.problem-page.chrome-collapsed .problem-topbar { display: none; }
+.problem-page.chrome-collapsed .chrome-expand { display: block; }
+.problem-page.chrome-collapsed .problem-view,
+.problem-page.chrome-collapsed .workbench { min-height: 100vh; }
+.problem-page.chrome-collapsed .problem-document,
+.problem-page.chrome-collapsed .coding-panel { height: 100vh; }
+
 @media (max-width: 1000px) {
   .site-header { grid-template-columns: 1fr auto; padding: 0 20px; }
   .site-nav { display: none; }
@@ -193,6 +221,9 @@ button { cursor: pointer; }
 @media (max-width: 680px) {
   .wordmark-sub, .api-badge span:last-child { display: none; }
   .catalog-view { padding: 38px 16px 55px; }
+  .catalog-intro { align-items: start; }
+  .track-tabs { overflow-x: auto; }
+  .track-tabs button { flex: 0 0 auto; }
   .hero { gap: 36px; }
   .hero h1 { font-size: 42px; }
   .diagram-flow { grid-template-columns: 1fr auto 1fr; }

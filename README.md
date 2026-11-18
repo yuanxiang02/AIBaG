@@ -61,6 +61,9 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 
 - `POST /api/judge`：输入 `problem_id + code`，内部保留 `pass / partial / retry` 用于进度，但界面展示自然语言面试反馈。
 - `POST /api/chat`：像真人面试官一样提供一层提示、一个优化方向、继续追问或自由对话。
+- `POST /api/answer`：用户确认后，按题型生成并缓存一份完整参考实现或口述回答；不会在题库接口中提前暴露。
+
+题目页的答案入口位于左侧题面最底部。点击确认后会直接展开完整实现；右侧仍只保留作答和面试官对话。
 
 提示词位于：
 
@@ -76,6 +79,7 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 | `/api/health` | GET | 本地服务健康检查 |
 | `/api/judge` | POST | 对代码进行核心实现 Review |
 | `/api/chat` | POST | 提示、优化建议与多轮追问 |
+| `/api/answer` | POST | 主动查看按题面生成的参考答案 |
 
 ## 安全边界
 
@@ -85,6 +89,10 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 - 私有凭据文档
 - 后端源码和提示词
 - JSON 中的隐藏 review points、参考说明与提示
+
+参考答案必须由用户在题目页主动确认后通过后端生成。页面会明确提示它会揭示核心思路；同一服务进程内的重复查看使用内存缓存，不会重复调用模型。
+
+DeepSeek 请求固定携带 `response_format: {"type": "json_object"}`。结构化 Review 或标准答案如果仍返回非法 JSON，后端会以零温度强制重试一次；聊天回复同时保留纯文本兼容，因此不会再因一次非 JSON 回复直接中断对话。
 
 ## 测试
 

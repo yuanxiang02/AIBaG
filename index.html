@@ -23,62 +23,32 @@
       </div>
     </header>
 
-    <main class="catalog-view">
-      <div class="hero">
-        <div class="hero-copy">
-          <span class="eyebrow">AI INTERVIEW FIELD NOTES · 001</span>
-          <h1>把核心算法，<br />写到真正能解释。</h1>
-          <p class="hero-subtitle">从 Attention kernel 到经典数据结构：先实现，再让 AI 面试官只 review 最关键的部分。</p>
-          <div class="hero-meta">
-            <span><strong id="problem-count">05</strong> curated problems</span>
-            <span><strong>2</strong> learning tracks</span>
-            <span><strong>∞</strong> follow-up rounds</span>
-          </div>
+    <main class="catalog-view catalog-simple">
+      <section class="catalog-intro">
+        <div>
+          <span class="eyebrow">INTERVIEW PRACTICE</span>
+          <h1>题库</h1>
         </div>
+        <p><strong id="problem-count">200</strong> 道题 · AI Review · 多轮追问</p>
+      </section>
 
-        <figure class="hero-diagram" aria-label="AIBaG 训练闭环">
-          <figcaption>THE AIBAG PRACTICE LOOP</figcaption>
-          <div class="diagram-flow">
-            <div class="diagram-node"><strong>Problem</strong><span>MHA / RoPE / DSA</span></div>
-            <b>→</b>
-            <div class="diagram-node emphasized"><strong>Implement</strong><span>write the core code</span></div>
-            <b>→</b>
-            <div class="diagram-node"><strong>AI Review</strong><span>shape / logic / edge</span></div>
-            <b>→</b>
-            <div class="diagram-node"><strong>Follow-up</strong><span>hint / optimize</span></div>
-          </div>
-          <p>代码与 review 形成闭环；模型负责指出关键缺口，不替你完成整道题。</p>
-        </figure>
-      </div>
-
-      <aside class="principle-callout">
-        <strong>CORE PRINCIPLE</strong>
-        <p>不需要背“标准说法”。所有题目采用白板模式：不运行、不 print，只要核心思路能通过静态推导说清楚，口语化解释也完全可以。</p>
-      </aside>
+      <nav class="track-tabs" aria-label="题目方向">
+        <button class="active" data-kind="">全部</button>
+        <button data-kind="coding">AI Infra 类</button>
+        <button data-kind="knowledge">简答八股</button>
+        <button data-kind="algorithm">力扣手撕</button>
+      </nav>
 
       <section class="problem-library">
         <div class="section-heading">
           <div>
-            <span class="eyebrow">CURATED SET · V0.1</span>
-            <h2>经典题库</h2>
+            <span class="eyebrow">PROBLEM SET</span>
+            <h2 id="track-title">全部题目</h2>
           </div>
           <div class="filters">
-            <label>
-              <span>Track</span>
-              <select id="category-filter"><option value="">全部方向</option></select>
-            </label>
-            <label>
-              <span>Level</span>
-              <select id="difficulty-filter">
-                <option value="">全部难度</option>
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
-            </label>
             <label class="search-field">
-              <span>Search</span>
-              <input id="problem-search" type="search" placeholder="题目 / tag" />
+              <span>搜索</span>
+              <input id="problem-search" type="search" placeholder="题目 / 标签" />
             </label>
           </div>
         </div>
@@ -103,8 +73,7 @@
     </main>
 
     <footer class="site-footer">
-      <span>AIBaG / Local-first interview practice</span>
-      <span>Question data → JSON · Review → DeepSeek</span>
+      <span>AIBaG · Local-first interview practice</span>
     </footer>
     <script src="/app.js" defer></script>
   </body>
