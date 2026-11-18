@@ -1,0 +1,4161 @@
+[
+  {
+    "id": "handbook-docs-03-fine-tuning-q01",
+    "number": 151,
+    "kind": "knowledge",
+    "title": "LoRA 原理",
+    "slug": "handbook-docs-03-fine-tuning-q01",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「LoRA 原理」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「LoRA 原理」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 LoRA 原理 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 LoRA 原理 要这样设计？"
+    ],
+    "reference_notes": [
+      "W \\in \\mathbb{R}^{d \\times d}：原始权重（冻结）",
+      "B \\in \\mathbb{R}^{d \\times r}：低秩矩阵（可训练）",
+      "A \\in \\mathbb{R}^{r \\times d}：低秩矩阵（可训练）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q01 · LoRA 原理",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-03-fine-tuning-q02",
+    "number": 152,
+    "kind": "knowledge",
+    "title": "QLoRA",
+    "slug": "handbook-docs-03-fine-tuning-q02",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「QLoRA」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「QLoRA」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 QLoRA 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 QLoRA 要这样设计？"
+    ],
+    "reference_notes": [
+      "NF4（Normal Float 4）：针对正态分布权重设计的 4-bit 数据类型",
+      "Double Quantization：连量化常数也量化，进一步压缩",
+      "Paged Optimizers：用 NVIDIA 统一内存管理优化器状态"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q02 · QLoRA",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-03-fine-tuning-q03",
+    "number": 153,
+    "kind": "knowledge",
+    "title": "其他 PEFT 方法",
+    "slug": "handbook-docs-03-fine-tuning-q03",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「其他 PEFT 方法」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「其他 PEFT 方法」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 其他 PEFT 方法 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 其他 PEFT 方法 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q03 · 其他 PEFT 方法",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-03-fine-tuning-q04",
+    "number": 154,
+    "kind": "knowledge",
+    "title": "指令微调",
+    "slug": "handbook-docs-03-fine-tuning-q04",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「指令微调」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「指令微调」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 指令微调 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 指令微调 要这样设计？"
+    ],
+    "reference_notes": [
+      "方式一：每轮独立计算损失",
+      "方式二：拼接多轮，只在 assistant 部分计算损失（推荐）",
+      "Q：SFT 数据多少够？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q04 · 指令微调",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-03-fine-tuning-q05",
+    "number": 155,
+    "kind": "knowledge",
+    "title": "常见微调问题",
+    "slug": "handbook-docs-03-fine-tuning-q05",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「常见微调问题」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「常见微调问题」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 常见微调问题 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 常见微调问题 要这样设计？"
+    ],
+    "reference_notes": [
+      "使用较小学习率（1e-5 5e-5）",
+      "混入少量预训练数据（Replay）",
+      "使用 LoRA（天然缓解，原参数被冻结）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q05 · 常见微调问题",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-03-fine-tuning-q06",
+    "number": 156,
+    "kind": "knowledge",
+    "title": "全量微调 vs LoRA 选型",
+    "slug": "handbook-docs-03-fine-tuning-q06",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「全量微调 vs LoRA 选型」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「全量微调 vs LoRA 选型」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 全量微调 vs LoRA 选型 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 全量微调 vs LoRA 选型 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：LoRA 多任务怎么部署？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q06 · 全量微调 vs LoRA 选型",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-03-fine-tuning-q07",
+    "number": 157,
+    "kind": "knowledge",
+    "title": "SFT 数据到监督信号的完整链路",
+    "slug": "handbook-docs-03-fine-tuning-q07",
+    "category": "知识问答",
+    "topic": "微调方法",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "微调方法",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「SFT 数据到监督信号的完整链路」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「SFT 数据到监督信号的完整链路」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 SFT 数据到监督信号的完整链路 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 SFT 数据到监督信号的完整链路 要这样设计？"
+    ],
+    "reference_notes": [
+      "多轮监督：可以监督所有 assistant 回答，也可以只监督最后一轮；前者使长对话提供更多监督 token，后者聚焦最后任务。不能只用一个 promptlength 覆盖任意多轮格式。",
+      "工具消息：assistant 发起的工具调用通常属于模型动作；工具返回是外部观察，通常不作为要模仿生成的目标，但作为后续上下文。调用 ID、返回顺序与模板须一致。",
+      "截断：先决定保留哪些完整轮次及必要上下文，再按预算处理。回答被截掉但仍强行补 EOS，会把未完成答案标成正常结束；删除全部回答 token 则产生空监督样本。应分开统计这些情况。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/03-fine-tuning.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/03-fine-tuning.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/03-fine-tuning.md",
+      "source_section": "Q07 · SFT 数据到监督信号的完整链路",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q01",
+    "number": 158,
+    "kind": "knowledge",
+    "title": "后训练全景",
+    "slug": "handbook-docs-04-alignment-q01",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「后训练全景」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「后训练全景」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 后训练全景 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 后训练全景 要这样设计？"
+    ],
+    "reference_notes": [
+      "RLHF：反馈主要来自人类偏好标注。",
+      "RLAIF：使用强模型依据准则生成偏好或评分，成本低但会继承 Judge 偏差。",
+      "RLVR：Reinforcement Learning with Verifiable Rewards，使用答案验证器、单元测试、编译器或形式系统等可验证信号。奖励更客观，但只适用于可验证任务。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q01 · 后训练全景",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q02",
+    "number": 159,
+    "kind": "knowledge",
+    "title": "奖励模型如何训练",
+    "slug": "handbook-docs-04-alignment-q02",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「奖励模型如何训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「奖励模型如何训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 奖励模型如何训练 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 奖励模型如何训练 要这样设计？"
+    ],
+    "reference_notes": [
+      "ORM（Outcome Reward Model）：只评最终结果。便宜，但正确答案可能来自错误推理，且信号稀疏。",
+      "PRM（Process Reward Model）：逐步评价中间推理。credit assignment 更细，但步骤切分、标注一致性和错误传播更复杂。",
+      "实践中可组合：结果正确性作为主目标，过程信号用于塑形和诊断，但要防止模型为了迎合过程模板而牺牲真正正确性。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q02 · 奖励模型如何训练",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q03",
+    "number": 160,
+    "kind": "knowledge",
+    "title": "奖励函数如何设计",
+    "slug": "handbook-docs-04-alignment-q03",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「奖励函数如何设计」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「奖励函数如何设计」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 奖励函数如何设计 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 奖励函数如何设计 要这样设计？"
+    ],
+    "reference_notes": [
+      "硬约束适合“违反即不可用”的条件，例如无法解析、危险输出。可以直接判无效，但过多硬门控会造成奖励稀疏。",
+      "软奖励适合连续质量，例如完整性、简洁性、过程质量。",
+      "条件化奖励可表达优先级：只有主任务正确时才给格式或简洁奖励，防止模型只刷容易指标。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q03 · 奖励函数如何设计",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q04",
+    "number": 161,
+    "kind": "knowledge",
+    "title": "PPO",
+    "slug": "handbook-docs-04-alignment-q04",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「PPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「PPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 PPO 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 PPO 要这样设计？"
+    ],
+    "reference_notes": [
+      "\\lambda 小：偏差更大、方差更小；",
+      "\\lambda 大：偏差更小、方差更大；",
+      "LLM 常只有序列末端 outcome reward，需要把回报分配到生成 token。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q04 · PPO",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q05",
+    "number": 162,
+    "kind": "knowledge",
+    "title": "DPO",
+    "slug": "handbook-docs-04-alignment-q05",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「DPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「DPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 DPO 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 DPO 要这样设计？"
+    ],
+    "reference_notes": [
+      "\\beta 大：更强地约束策略接近 reference，最优策略更保守；",
+      "\\beta 小：允许更大策略偏移，但更容易过拟合偏好或训练不稳。",
+      "只对 response token 求 log-prob，prompt 和 padding 必须 mask。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q05 · DPO",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q06",
+    "number": 163,
+    "kind": "knowledge",
+    "title": "GRPO",
+    "slug": "handbook-docs-04-alignment-q06",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「GRPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「GRPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 GRPO 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 GRPO 要这样设计？"
+    ],
+    "reference_notes": [
+      "有可靠的规则奖励或验证器；",
+      "同一 prompt 能采样出有明显质量差异的多条轨迹；",
+      "需要在线探索，而固定偏好数据覆盖不足；"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q06 · GRPO",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q07",
+    "number": 164,
+    "kind": "knowledge",
+    "title": "DAPO",
+    "slug": "handbook-docs-04-alignment-q07",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「DAPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「DAPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 DAPO 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 DAPO 要这样设计？"
+    ],
+    "reference_notes": [
+      "解决：探索空间、有效样本比例、loss 聚合和超长截断噪声。",
+      "没有自动解决：奖励正确性、验证器漏洞、基础模型完全不会做题、多奖励互相冲突。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q07 · DAPO",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q08",
+    "number": 165,
+    "kind": "knowledge",
+    "title": "GSPO 与 GDPO",
+    "slug": "handbook-docs-04-alignment-q08",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「GSPO 与 GDPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「GSPO 与 GDPO」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 GSPO 与 GDPO 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 GSPO 与 GDPO 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q08 · GSPO 与 GDPO",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q09",
+    "number": 166,
+    "kind": "knowledge",
+    "title": "其他后训练算法",
+    "slug": "handbook-docs-04-alignment-q09",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「其他后训练算法」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「其他后训练算法」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 其他后训练算法 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 其他后训练算法 要这样设计？"
+    ],
+    "reference_notes": [
+      "REINFORCE：最基本的 Monte Carlo policy gradient，直接用完整回报更新，简单但方差大。",
+      "RLOO（REINFORCE Leave-One-Out）：同 prompt 多次采样，第 i 条回答用其他回答的平均奖励作 baseline，避免把自身奖励混入 baseline。",
+      "ReMax：用贪心解码回答的 reward 作为 baseline，不训练 Critic；实现轻，但 baseline 质量依赖贪心输出。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q09",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q09 · 其他后训练算法",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q10",
+    "number": 167,
+    "kind": "knowledge",
+    "title": "Reward Hacking 与 Reward Overoptimization",
+    "slug": "handbook-docs-04-alignment-q10",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Reward Hacking 与 Reward Overoptimization」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Reward Hacking 与 Reward Overoptimization」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Reward Hacking 与 Reward Overoptimization 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Reward Hacking 与 Reward Overoptimization 要这样设计？"
+    ],
+    "reference_notes": [
+      "Reward Hacking：模型找到代理奖励的漏洞，例如堆关键词、重复模板、伪造格式或拖长回答。",
+      "Reward Overoptimization：训练 reward 继续上升，但真实质量或 held-out Judge 开始下降；即使没有直观“作弊动作”，也属于 Goodhart's Law 下的代理目标失真。",
+      "奖励只是人类目标的代理，不可能覆盖所有质量维度；"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q10",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q10 · Reward Hacking 与 Reward Overoptimization",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q11",
+    "number": 168,
+    "kind": "knowledge",
+    "title": "训练监控与故障定位",
+    "slug": "handbook-docs-04-alignment-q11",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「训练监控与故障定位」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「训练监控与故障定位」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 训练监控与故障定位 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 训练监控与故障定位 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q11",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q11 · 训练监控与故障定位",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q12",
+    "number": 169,
+    "kind": "knowledge",
+    "title": "算法选型",
+    "slug": "handbook-docs-04-alignment-q12",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「算法选型」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「算法选型」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 算法选型 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 算法选型 要这样设计？"
+    ],
+    "reference_notes": [
+      "只有高质量示范数据：先 SFT。",
+      "有固定偏好对、算力有限：优先 DPO 类方法。",
+      "有可靠验证器且需要探索新轨迹：GRPO / DAPO 类在线 RL。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q12",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q12 · 算法选型",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q13",
+    "number": 170,
+    "kind": "knowledge",
+    "title": "从 rollout 到一次策略更新",
+    "slug": "handbook-docs-04-alignment-q13",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「从 rollout 到一次策略更新」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「从 rollout 到一次策略更新」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 从 rollout 到一次策略更新 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 从 rollout 到一次策略更新 要这样设计？"
+    ],
+    "reference_notes": [
+      "冻结 rollout 快照，生成回答并记录版本、采样设置、真实结束原因。",
+      "逐维打分；工具失败和评估器超时按预先定义的策略处理，不悄悄混成负例。",
+      "按 prompt 分组，计算 advantage / return，并在 actor loss 中视为固定目标。"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q13",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q13 · 从 rollout 到一次策略更新",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-04-alignment-q14",
+    "number": 171,
+    "kind": "knowledge",
+    "title": "奖励尺度、约束与信用分配",
+    "slug": "handbook-docs-04-alignment-q14",
+    "category": "知识问答",
+    "topic": "后训练与对齐",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "后训练与对齐",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「奖励尺度、约束与信用分配」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「奖励尺度、约束与信用分配」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 奖励尺度、约束与信用分配 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 奖励尺度、约束与信用分配 要这样设计？"
+    ],
+    "reference_notes": [
+      "Training language models to follow instructions with human feedback（InstructGPT）",
+      "Proximal Policy Optimization Algorithms",
+      "Direct Preference Optimization"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/04-alignment.md · Q14",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/04-alignment.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/04-alignment.md",
+      "source_section": "Q14 · 奖励尺度、约束与信用分配",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q02",
+    "number": 172,
+    "kind": "knowledge",
+    "title": "Flash Attention",
+    "slug": "handbook-docs-05-inference-q02",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Flash Attention」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Flash Attention」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Flash Attention 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Flash Attention 要这样设计？"
+    ],
+    "reference_notes": [
+      "把 K 和 V 分块，从 HBM（显存）加载到 SRAM（芯片）中计算",
+      "用 softmax 的平移不变性，算局部最大值再合并",
+      "中间显存：不再物化完整 n\\times n score/probability 矩阵，额外存储从 O(n^2) 降到近似 O(n)"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q02 · Flash Attention",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q03",
+    "number": 173,
+    "kind": "knowledge",
+    "title": "PagedAttention（vLLM）",
+    "slug": "handbook-docs-05-inference-q03",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「PagedAttention（vLLM）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「PagedAttention（vLLM）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 PagedAttention（vLLM） 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 PagedAttention（vLLM） 要这样设计？"
+    ],
+    "reference_notes": [
+      "把 KV Cache 拆成固定大小的 block（页）",
+      "用一个映射表记录\"逻辑上的第几段上下文\"对应\"物理上的哪一块显存\"",
+      "显著减少为最大生成长度预留造成的内部/外部碎片"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q03 · PagedAttention（vLLM）",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q04",
+    "number": 174,
+    "kind": "knowledge",
+    "title": "Continuous Batching",
+    "slug": "handbook-docs-05-inference-q04",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Continuous Batching」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Continuous Batching」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Continuous Batching 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Continuous Batching 要这样设计？"
+    ],
+    "reference_notes": [
+      "延迟更好（短请求不被长请求拖累）",
+      "Q：和 PagedAttention 什么关系？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q04 · Continuous Batching",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q05",
+    "number": 175,
+    "kind": "knowledge",
+    "title": "Speculative Decoding 投机解码",
+    "slug": "handbook-docs-05-inference-q05",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Speculative Decoding 投机解码」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Speculative Decoding 投机解码」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Speculative Decoding 投机解码 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Speculative Decoding 投机解码 要这样设计？"
+    ],
+    "reference_notes": [
+      "Draft model 自回归生成 \\gamma 个 token",
+      "Target model 一次前向验证这 \\gamma 个 token",
+      "对草稿 token x 按 \\min(1, p(x)/q(x)) 接受，其中 p 是 target 分布、q 是 draft 分布；在第一个拒绝处停止"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q05 · Speculative Decoding 投机解码",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q06",
+    "number": 176,
+    "kind": "knowledge",
+    "title": "解码策略",
+    "slug": "handbook-docs-05-inference-q06",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「解码策略」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「解码策略」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 解码策略 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 解码策略 要这样设计？"
+    ],
+    "reference_notes": [
+      "用 log 概率之和（连乘易下溢）",
+      "加长度惩罚 \\alpha 防止偏向短句"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q06 · 解码策略",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q07",
+    "number": 177,
+    "kind": "knowledge",
+    "title": "重复惩罚",
+    "slug": "handbook-docs-05-inference-q07",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「重复惩罚」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「重复惩罚」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 重复惩罚 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 重复惩罚 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q07 · 重复惩罚",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q08",
+    "number": 178,
+    "kind": "knowledge",
+    "title": "模型量化",
+    "slug": "handbook-docs-05-inference-q08",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「模型量化」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「模型量化」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 模型量化 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 模型量化 要这样设计？"
+    ],
+    "reference_notes": [
+      "按位宽：FP16/BF16、INT8、INT4、INT2",
+      "按对象：只量化权重 vs 连激活也量化（weight-only 最常见）",
+      "按时机：训练后量化 PTQ vs 量化感知训练 QAT"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q08 · 模型量化",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-05-inference-q09",
+    "number": 179,
+    "kind": "knowledge",
+    "title": "长上下文",
+    "slug": "handbook-docs-05-inference-q09",
+    "category": "知识问答",
+    "topic": "推理优化",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "推理优化",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「长上下文」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「长上下文」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 长上下文 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 长上下文 要这样设计？"
+    ],
+    "reference_notes": [
+      "Sliding Window Attention（Mistral）：只关注最近 window 内的 token",
+      "StreamingLLM：保留 attention sink + 滑窗",
+      "Ring Attention：把 KV 切到多卡，绕一圈算完"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/05-inference.md · Q09",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/05-inference.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/05-inference.md",
+      "source_section": "Q09 · 长上下文",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q01",
+    "number": 180,
+    "kind": "knowledge",
+    "title": "RAG 是什么 / 为什么需要",
+    "slug": "handbook-docs-06-rag-q01",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「RAG 是什么 / 为什么需要」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「RAG 是什么 / 为什么需要」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 RAG 是什么 / 为什么需要 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 RAG 是什么 / 为什么需要 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：RAG 比直接微调好在哪？",
+      "可更新：换文档库就能换知识，不用重训",
+      "可追溯：能告诉你证据在哪"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q01 · RAG 是什么 / 为什么需要",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q02",
+    "number": 181,
+    "kind": "knowledge",
+    "title": "索引构建",
+    "slug": "handbook-docs-06-rag-q02",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「索引构建」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「索引构建」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 索引构建 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 索引构建 要这样设计？"
+    ],
+    "reference_notes": [
+      "通常 256-1024 tokens",
+      "加 10-20% overlap（避免语义被切断）",
+      "FAISS：Meta 开源，快但要自己加持久化"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q02 · 索引构建",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q03",
+    "number": 182,
+    "kind": "knowledge",
+    "title": "查询改写",
+    "slug": "handbook-docs-06-rag-q03",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「查询改写」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「查询改写」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 查询改写 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 查询改写 要这样设计？"
+    ],
+    "reference_notes": [
+      "视检索器决定是否去停用词；对 BM25 可能有益，但对神经 embedding，删除否定词、时间词等可能改变语义",
+      "HyDE（Hypothetical Document Embeddings）：让 LLM 先假设性地写一个回答，再用这个回答去做向量检索（让检索目标语义更接近文档语义）",
+      "Multi-Query：让 LLM 改写出多个等价 query，并行检索后合并"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q03 · 查询改写",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q04",
+    "number": 183,
+    "kind": "knowledge",
+    "title": "召回策略",
+    "slug": "handbook-docs-06-rag-q04",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「召回策略」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「召回策略」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 召回策略 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 召回策略 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q04 · 召回策略",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q05",
+    "number": 184,
+    "kind": "knowledge",
+    "title": "重排序",
+    "slug": "handbook-docs-06-rag-q05",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「重排序」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「重排序」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 重排序 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 重排序 要这样设计？"
+    ],
+    "reference_notes": [
+      "BGE-Reranker-v2（国内首选，开源）",
+      "Cohere Reranker（商业）",
+      "Cross-Encoder/ms-marco（学术基线）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q05 · 重排序",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q06",
+    "number": 185,
+    "kind": "knowledge",
+    "title": "RAG 评测指标",
+    "slug": "handbook-docs-06-rag-q06",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「RAG 评测指标」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「RAG 评测指标」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 RAG 评测指标 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 RAG 评测指标 要这样设计？"
+    ],
+    "reference_notes": [
+      "Recall@K：Top-K 命中的相关文档数 / 全部已标注相关文档数",
+      "Precision@K：Top-K 命中的相关文档数 / K（假设返回恰好 K 条）",
+      "Hit@K：Top-K 是否至少命中一条相关文档，单 query 为 0 或 1"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q06 · RAG 评测指标",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q07",
+    "number": 186,
+    "kind": "knowledge",
+    "title": "高级 RAG",
+    "slug": "handbook-docs-06-rag-q07",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「高级 RAG」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「高级 RAG」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 高级 RAG 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 高级 RAG 要这样设计？"
+    ],
+    "reference_notes": [
+      "实体识别 → 构建 KG → 图检索 + 向量检索",
+      "适合多跳推理和关系型查询"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q07 · 高级 RAG",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-06-rag-q08",
+    "number": 187,
+    "kind": "knowledge",
+    "title": "RAG vs 长上下文 vs 微调",
+    "slug": "handbook-docs-06-rag-q08",
+    "category": "知识问答",
+    "topic": "RAG",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "RAG",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「RAG vs 长上下文 vs 微调」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「RAG vs 长上下文 vs 微调」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 RAG vs 长上下文 vs 微调 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 RAG vs 长上下文 vs 微调 要这样设计？"
+    ],
+    "reference_notes": [
+      "风格 + 指令 → SFT",
+      "短期上下文 → 长上下文窗口",
+      "Q：长上下文模型出了，RAG 是不是被淘汰了？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/06-rag.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/06-rag.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/06-rag.md",
+      "source_section": "Q08 · RAG vs 长上下文 vs 微调",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-07-agent-q01",
+    "number": 188,
+    "kind": "knowledge",
+    "title": "Agent 是什么",
+    "slug": "handbook-docs-07-agent-q01",
+    "category": "知识问答",
+    "topic": "Agent",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "Agent",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Agent 是什么」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Agent 是什么」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Agent 是什么 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Agent 是什么 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/07-agent.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/07-agent.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/07-agent.md",
+      "source_section": "Q01 · Agent 是什么",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-07-agent-q02",
+    "number": 189,
+    "kind": "knowledge",
+    "title": "ReAct / Plan-and-Solve / Reflexion",
+    "slug": "handbook-docs-07-agent-q02",
+    "category": "知识问答",
+    "topic": "Agent",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "Agent",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「ReAct / Plan-and-Solve / Reflexion」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「ReAct / Plan-and-Solve / Reflexion」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 ReAct / Plan-and-Solve / Reflexion 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 ReAct / Plan-and-Solve / Reflexion 要这样设计？"
+    ],
+    "reference_notes": [
+      "Plan：先把任务拆成子步骤",
+      "Solve：按计划逐步执行"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/07-agent.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/07-agent.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/07-agent.md",
+      "source_section": "Q02 · ReAct / Plan-and-Solve / Reflexion",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-07-agent-q03",
+    "number": 190,
+    "kind": "knowledge",
+    "title": "Function Calling",
+    "slug": "handbook-docs-07-agent-q03",
+    "category": "知识问答",
+    "topic": "Agent",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "Agent",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Function Calling」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Function Calling」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Function Calling 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Function Calling 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：Function Calling 怎么训练？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/07-agent.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/07-agent.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/07-agent.md",
+      "source_section": "Q03 · Function Calling",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-07-agent-q04",
+    "number": 191,
+    "kind": "knowledge",
+    "title": "Tool Use 训练",
+    "slug": "handbook-docs-07-agent-q04",
+    "category": "知识问答",
+    "topic": "Agent",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "Agent",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Tool Use 训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Tool Use 训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Tool Use 训练 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Tool Use 训练 要这样设计？"
+    ],
+    "reference_notes": [
+      "种子工具：定义一组有用的工具（搜索、计算器、代码执行等）",
+      "生成数据：让 GPT-4 生成\"用户问题 + 多步工具调用 + 答案\"",
+      "筛选：保留实际能跑通的轨迹"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/07-agent.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/07-agent.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/07-agent.md",
+      "source_section": "Q04 · Tool Use 训练",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-07-agent-q05",
+    "number": 192,
+    "kind": "knowledge",
+    "title": "Memory",
+    "slug": "handbook-docs-07-agent-q05",
+    "category": "知识问答",
+    "topic": "Agent",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "Agent",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Memory」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Memory」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Memory 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Memory 要这样设计？"
+    ],
+    "reference_notes": [
+      "向量数据库：把对话历史向量化存储，需要时检索（RAG 思路）",
+      "结构化记忆：用模型抽取关键事实存为 JSON"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/07-agent.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/07-agent.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/07-agent.md",
+      "source_section": "Q05 · Memory",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-07-agent-q06",
+    "number": 193,
+    "kind": "knowledge",
+    "title": "Multi-Agent 协作",
+    "slug": "handbook-docs-07-agent-q06",
+    "category": "知识问答",
+    "topic": "Agent",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "Agent",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Multi-Agent 协作」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Multi-Agent 协作」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Multi-Agent 协作 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Multi-Agent 协作 要这样设计？"
+    ],
+    "reference_notes": [
+      "MetaGPT：模拟软件公司的多 Agent 协作",
+      "CrewAI：业务流程类多 Agent",
+      "Q：Multi-Agent 一定比 Single Agent 好吗？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/07-agent.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/07-agent.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/07-agent.md",
+      "source_section": "Q06 · Multi-Agent 协作",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q01",
+    "number": 194,
+    "kind": "knowledge",
+    "title": "CLIP 训练机制",
+    "slug": "handbook-docs-08-multimodal-q01",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「CLIP 训练机制」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「CLIP 训练机制」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 CLIP 训练机制 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 CLIP 训练机制 要这样设计？"
+    ],
+    "reference_notes": [
+      "大 batch 很重要：batch 内其他样本充当负例，候选更多通常提升辨别难度，但也增加“语义相同却被当作负例”的 false negatives",
+      "训练数据是图文配对的网页数据（4 亿对）",
+      "推理时零样本分类：给定 N 个类别名 → 编码成文本向量 → 与图像向量做相似度"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q01 · CLIP 训练机制",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q02",
+    "number": 195,
+    "kind": "knowledge",
+    "title": "BLIP / BLIP-2 / Q-Former",
+    "slug": "handbook-docs-08-multimodal-q02",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「BLIP / BLIP-2 / Q-Former」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「BLIP / BLIP-2 / Q-Former」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 BLIP / BLIP-2 / Q-Former 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 BLIP / BLIP-2 / Q-Former 要这样设计？"
+    ],
+    "reference_notes": [
+      "视觉 token 数量可控",
+      "LLM 主体冻结，只训 Q-Former + 投影层"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q02 · BLIP / BLIP-2 / Q-Former",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q03",
+    "number": 196,
+    "kind": "knowledge",
+    "title": "LLaVA / MiniGPT 架构",
+    "slug": "handbook-docs-08-multimodal-q03",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「LLaVA / MiniGPT 架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「LLaVA / MiniGPT 架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 LLaVA / MiniGPT 架构 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 LLaVA / MiniGPT 架构 要这样设计？"
+    ],
+    "reference_notes": [
+      "Stage 1（Pretrain）：只训投影层，用图文 pair 数据对齐",
+      "Stage 2（Instruct Tuning）：训投影层 + LLM。原始 LLaVA 使用 language-only GPT-4，以图像 captions、目标类别/边界框等文字化信息生成指令数据，并非让 GPT-4V 直接看图生成"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q03 · LLaVA / MiniGPT 架构",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q04",
+    "number": 197,
+    "kind": "knowledge",
+    "title": "Vision Encoder 选型",
+    "slug": "handbook-docs-08-multimodal-q04",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Vision Encoder 选型」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Vision Encoder 选型」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Vision Encoder 选型 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Vision Encoder 选型 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：DINOv2 vs CLIP 怎么选？",
+      "Q：SigLIP 比 CLIP 好在哪？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q04 · Vision Encoder 选型",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q05",
+    "number": 198,
+    "kind": "knowledge",
+    "title": "Qwen2.5-VL 设计要点",
+    "slug": "handbook-docs-08-multimodal-q05",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Qwen2.5-VL 设计要点」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Qwen2.5-VL 设计要点」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Qwen2.5-VL 设计要点 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Qwen2.5-VL 设计要点 要这样设计？"
+    ],
+    "reference_notes": [
+      "万物识别：扩展可识别图像类别",
+      "精确视觉定位：bbox 和 point，支持层级化定位 + 规范 JSON 输出",
+      "文字识别和理解：OCR 能力大幅提升 + 信息抽取"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q05 · Qwen2.5-VL 设计要点",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q06",
+    "number": 199,
+    "kind": "knowledge",
+    "title": "多模态 RAG",
+    "slug": "handbook-docs-08-multimodal-q06",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「多模态 RAG」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「多模态 RAG」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 多模态 RAG 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 多模态 RAG 要这样设计？"
+    ],
+    "reference_notes": [
+      "图像 → embedding：用 CLIP / BGE-VL 等",
+      "多模态向量库：存图、文及其向量",
+      "跨模态检索：文 → 图 / 图 → 文 / 图+文 → 文"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q06 · 多模态 RAG",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-08-multimodal-q07",
+    "number": 200,
+    "kind": "knowledge",
+    "title": "Diffusion Model 基础",
+    "slug": "handbook-docs-08-multimodal-q07",
+    "category": "知识问答",
+    "topic": "多模态",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "多模态",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Diffusion Model 基础」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Diffusion Model 基础」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Diffusion Model 基础 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Diffusion Model 基础 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/08-multimodal.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/08-multimodal.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/08-multimodal.md",
+      "source_section": "Q07 · Diffusion Model 基础",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  }
+]

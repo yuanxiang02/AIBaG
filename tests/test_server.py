@@ -5,16 +5,65 @@ import server
 
 
 class ProblemBankTests(unittest.TestCase):
+    def test_catalog_has_two_hundred_problems(self):
+        self.assertEqual(len(server.PROBLEMS), 200)
+
     def test_problem_ids_are_unique(self):
         ids = [problem["id"] for problem in server.PROBLEMS]
         self.assertEqual(len(ids), len(set(ids)))
+
+    def test_problem_numbers_are_consecutive(self):
+        numbers = [problem["number"] for problem in server.PROBLEMS]
+        self.assertEqual(numbers, list(range(1, len(server.PROBLEMS) + 1)))
+
+    def test_every_problem_records_a_source(self):
+        for problem in server.PROBLEMS:
+            self.assertTrue(problem["sources"], problem["id"])
+            self.assertTrue(problem["sources"][0].get("url"), problem["id"])
+            self.assertTrue(problem["license"], problem["id"])
+            self.assertTrue(problem["provenance"].get("imported_at"), problem["id"])
+
+    def test_catalog_has_all_three_interview_kinds(self):
+        counts = {
+            kind: sum(problem["kind"] == kind for problem in server.PROBLEMS)
+            for kind in {"coding", "algorithm", "knowledge"}
+        }
+        self.assertEqual(counts, {"coding": 40, "algorithm": 87, "knowledge": 73})
+
+    def test_imported_handbook_items_pin_the_upstream_revision(self):
+        imported = [
+            problem
+            for problem in server.PROBLEMS
+            if problem["provenance"].get("origin") == "axiaoquan/llm-interview-handbook"
+        ]
+        self.assertEqual(len(imported), 180)
+        for problem in imported:
+            provenance = problem["provenance"]
+            self.assertEqual(
+                provenance["upstream_commit"],
+                "8a86e722dcdb77de472daefa9401a859deb96f63",
+            )
+            self.assertEqual(provenance["upstream_updated_at"], "2026-11-15T06:00:07Z")
+            self.assertTrue(provenance["source_path"])
+            self.assertEqual(problem["license"]["spdx"], "MIT")
+
+    def test_all_generated_starters_are_valid_python(self):
+        for problem in server.PROBLEMS:
+            starter = problem["starter_code"]
+            if starter:
+                compile(starter, problem["id"], "exec")
+            if problem["kind"] == "knowledge":
+                self.assertEqual(starter, "")
 
     def test_public_problems_hide_judging_material(self):
         public = server.public_problem(server.PROBLEMS[0])
         self.assertNotIn("review_points", public)
         self.assertNotIn("reference_notes", public)
         self.assertNotIn("hints", public)
+        self.assertNotIn("review_dimensions", public)
+        self.assertNotIn("follow_ups", public)
         self.assertIn("starter_code", public)
+        self.assertIn("kind", public)
 
 
 class ReviewNormalizationTests(unittest.TestCase):
@@ -68,8 +117,9 @@ class ModelFlowTests(unittest.TestCase):
         self.assertEqual(result["score"], 88)
         self.assertIn("方向", result["interviewer_response"])
         context = call_llm.call_args.args[0][1]["content"]
-        self.assertIn("candidate_code", context)
+        self.assertIn("candidate_submission", context)
         self.assertIn("review_points", context)
+        self.assertIn('"kind": "coding"', context)
         self.assertIn('"code_execution": false', context)
         self.assertNotIn("plain_text_key", call_llm.call_args.kwargs)
 
@@ -84,6 +134,7 @@ class ModelFlowTests(unittest.TestCase):
         self.assertIn("数据", result["reply"])
         context = call_llm.call_args.args[0][1]["content"]
         self.assertIn('"runtime_prints": false', context)
+        self.assertIn("candidate_submission", context)
         self.assertEqual(call_llm.call_args.kwargs["plain_text_key"], "reply")
 
 

@@ -20,16 +20,23 @@ const elements = {
   constraints: document.querySelector("#problem-constraints"),
   tags: document.querySelector("#problem-tags"),
   sources: document.querySelector("#problem-sources"),
+  documentLabel: document.querySelector("#document-label"),
+  modeNoteTitle: document.querySelector("#mode-note-title"),
+  modeNoteText: document.querySelector("#mode-note-text"),
+  answerFilename: document.querySelector("#answer-filename"),
   editor: document.querySelector("#code-editor"),
   lineNumbers: document.querySelector("#line-numbers"),
   draftStatus: document.querySelector("#draft-status"),
   reset: document.querySelector("#reset-code"),
   submit: document.querySelector("#submit-code"),
+  submitNote: document.querySelector("#submit-note"),
   coachLog: document.querySelector("#coach-log"),
   reviewState: document.querySelector("#review-state"),
   coachInput: document.querySelector("#coach-input"),
   sendCoach: document.querySelector("#send-coach"),
   quickActions: document.querySelector(".coach-quick-actions"),
+  coachEmpty: document.querySelector("#coach-empty"),
+  optimizeAction: document.querySelector("#optimize-action"),
 };
 
 async function request(endpoint, options = {}) {
@@ -52,6 +59,8 @@ function appendDefinition(list, term, description) {
 
 function renderProblem(problem) {
   state.problem = problem;
+  const isKnowledge = problem.kind === "knowledge";
+  document.body.classList.toggle("knowledge-problem", isKnowledge);
   document.title = `${problem.title} · AIBaG`;
   elements.number.textContent = String(problem.number).padStart(2, "0");
   elements.category.textContent = problem.category.toUpperCase();
@@ -60,6 +69,23 @@ function renderProblem(problem) {
   elements.difficulty.className = `difficulty-pill difficulty ${problem.difficulty.toLowerCase()}`;
   elements.language.textContent = problem.language;
   elements.description.textContent = problem.description;
+  elements.documentLabel.textContent = isKnowledge ? "INTERVIEW QUESTION" : "PROBLEM STATEMENT";
+  elements.modeNoteTitle.textContent = isKnowledge ? "ORAL INTERVIEW MODE" : "WHITEBOARD MODE";
+  elements.modeNoteText.textContent = isKnowledge
+    ? "不用背标准答案。请用自己的话讲清核心概念、原因和边界；口语化表达完全可以。"
+    : "不能运行代码、不能 print、不能使用 debugger。请直接推导 shape、边界条件和算法不变量。";
+  elements.answerFilename.textContent = isKnowledge ? "answer.txt" : "solution.py";
+  elements.editor.setAttribute("aria-label", isKnowledge ? "口头回答草稿" : "代码编辑器");
+  elements.editor.placeholder = isKnowledge ? "用自己的话写下核心回答…" : "";
+  elements.submitNote.textContent = isKnowledge
+    ? "面试口述模式：讲清核心即可，不要求标准答案腔。"
+    : "白板模式：只做静态推理，不运行代码。";
+  elements.submit.textContent = isKnowledge ? "请面试官听一下" : "请面试官看一下";
+  elements.reset.textContent = isKnowledge ? "清空" : "重置";
+  elements.optimizeAction.textContent = isKnowledge ? "这块还能怎么补？" : "这块还能怎么改？";
+  elements.coachEmpty.textContent = isKnowledge
+    ? "你可以先用自己的话回答，也可以要一点提示。面试官只看核心意思，不要求“标准答案腔”。"
+    : "你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。";
 
   elements.examples.replaceChildren();
   (problem.examples || []).forEach((example, index) => {
@@ -275,7 +301,7 @@ elements.editor.addEventListener("keydown", (event) => {
   scheduleDraftSave();
 });
 elements.reset.addEventListener("click", () => {
-  if (!state.problem || !window.confirm("将当前草稿恢复为初始模板？")) return;
+  if (!state.problem || !window.confirm(state.problem.kind === "knowledge" ? "清空当前回答草稿？" : "将当前草稿恢复为初始模板？")) return;
   elements.editor.value = state.problem.starter_code;
   delete state.drafts[state.problem.id];
   localStorage.setItem("aibag_code_drafts_v1", JSON.stringify(state.drafts));

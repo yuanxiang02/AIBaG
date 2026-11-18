@@ -42,13 +42,13 @@
       <div class="workbench">
         <article class="problem-document">
           <section class="document-intro">
-            <span class="document-label">PROBLEM STATEMENT</span>
+            <span id="document-label" class="document-label">PROBLEM STATEMENT</span>
             <p id="problem-description"></p>
           </section>
 
           <aside class="interview-mode-note">
-            <strong>WHITEBOARD MODE</strong>
-            <p>不能运行代码、不能 print、不能使用 debugger。请直接推导 shape、边界条件和算法不变量。</p>
+            <strong id="mode-note-title">WHITEBOARD MODE</strong>
+            <p id="mode-note-text">不能运行代码、不能 print、不能使用 debugger。请直接推导 shape、边界条件和算法不变量。</p>
           </aside>
 
           <section>
@@ -77,7 +77,7 @@
           <div class="editor-toolbar">
             <div>
               <span class="editor-dot red"></span><span class="editor-dot amber"></span><span class="editor-dot green"></span>
-              <strong>solution.py</strong>
+              <strong id="answer-filename">solution.py</strong>
             </div>
             <div class="editor-actions">
               <span id="draft-status">本地草稿</span>
@@ -89,7 +89,7 @@
             <textarea id="code-editor" spellcheck="false" aria-label="代码编辑器"></textarea>
           </div>
           <div class="submit-bar">
-            <p>白板模式：只做静态推理，不运行代码。</p>
+            <p id="submit-note">白板模式：只做静态推理，不运行代码。</p>
             <button id="submit-code" class="primary-button">请面试官看一下</button>
           </div>
 
@@ -102,11 +102,11 @@
               <span id="review-state" class="review-state">还没提交</span>
             </div>
             <div id="coach-log" class="coach-log">
-              <p class="coach-empty">你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。</p>
+              <p id="coach-empty" class="coach-empty">你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。</p>
             </div>
             <div class="coach-quick-actions">
               <button data-action="hint">给我一点提示</button>
-              <button data-action="optimize">这块还能怎么改？</button>
+              <button id="optimize-action" data-action="optimize">这块还能怎么改？</button>
               <button data-action="follow_up">继续问我</button>
             </div>
             <div class="coach-input-row">

@@ -11,15 +11,19 @@ AIBaG 是一个本地优先的算法与 AI Infra 面试训练场。产品采用�
 
 ## 当前题库
 
-题目持久化在 [`data/problems.json`](data/problems.json)：
+运行时题库持久化在 [`data/catalog/`](data/catalog/)，当前首批共 200 道，按 50 道一个 JSON 分片：
 
-1. 从零实现多头自注意力（MHA）
-2. 实现 Rotary Position Embedding（RoPE）
-3. 实现稳定归并排序
-4. 原地三路快速排序
-5. 出现频率最高的 K 个元素
+- **LLM / AI Infra 手撕（40 道）**：Attention、位置编码、归一化、Tokenizer、解码、PEFT、Loss / RL 与 MoE 等。
+- **经典算法（87 道）**：数组、链表、哈希、字符串、树、回溯、单调栈、动态规划与面试真题等。
+- **知识问答（73 道）**：基础、架构、训练、微调、对齐、推理、RAG、Agent、多模态等。
 
-每道题包含题面、示例、约束、starter code、隐藏 review points、分层提示及来源说明。浏览器接口不会返回隐藏评分点和提示。
+每道题包含 `kind`、题面、分类、starter code、隐藏 review points、追问、来源、许可证与导入版本。浏览器接口不会返回隐藏评分点、参考说明和预设追问。知识题进入独立题目页后会自动切换到口头回答模式。
+
+## 题库来源与致谢
+
+题库扩展部分改编自 MIT 许可的 [axiaoquan/llm-interview-handbook](https://github.com/axiaoquan/llm-interview-handbook)。AIBaG 将其转换为适合本项目的 JSON、白板代码题和多轮 AI 面试格式；具体章节记录在每道题的 `sources` 与 `provenance` 字段中。上游 revision 固定为 `8a86e722dcdb77de472daefa9401a859deb96f63`，完整版权与许可证说明见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) 和 [`third_party/llm-interview-handbook-LICENSE`](third_party/llm-interview-handbook-LICENSE)。原始 20 道精编种子仍保存在 [`data/problems.json`](data/problems.json)，用于可重复生成完整分片。
+
+导入器位于 [`scripts/import_handbook.py`](scripts/import_handbook.py)。它从固定上游 checkout 解析题目，过滤模板，补齐三类统一 schema，并按指定分片确定性输出 JSON；不会在运行服务时联网抓取。
 
 ## 启动
 
@@ -88,7 +92,7 @@ AIBAG_CREDENTIAL_DOC=/absolute/path/to/private-note.md
 python3 -m unittest discover -s tests -v
 node --check app.js
 node --check problem.js
-python3 -m json.tool data/problems.json >/dev/null
+for file in data/catalog/*.json; do python3 -m json.tool "$file" >/dev/null; done
 ```
 
 单元测试不会调用外部模型 API。当前“提交”是 AI Review，不执行用户代码；后续如需确定性 Accepted/Rejected，应增加隔离测试执行器。

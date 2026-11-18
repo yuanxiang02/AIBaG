@@ -1,0 +1,4078 @@
+[
+  {
+    "id": "handbook-algorithms-08-monotonic-stack-q03",
+    "number": 101,
+    "kind": "algorithm",
+    "title": "下一个更大元素 II",
+    "slug": "handbook-algorithms-08-monotonic-stack-q03",
+    "category": "经典算法",
+    "topic": "单调栈",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "单调栈",
+      "algorithm"
+    ],
+    "summary": "请现场实现「下一个更大元素 II」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「下一个更大元素 II」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/08-monotonic-stack.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/08-monotonic-stack.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/08-monotonic-stack.md",
+      "source_section": "Q03 · 下一个更大元素 II",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-08-monotonic-stack-q04",
+    "number": 102,
+    "kind": "algorithm",
+    "title": "接雨水",
+    "slug": "handbook-algorithms-08-monotonic-stack-q04",
+    "category": "经典算法",
+    "topic": "单调栈",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "单调栈",
+      "algorithm"
+    ],
+    "summary": "请现场实现「接雨水」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「接雨水」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/08-monotonic-stack.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/08-monotonic-stack.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/08-monotonic-stack.md",
+      "source_section": "Q04 · 接雨水",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-08-monotonic-stack-q05",
+    "number": 103,
+    "kind": "algorithm",
+    "title": "柱状图中最大的矩形",
+    "slug": "handbook-algorithms-08-monotonic-stack-q05",
+    "category": "经典算法",
+    "topic": "单调栈",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "单调栈",
+      "algorithm"
+    ],
+    "summary": "请现场实现「柱状图中最大的矩形」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「柱状图中最大的矩形」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/08-monotonic-stack.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/08-monotonic-stack.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/08-monotonic-stack.md",
+      "source_section": "Q05 · 柱状图中最大的矩形",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q01",
+    "number": 104,
+    "kind": "algorithm",
+    "title": "斐波那契数",
+    "slug": "handbook-algorithms-09-dp-q01",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「斐波那契数」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「斐波那契数」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def fib(n):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q01 · 斐波那契数",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q02",
+    "number": 105,
+    "kind": "algorithm",
+    "title": "爬楼梯",
+    "slug": "handbook-algorithms-09-dp-q02",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「爬楼梯」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「爬楼梯」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def climbStairs(n):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q02 · 爬楼梯",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q03",
+    "number": 106,
+    "kind": "algorithm",
+    "title": "最小花费爬楼梯",
+    "slug": "handbook-algorithms-09-dp-q03",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最小花费爬楼梯」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最小花费爬楼梯」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q03 · 最小花费爬楼梯",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q04",
+    "number": 107,
+    "kind": "algorithm",
+    "title": "不同路径",
+    "slug": "handbook-algorithms-09-dp-q04",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「不同路径」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「不同路径」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def uniquePaths(m, n):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q04 · 不同路径",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q05",
+    "number": 108,
+    "kind": "algorithm",
+    "title": "整数拆分",
+    "slug": "handbook-algorithms-09-dp-q05",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「整数拆分」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「整数拆分」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def integerBreak(n):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [
+      "j \\cdot (i - j)：拆成两段",
+      "j \\cdot dp[i-j]：(i-j) 继续拆"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q05 · 整数拆分",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q06",
+    "number": 109,
+    "kind": "algorithm",
+    "title": "01 背包（二维 dp）",
+    "slug": "handbook-algorithms-09-dp-q06",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「01 背包（二维 dp）」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「01 背包（二维 dp）」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [
+      "不放物品 i：dp[i-1][j]",
+      "放物品 i（前提 j ≥ weight[i]）：dp[i-1][j - weight[i]] + value[i]",
+      "dp[i][0] = 0（容量为 0 装不了）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q06 · 01 背包（二维 dp）",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q07",
+    "number": 110,
+    "kind": "algorithm",
+    "title": "01 背包（一维滚动数组）",
+    "slug": "handbook-algorithms-09-dp-q07",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「01 背包（一维滚动数组）」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「01 背包（一维滚动数组）」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def knapsack01(weights, values, W):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q07 · 01 背包（一维滚动数组）",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q08",
+    "number": 111,
+    "kind": "algorithm",
+    "title": "完全背包",
+    "slug": "handbook-algorithms-09-dp-q08",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「完全背包」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「完全背包」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def unbounded_knapsack(weights, values, W):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q08 · 完全背包",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q09",
+    "number": 112,
+    "kind": "algorithm",
+    "title": "最长递增子序列",
+    "slug": "handbook-algorithms-09-dp-q09",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最长递增子序列」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最长递增子序列」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def lengthOfLIS(nums):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q09",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q09 · 最长递增子序列",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q10",
+    "number": 113,
+    "kind": "algorithm",
+    "title": "最长公共子序列",
+    "slug": "handbook-algorithms-09-dp-q10",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最长公共子序列」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最长公共子序列」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def longestCommonSubsequence(s1, s2):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q10",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q10 · 最长公共子序列",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q11",
+    "number": 114,
+    "kind": "algorithm",
+    "title": "编辑距离",
+    "slug": "handbook-algorithms-09-dp-q11",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「编辑距离」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「编辑距离」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q11",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q11 · 编辑距离",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-09-dp-q12",
+    "number": 115,
+    "kind": "algorithm",
+    "title": "打家劫舍",
+    "slug": "handbook-algorithms-09-dp-q12",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "algorithm"
+    ],
+    "summary": "请现场实现「打家劫舍」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「打家劫舍」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def rob(nums):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/09-dp.md · Q12",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/09-dp.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/09-dp.md",
+      "source_section": "Q12 · 打家劫舍",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q02",
+    "number": 116,
+    "kind": "algorithm",
+    "title": "搜索二维矩阵",
+    "slug": "handbook-algorithms-11-interview-real-questions-q02",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「搜索二维矩阵」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「搜索二维矩阵」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q02 · 搜索二维矩阵",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q03",
+    "number": 117,
+    "kind": "algorithm",
+    "title": "最大子数组和",
+    "slug": "handbook-algorithms-11-interview-real-questions-q03",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最大子数组和」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最大子数组和」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q03 · 最大子数组和",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q04",
+    "number": 118,
+    "kind": "algorithm",
+    "title": "最大为 N 的数字组合",
+    "slug": "handbook-algorithms-11-interview-real-questions-q04",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最大为 N 的数字组合」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最大为 N 的数字组合」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q04 · 最大为 N 的数字组合",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q05",
+    "number": 119,
+    "kind": "algorithm",
+    "title": "有效括号变体",
+    "slug": "handbook-algorithms-11-interview-real-questions-q05",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「有效括号变体」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「有效括号变体」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def is_valid_parentheses(s):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q05 · 有效括号变体",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q07",
+    "number": 120,
+    "kind": "algorithm",
+    "title": "奇偶位置有序链表",
+    "slug": "handbook-algorithms-11-interview-real-questions-q07",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「奇偶位置有序链表」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「奇偶位置有序链表」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def reverse_list(head):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q07 · 奇偶位置有序链表",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q08",
+    "number": 121,
+    "kind": "algorithm",
+    "title": "二叉树中和为目标值的所有路径",
+    "slug": "handbook-algorithms-11-interview-real-questions-q08",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「二叉树中和为目标值的所有路径」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「二叉树中和为目标值的所有路径」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def paths_with_sum(root, target_sum):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q08 · 二叉树中和为目标值的所有路径",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q09",
+    "number": 122,
+    "kind": "algorithm",
+    "title": "使用随机梯度下降求解方程",
+    "slug": "handbook-algorithms-11-interview-real-questions-q09",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「使用随机梯度下降求解方程」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「使用随机梯度下降求解方程」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def solve_x_squared_equals_five(initial_x=1.0, learning_rate=0.01, max_steps=10000, tolerance=1e-8):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q09",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q09 · 使用随机梯度下降求解方程",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q10",
+    "number": 123,
+    "kind": "algorithm",
+    "title": "均匀随机数转换",
+    "slug": "handbook-algorithms-11-interview-real-questions-q10",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「均匀随机数转换」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「均匀随机数转换」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def rand_0_to_6(rand_0_to_4):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q10",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q10 · 均匀随机数转换",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q11",
+    "number": 124,
+    "kind": "algorithm",
+    "title": "快速排序过程中计算 Pairwise AUC",
+    "slug": "handbook-algorithms-11-interview-real-questions-q11",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「快速排序过程中计算 Pairwise AUC」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「快速排序过程中计算 Pairwise AUC」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def count_ordered_pairs(before, after, rank_count):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q11",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q11 · 快速排序过程中计算 Pairwise AUC",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q12",
+    "number": 125,
+    "kind": "algorithm",
+    "title": "KNN",
+    "slug": "handbook-algorithms-11-interview-real-questions-q12",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「KNN」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「KNN」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "def knn_predict(train_x, train_y, query, k):\n    # TODO: implement the core idea\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q12",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q12 · KNN",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q13",
+    "number": 126,
+    "kind": "algorithm",
+    "title": "多头注意力机制",
+    "slug": "handbook-algorithms-11-interview-real-questions-q13",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「多头注意力机制」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「多头注意力机制」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q13",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q13 · 多头注意力机制",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-algorithms-11-interview-real-questions-q14",
+    "number": 127,
+    "kind": "algorithm",
+    "title": "手写 GRPO Loss",
+    "slug": "handbook-algorithms-11-interview-real-questions-q14",
+    "category": "经典算法",
+    "topic": "面试真题",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "面试真题",
+      "algorithm"
+    ],
+    "summary": "请现场实现「手写 GRPO Loss」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「手写 GRPO Loss」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "# 请写出核心实现；当前是白板模式，不能运行代码。\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "你维护的核心不变量是什么？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/11-interview-real-questions.md · Q14",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/11-interview-real-questions.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/11-interview-real-questions.md",
+      "source_section": "Q14 · 手写 GRPO Loss",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-00-foundations-q01",
+    "number": 128,
+    "kind": "knowledge",
+    "title": "矩阵 / 线性子空间基础",
+    "slug": "handbook-docs-00-foundations-q01",
+    "category": "知识问答",
+    "topic": "基础知识",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "基础知识",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「矩阵 / 线性子空间基础」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「矩阵 / 线性子空间基础」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 矩阵 / 线性子空间基础 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 矩阵 / 线性子空间基础 要这样设计？"
+    ],
+    "reference_notes": [
+      "对加法封闭：对任意 \\alpha, \\beta \\in W，有 \\alpha + \\beta \\in W",
+      "对乘法封闭：对任意 \\alpha \\in W、任意常数 k，有 k\\alpha \\in W",
+      "过原点的直线、平面是子空间（不过原点的不是）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/00-foundations.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/00-foundations.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/00-foundations.md",
+      "source_section": "Q01 · 矩阵 / 线性子空间基础",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-00-foundations-q02",
+    "number": 129,
+    "kind": "knowledge",
+    "title": "概率分布与极大似然",
+    "slug": "handbook-docs-00-foundations-q02",
+    "category": "知识问答",
+    "topic": "基础知识",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "基础知识",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「概率分布与极大似然」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「概率分布与极大似然」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 概率分布与极大似然 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 概率分布与极大似然 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：MLE 和 MAP 的区别？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/00-foundations.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/00-foundations.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/00-foundations.md",
+      "source_section": "Q02 · 概率分布与极大似然",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-00-foundations-q03",
+    "number": 130,
+    "kind": "knowledge",
+    "title": "KL 散度 / 交叉熵 / 熵",
+    "slug": "handbook-docs-00-foundations-q03",
+    "category": "知识问答",
+    "topic": "基础知识",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "基础知识",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「KL 散度 / 交叉熵 / 熵」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「KL 散度 / 交叉熵 / 熵」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 KL 散度 / 交叉熵 / 熵 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 KL 散度 / 交叉熵 / 熵 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：为什么 LLM next-token 预测用交叉熵？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/00-foundations.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/00-foundations.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/00-foundations.md",
+      "source_section": "Q03 · KL 散度 / 交叉熵 / 熵",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-00-foundations-q04",
+    "number": 131,
+    "kind": "knowledge",
+    "title": "梯度下降 / 反向传播",
+    "slug": "handbook-docs-00-foundations-q04",
+    "category": "知识问答",
+    "topic": "基础知识",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "基础知识",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「梯度下降 / 反向传播」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「梯度下降 / 反向传播」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 梯度下降 / 反向传播 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 梯度下降 / 反向传播 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：为什么 mini-batch SGD 不会卡在局部最优？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/00-foundations.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/00-foundations.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/00-foundations.md",
+      "source_section": "Q04 · 梯度下降 / 反向传播",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-00-foundations-q05",
+    "number": 132,
+    "kind": "knowledge",
+    "title": "偏差-方差分解",
+    "slug": "handbook-docs-00-foundations-q05",
+    "category": "知识问答",
+    "topic": "基础知识",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "基础知识",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「偏差-方差分解」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「偏差-方差分解」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 偏差-方差分解 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 偏差-方差分解 要这样设计？"
+    ],
+    "reference_notes": [
+      "欠拟合（高 Bias）：增大模型 / 加特征 / 减正则",
+      "过拟合（高 Variance）：加数据 / 加正则 / Dropout / 早停"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/00-foundations.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/00-foundations.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/00-foundations.md",
+      "source_section": "Q05 · 偏差-方差分解",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-00-foundations-q06",
+    "number": 133,
+    "kind": "knowledge",
+    "title": "常见激活函数",
+    "slug": "handbook-docs-00-foundations-q06",
+    "category": "知识问答",
+    "topic": "基础知识",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "基础知识",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「常见激活函数」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「常见激活函数」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 常见激活函数 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 常见激活函数 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：为什么不用 sigmoid 做隐层激活？",
+      "Q：ReLU vs GeLU 在大模型里的取舍？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/00-foundations.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/00-foundations.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/00-foundations.md",
+      "source_section": "Q06 · 常见激活函数",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q01",
+    "number": 134,
+    "kind": "knowledge",
+    "title": "Transformer 整体架构",
+    "slug": "handbook-docs-01-architecture-q01",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Transformer 整体架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Transformer 整体架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Transformer 整体架构 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Transformer 整体架构 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：为什么 Transformer 比 RNN 好？",
+      "Q：Transformer 的复杂度瓶颈在哪？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q01 · Transformer 整体架构",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q02",
+    "number": 135,
+    "kind": "knowledge",
+    "title": "Self-Attention 自注意力",
+    "slug": "handbook-docs-01-architecture-q02",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Self-Attention 自注意力」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Self-Attention 自注意力」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Self-Attention 自注意力 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Self-Attention 自注意力 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：为什么 Q、K、V 要用三个不同的投影矩阵，不能共享？",
+      "Q：为什么用 softmax 而不是 sigmoid？",
+      "Q：mask 为什么填 -\\infty 而不是 0？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q02 · Self-Attention 自注意力",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q04",
+    "number": 136,
+    "kind": "knowledge",
+    "title": "MHA / MQA / GQA / MLA 区别",
+    "slug": "handbook-docs-01-architecture-q04",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「MHA / MQA / GQA / MLA 区别」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「MHA / MQA / GQA / MLA 区别」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 MHA / MQA / GQA / MLA 区别 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 MHA / MQA / GQA / MLA 区别 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：MQA 为什么会掉点？",
+      "Q：GQA 的分组数怎么选？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q04 · MHA / MQA / GQA / MLA 区别",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q05",
+    "number": 137,
+    "kind": "knowledge",
+    "title": "位置编码",
+    "slug": "handbook-docs-01-architecture-q05",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「位置编码」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「位置编码」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 位置编码 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 位置编码 要这样设计？"
+    ],
+    "reference_notes": [
+      "可外推到训练未见的长度（理论上）",
+      "直接加到 embedding，深层后位置信息会被内容稀释",
+      "把\"加性位置\"升级成\"几何变换\""
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q05 · 位置编码",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q08",
+    "number": 138,
+    "kind": "knowledge",
+    "title": "Encoder-Only / Decoder-Only / Encoder-Decoder",
+    "slug": "handbook-docs-01-architecture-q08",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Encoder-Only / Decoder-Only / Encoder-Decoder」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Encoder-Only / Decoder-Only / Encoder-Decoder」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Encoder-Only / Decoder-Only / Encoder-Decoder 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Encoder-Only / Decoder-Only / Encoder-Decoder 要这样设计？"
+    ],
+    "reference_notes": [
+      "统一的 next-token prediction 范式简单且强大",
+      "Scaling Law 对 Decoder-Only 最友好",
+      "GPT 系列验证了仅 Decoder 就能做好几乎所有任务"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q08 · Encoder-Only / Decoder-Only / Encoder-Decoder",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q09",
+    "number": 139,
+    "kind": "knowledge",
+    "title": "Causal Mask 因果掩码",
+    "slug": "handbook-docs-01-architecture-q09",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Causal Mask 因果掩码」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Causal Mask 因果掩码」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Causal Mask 因果掩码 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Causal Mask 因果掩码 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：训练和推理时 Causal Mask 的区别？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q09",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q09 · Causal Mask 因果掩码",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q10",
+    "number": 140,
+    "kind": "knowledge",
+    "title": "Tokenization 分词算法",
+    "slug": "handbook-docs-01-architecture-q10",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Tokenization 分词算法」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Tokenization 分词算法」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 Tokenization 分词算法 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 Tokenization 分词算法 要这样设计？"
+    ],
+    "reference_notes": [
+      "词粒度不确定（\"中华人民共和国\"是一个词还是多个？）",
+      "字级别：每个汉字一个 token（BERT-Chinese）",
+      "SentencePiece：直接在字节/字符序列上训练 BPE/Unigram"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q10",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q10 · Tokenization 分词算法",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-01-architecture-q11",
+    "number": 141,
+    "kind": "knowledge",
+    "title": "MoE 混合专家",
+    "slug": "handbook-docs-01-architecture-q11",
+    "category": "知识问答",
+    "topic": "模型架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「MoE 混合专家」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「MoE 混合专家」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 MoE 混合专家 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 MoE 混合专家 要这样设计？"
+    ],
+    "reference_notes": [
+      "参数量大但激活量小：万亿级模型推理时只激活几十亿参数",
+      "负载均衡：避免所有 token 都去同一个专家 → 加 load balancing loss",
+      "训练不稳定：router 决策是离散的"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/01-architecture.md · Q11",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/01-architecture.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/01-architecture.md",
+      "source_section": "Q11 · MoE 混合专家",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q01",
+    "number": 142,
+    "kind": "knowledge",
+    "title": "损失函数",
+    "slug": "handbook-docs-02-training-q01",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「损失函数」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「损失函数」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 损失函数 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 损失函数 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：为什么 LLM 用交叉熵不用 MSE？",
+      "Q：分类用 MSE 会怎么样？",
+      "Q：为什么 CE 与 softmax 的梯度特别合适？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q01 · 损失函数",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q02",
+    "number": 143,
+    "kind": "knowledge",
+    "title": "优化器",
+    "slug": "handbook-docs-02-training-q02",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「优化器」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「优化器」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 优化器 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 优化器 要这样设计？"
+    ],
+    "reference_notes": [
+      "参数本身：4 bytes",
+      "Adam 一阶矩 m：4 bytes",
+      "Adam 二阶矩 v：4 bytes"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q02 · 优化器",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q03",
+    "number": 144,
+    "kind": "knowledge",
+    "title": "学习率调度",
+    "slug": "handbook-docs-02-training-q03",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「学习率调度」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「学习率调度」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 学习率调度 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 学习率调度 要这样设计？"
+    ],
+    "reference_notes": [
+      "Warmup：从 0 线性增加到 peak lr",
+      "Cosine decay：按余弦曲线下降到 10% peak lr",
+      "Warmup 阶段线性增加"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q03 · 学习率调度",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q04",
+    "number": 145,
+    "kind": "knowledge",
+    "title": "梯度问题",
+    "slug": "handbook-docs-02-training-q04",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「梯度问题」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「梯度问题」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 梯度问题 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 梯度问题 要这样设计？"
+    ],
+    "reference_notes": [
+      "残差连接（Residual Connection）—— 最重要",
+      "Pre-Norm（而非 Post-Norm）",
+      "合适的初始化（Xavier / He）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q04 · 梯度问题",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q05",
+    "number": 146,
+    "kind": "knowledge",
+    "title": "混合精度训练",
+    "slug": "handbook-docs-02-training-q05",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「混合精度训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「混合精度训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 混合精度训练 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 混合精度训练 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：训练用混合精度，参数量怎么算显存？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q05 · 混合精度训练",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q06",
+    "number": 147,
+    "kind": "knowledge",
+    "title": "分布式训练",
+    "slug": "handbook-docs-02-training-q06",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「分布式训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「分布式训练」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 分布式训练 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 分布式训练 要这样设计？"
+    ],
+    "reference_notes": [
+      "Offload：把优化器状态、梯度卸载到 CPU 内存",
+      "Infinity：连参数都可以放到 NVMe SSD",
+      "适合单机训练超大模型（牺牲速度换显存）"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q06 · 分布式训练",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q07",
+    "number": 148,
+    "kind": "knowledge",
+    "title": "并行策略",
+    "slug": "handbook-docs-02-training-q07",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「并行策略」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「并行策略」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 并行策略 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 并行策略 要这样设计？"
+    ],
+    "reference_notes": [
+      "Q：3D 并行的具体维度怎么分？",
+      "Q：长上下文为什么要 SP？"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q07 · 并行策略",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q08",
+    "number": 149,
+    "kind": "knowledge",
+    "title": "预训练数据与计算预算",
+    "slug": "handbook-docs-02-training-q08",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「预训练数据与计算预算」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「预训练数据与计算预算」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 预训练数据与计算预算 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 预训练数据与计算预算 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q08",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q08 · 预训练数据与计算预算",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  },
+  {
+    "id": "handbook-docs-02-training-q09",
+    "number": 150,
+    "kind": "knowledge",
+    "title": "有效 token、梯度累积与精确续训",
+    "slug": "handbook-docs-02-training-q09",
+    "category": "知识问答",
+    "topic": "模型训练",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "模型训练",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「有效 token、梯度累积与精确续训」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「有效 token、梯度累积与精确续训」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么 有效 token、梯度累积与精确续训 要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "为什么 有效 token、梯度累积与精确续训 要这样设计？"
+    ],
+    "reference_notes": [],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/02-training.md · Q09",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/02-training.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/02-training.md",
+      "source_section": "Q09 · 有效 token、梯度累积与精确续训",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-18"
+    }
+  }
+]

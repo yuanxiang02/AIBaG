@@ -18,6 +18,7 @@ from urllib.request import Request, urlopen
 
 ROOT = Path(__file__).resolve().parent
 PROBLEMS_PATH = ROOT / "data" / "problems.json"
+CATALOG_DIR = ROOT / "data" / "catalog"
 MAX_REQUEST_BYTES = 1_000_000
 INTERVIEW_MODE = {
     "code_execution": False,
@@ -46,10 +47,32 @@ load_dotenv(ROOT / ".env")
 
 
 def load_problems() -> list[dict[str, Any]]:
-    problems = json.loads(PROBLEMS_PATH.read_text(encoding="utf-8"))
-    if not isinstance(problems, list):
-        raise ValueError("data/problems.json must contain a JSON array")
-    required = {"id", "title", "category", "difficulty", "description", "review_points"}
+    paths = sorted(CATALOG_DIR.glob("part-*.json"))
+    if not paths:
+        paths = [PROBLEMS_PATH]
+    problems: list[dict[str, Any]] = []
+    for path in paths:
+        shard = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(shard, list):
+            raise ValueError(f"{path.relative_to(ROOT)} must contain a JSON array")
+        problems.extend(shard)
+    required = {
+        "id",
+        "number",
+        "kind",
+        "title",
+        "category",
+        "topic",
+        "difficulty",
+        "description",
+        "starter_code",
+        "review_points",
+        "review_dimensions",
+        "follow_ups",
+        "sources",
+        "license",
+        "provenance",
+    }
     seen: set[str] = set()
     for problem in problems:
         missing = required - set(problem)
@@ -58,6 +81,9 @@ def load_problems() -> list[dict[str, Any]]:
         if problem["id"] in seen:
             raise ValueError(f"Duplicate problem id: {problem['id']}")
         seen.add(problem["id"])
+    numbers = [problem["number"] for problem in problems]
+    if numbers != list(range(1, len(problems) + 1)):
+        raise ValueError("Problem numbers must be consecutive and ordered from 1")
     return problems
 
 
@@ -67,7 +93,7 @@ PROBLEM_INDEX = {problem["id"]: problem for problem in PROBLEMS}
 
 def public_problem(problem: dict[str, Any]) -> dict[str, Any]:
     """Return the problem statement without hidden review points or reference notes."""
-    hidden = {"review_points", "reference_notes", "hints"}
+    hidden = {"review_points", "review_dimensions", "reference_notes", "hints", "follow_ups"}
     return {key: value for key, value in problem.items() if key not in hidden}
 
 
@@ -210,12 +236,13 @@ def judge_code(problem: dict[str, Any], code: str) -> dict[str, Any]:
     system = (ROOT / "prompts" / "judge.txt").read_text(encoding="utf-8")
     context = {
         "interview_mode": INTERVIEW_MODE,
+        "kind": problem["kind"],
         "title": problem["title"],
         "description": problem["description"],
         "constraints": problem.get("constraints", []),
         "review_points": problem["review_points"],
         "reference_notes": problem.get("reference_notes", []),
-        "candidate_code": code,
+        "candidate_submission": code,
     }
     raw = call_llm(
         [
@@ -242,12 +269,13 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, s
             )
     context = {
         "interview_mode": INTERVIEW_MODE,
+        "kind": problem["kind"],
         "action": action,
         "title": problem["title"],
         "description": problem["description"],
         "review_points": problem["review_points"],
         "hints": problem.get("hints", []),
-        "candidate_code": str(payload.get("code", ""))[:16_000],
+        "candidate_submission": str(payload.get("code", ""))[:16_000],
         "latest_review": payload.get("review", {}),
         "candidate_message": str(payload.get("message", ""))[:2_000],
         "conversation": safe_history,
@@ -340,7 +368,7 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
             if path == "/api/judge":
                 code = str(payload.get("code", "")).strip()
                 if len(code) < 8:
-                    raise ValueError("Please provide code before submitting")
+                    raise ValueError("Please provide an answer before submitting")
                 result = judge_code(problem, code[:16_000])
             else:
                 result = coach_reply(problem, payload)
