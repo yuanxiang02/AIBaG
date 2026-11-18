@@ -1,6 +1,7 @@
 const state = {
   problems: [],
   activeKind: "",
+  visibleLimit: 80,
   progress: JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}"),
 };
 
@@ -12,6 +13,7 @@ const elements = {
   search: document.querySelector("#problem-search"),
   apiDot: document.querySelector("#api-dot"),
   apiStatus: document.querySelector("#api-status"),
+  loadMore: document.querySelector("#load-more"),
 };
 
 async function request(endpoint) {
@@ -31,6 +33,7 @@ function filteredProblems() {
 }
 
 function renderEmpty(message) {
+  elements.loadMore.hidden = true;
   elements.list.replaceChildren();
   const row = document.createElement("tr");
   row.className = "empty-row";
@@ -48,7 +51,7 @@ function renderProblems() {
     return;
   }
   elements.list.replaceChildren();
-  problems.forEach((problem) => {
+  problems.slice(0, state.visibleLimit).forEach((problem) => {
     const row = document.createElement("tr");
     const destination = `/problem.html?id=${encodeURIComponent(problem.id)}`;
 
@@ -93,6 +96,9 @@ function renderProblems() {
     });
     elements.list.appendChild(row);
   });
+  const remaining = Math.max(0, problems.length - state.visibleLimit);
+  elements.loadMore.hidden = remaining === 0;
+  elements.loadMore.textContent = remaining ? `加载更多（剩余 ${remaining}）` : "";
 }
 
 async function initialize() {
@@ -116,11 +122,19 @@ elements.trackTabs.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-kind]");
   if (!button) return;
   state.activeKind = button.dataset.kind;
+  state.visibleLimit = 80;
   elements.trackTabs.querySelectorAll("button").forEach((item) => item.classList.toggle("active", item === button));
   elements.trackTitle.textContent = button.textContent === "全部" ? "全部题目" : button.textContent;
   renderProblems();
 });
-elements.search.addEventListener("input", renderProblems);
+elements.search.addEventListener("input", () => {
+  state.visibleLimit = 80;
+  renderProblems();
+});
+elements.loadMore.addEventListener("click", () => {
+  state.visibleLimit += 80;
+  renderProblems();
+});
 window.addEventListener("pageshow", () => {
   state.progress = JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}");
   if (state.problems.length) renderProblems();

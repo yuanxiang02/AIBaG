@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import copy
+import gzip
 import json
 import os
 import re
@@ -12,13 +14,14 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
-from urllib.parse import urlsplit
+from urllib.parse import parse_qs, urlsplit
 from urllib.request import Request, urlopen
 
 
 ROOT = Path(__file__).resolve().parent
 PROBLEMS_PATH = ROOT / "data" / "problems.json"
 CATALOG_DIR = ROOT / "data" / "catalog"
+VARIANTS_PATH = ROOT / "data" / "variant_templates.json"
 MAX_REQUEST_BYTES = 1_000_000
 INTERVIEW_MODE = {
     "code_execution": False,
@@ -56,6 +59,48 @@ def load_problems() -> list[dict[str, Any]]:
         if not isinstance(shard, list):
             raise ValueError(f"{path.relative_to(ROOT)} must contain a JSON array")
         problems.extend(shard)
+    if VARIANTS_PATH.exists():
+        templates = json.loads(VARIANTS_PATH.read_text(encoding="utf-8"))
+        if not isinstance(templates, list):
+            raise ValueError("data/variant_templates.json must contain a JSON array")
+        base_problems = list(problems)
+        next_number = len(base_problems) + 1
+        for template in templates:
+            key = str(template["key"])
+            for base in base_problems:
+                derived = copy.deepcopy(base)
+                kind = base["kind"]
+                title = base["title"]
+                description = str(template["descriptions"][kind]).format(
+                    title=title,
+                    summary=base.get("summary", base["description"]),
+                )
+                prompts = [
+                    str(prompt).format(title=title)
+                    for prompt in template["follow_ups"][kind]
+                ]
+                derived.update(
+                    {
+                        "id": f"{base['id']}--{key}",
+                        "number": next_number,
+                        "title": f"{title} · {template['title_suffix']}",
+                        "slug": f"{base.get('slug', base['id'])}--{key}",
+                        "summary": description[:180],
+                        "description": description,
+                        "tags": [*base.get("tags", []), str(template["tag"])],
+                        "follow_ups": prompts,
+                        "hints": prompts[:1],
+                        "provenance": {
+                            "origin": "aibag-derived",
+                            "derived_from": base["id"],
+                            "variant": key,
+                            "imported_at": base["provenance"]["imported_at"],
+                            "base_provenance": base["provenance"],
+                        },
+                    }
+                )
+                problems.append(derived)
+                next_number += 1
     required = {
         "id",
         "number",
@@ -96,6 +141,22 @@ def public_problem(problem: dict[str, Any]) -> dict[str, Any]:
     """Return the problem statement without hidden review points or reference notes."""
     hidden = {"review_points", "review_dimensions", "reference_notes", "hints", "follow_ups"}
     return {key: value for key, value in problem.items() if key not in hidden}
+
+
+def public_problem_summary(problem: dict[str, Any]) -> dict[str, Any]:
+    """Small payload used by catalog pages; detail is fetched on demand."""
+    fields = (
+        "id",
+        "number",
+        "kind",
+        "title",
+        "category",
+        "topic",
+        "difficulty",
+        "tags",
+        "summary",
+    )
+    return {field: problem[field] for field in fields}
 
 
 def resolve_api_key() -> str:
@@ -289,10 +350,12 @@ def judge_code(problem: dict[str, Any], code: str) -> dict[str, Any]:
     return normalize_review(raw)
 
 
-def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, str]:
-    system = (ROOT / "prompts" / "coach.txt").read_text(encoding="utf-8")
+def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, Any]:
+    is_knowledge = problem["kind"] == "knowledge"
+    prompt_name = "coach_knowledge.txt" if is_knowledge else "coach.txt"
+    system = (ROOT / "prompts" / prompt_name).read_text(encoding="utf-8")
     action = str(payload.get("action", "chat"))
-    if action not in {"hint", "optimize", "follow_up", "chat"}:
+    if action not in {"hint", "optimize", "counter", "follow_up", "chat"}:
         action = "chat"
     history = payload.get("history", [])
     if not isinstance(history, list):
@@ -321,13 +384,35 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, s
             {"role": "system", "content": system},
             {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
         ],
-        plain_text_key="reply",
+        plain_text_key=None if is_knowledge else "reply",
     )
-    return {
+    result: dict[str, Any] = {
         "action": action,
         "reply": str(raw.get("reply", "我们先聚焦一个最关键的知识点。"))[:1_500],
         "focus": str(raw.get("focus", ""))[:500],
     }
+    if is_knowledge:
+        pe = raw.get("pe", {})
+        if not isinstance(pe, dict):
+            pe = {}
+        state = str(pe.get("state", "exploring"))
+        if state not in {"blank", "exploring", "partial", "solid", "misconception", "blocked"}:
+            state = "exploring"
+        try:
+            level = max(0, min(4, int(pe.get("level", 1))))
+        except (TypeError, ValueError):
+            level = 1
+        strategy = str(pe.get("strategy", "probe"))
+        if strategy not in {"entry_hint", "clarify", "probe", "challenge", "reframe", "affirm"}:
+            strategy = "probe"
+        result["pe"] = {
+            "state": state,
+            "level": level,
+            "evidence": str(pe.get("evidence", ""))[:500],
+            "core_gap": str(pe.get("core_gap", ""))[:500],
+            "strategy": strategy,
+        }
+    return result
 
 
 def reference_answer(problem: dict[str, Any]) -> dict[str, str]:
@@ -366,6 +451,8 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
         "/",
         "/index.html",
         "/app.js",
+        "/completed.html",
+        "/completed.js",
         "/problem.html",
         "/problem.js",
         "/style.css",
@@ -376,10 +463,16 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
 
     def send_json(self, data: Any, status: int = HTTPStatus.OK) -> None:
         body = json.dumps(data, ensure_ascii=False).encode("utf-8")
+        use_gzip = len(body) >= 1_024 and "gzip" in self.headers.get("Accept-Encoding", "")
+        if use_gzip:
+            body = gzip.compress(body, compresslevel=5)
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
         self.send_header("Cache-Control", "no-store")
+        self.send_header("Vary", "Accept-Encoding")
+        if use_gzip:
+            self.send_header("Content-Encoding", "gzip")
         self.end_headers()
         self.wfile.write(body)
 
@@ -404,7 +497,15 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
             self.send_json(api_config())
             return
         if path == "/api/problems":
-            self.send_json([public_problem(problem) for problem in PROBLEMS])
+            self.send_json([public_problem_summary(problem) for problem in PROBLEMS])
+            return
+        if path == "/api/problem":
+            problem_id = parse_qs(urlsplit(self.path).query).get("id", [""])[0]
+            problem = PROBLEM_INDEX.get(problem_id)
+            if problem is None:
+                self.send_json({"error": "Unknown problem id"}, HTTPStatus.NOT_FOUND)
+                return
+            self.send_json(public_problem(problem))
             return
         if path not in self.STATIC_PATHS:
             self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)

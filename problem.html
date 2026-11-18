@@ -16,7 +16,7 @@
       </a>
       <nav class="site-nav" aria-label="主导航">
         <a href="/">题库</a>
-        <span class="nav-disabled">正在作答</span>
+        <a href="/completed.html">做过的题</a>
       </nav>
       <div class="api-badge">
         <span id="api-dot" class="status-dot"></span>
@@ -128,7 +128,7 @@
             <div class="coach-quick-actions">
               <button data-action="hint">给我一点提示</button>
               <button id="optimize-action" data-action="optimize">这块还能怎么改？</button>
-              <button data-action="follow_up">继续问我</button>
+              <button id="follow-up-action" data-action="follow_up">继续问我</button>
             </div>
             <div class="coach-input-row">
               <input id="coach-input" type="text" maxlength="2000" placeholder="比如：我这里想先拆 head，这样可以吗？" />

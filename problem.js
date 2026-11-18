@@ -42,6 +42,7 @@ const elements = {
   quickActions: document.querySelector(".coach-quick-actions"),
   coachEmpty: document.querySelector("#coach-empty"),
   optimizeAction: document.querySelector("#optimize-action"),
+  followUpAction: document.querySelector("#follow-up-action"),
   collapseChrome: document.querySelector("#collapse-chrome"),
   expandChrome: document.querySelector("#expand-chrome"),
 };
@@ -90,7 +91,9 @@ function renderProblem(problem) {
   elements.submit.textContent = isKnowledge ? "请面试官听一下" : "请面试官看一下";
   elements.reset.textContent = isKnowledge ? "清空" : "重置";
   elements.showAnswer.textContent = isKnowledge ? "查看标准回答" : "查看标准答案";
-  elements.optimizeAction.textContent = isKnowledge ? "这块还能怎么补？" : "这块还能怎么改？";
+  elements.optimizeAction.textContent = isKnowledge ? "反问我一下" : "这块还能怎么改？";
+  elements.optimizeAction.dataset.action = isKnowledge ? "counter" : "optimize";
+  elements.followUpAction.textContent = isKnowledge ? "继续追问" : "继续问我";
   elements.coachEmpty.textContent = isKnowledge
     ? "你可以先用自己的话回答，也可以要一点提示。面试官只看核心意思，不要求“标准答案腔”。"
     : "你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。";
@@ -193,6 +196,28 @@ function renderReview(review) {
   elements.reviewState.className = `review-state ${review.verdict}`;
 }
 
+function renderProficiency(pe) {
+  const labels = {
+    blank: "PE · 还没展开",
+    exploring: "PE · 正在梳理",
+    partial: "PE · 部分掌握",
+    solid: "PE · 核心已掌握",
+    misconception: "PE · 有个误区",
+    blocked: "PE · 暂时卡住",
+  };
+  const classes = {
+    blank: "retry",
+    exploring: "partial",
+    partial: "partial",
+    solid: "pass",
+    misconception: "retry",
+    blocked: "retry",
+  };
+  elements.reviewState.textContent = labels[pe.state] || "PE · 正在判断";
+  elements.reviewState.className = `review-state ${classes[pe.state] || "partial"}`;
+  elements.reviewState.title = pe.evidence || pe.core_gap || "";
+}
+
 function setBusy(busy) {
   state.busy = busy;
   elements.submit.disabled = busy;
@@ -274,7 +299,8 @@ async function sendCoach(action = "chat") {
   }
   const labels = {
     hint: "给我一点提示。",
-    optimize: "这块还能怎么改？",
+    optimize: state.problem.kind === "knowledge" ? "这块还能怎么补？" : "这块还能怎么改？",
+    counter: "你可以反问我一下。",
     follow_up: "你继续问我吧。",
     chat: message,
   };
@@ -297,6 +323,7 @@ async function sendCoach(action = "chat") {
     });
     pending.remove();
     appendCoachMessage("面试官", result.reply, "interviewer-turn");
+    if (result.pe) renderProficiency(result.pe);
     state.conversation.push({ role: "assistant", content: result.reply });
   } catch (error) {
     pending.remove();
@@ -313,12 +340,10 @@ async function initialize() {
     return;
   }
   try {
-    const [problems, config] = await Promise.all([request("/api/problems"), request("/api/config")]);
-    const problem = problems.find((item) => item.id === problemId);
-    if (!problem) {
-      window.location.replace("/");
-      return;
-    }
+    const [problem, config] = await Promise.all([
+      request(`/api/problem?id=${encodeURIComponent(problemId)}`),
+      request("/api/config"),
+    ]);
     const provider = new URL(config.base_url).host;
     elements.apiStatus.textContent = `${config.model} · ${provider}`;
     elements.apiDot.className = config.has_api_key ? "status-dot ok" : "status-dot warn";

@@ -12,4 +12,6 @@
 
 AIBaG 将相关内容转换为 JSON 题库、白板面试 starter code、隐藏 review points 与多轮提示。题面可能经过压缩、重写或拆分；每道直接改编的题目会在 `data/catalog/*.json` 的 `sources` 与 `provenance` 字段中记录具体上游章节、commit、更新时间和导入日期。
 
+运行时的 1,000 道题由 200 道基础题与 4 组 AIBaG 自有训练视角组合而成。派生题会保留基础题来源，并通过 `provenance.origin = aibag-derived`、`derived_from` 和 `variant` 明确标识，不表示上游仓库原生包含 1,000 道独立题目。
+
 本说明不表示上游作者认可、维护或参与 AIBaG。

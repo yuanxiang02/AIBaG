@@ -6,8 +6,8 @@ import server
 
 
 class ProblemBankTests(unittest.TestCase):
-    def test_catalog_has_two_hundred_problems(self):
-        self.assertEqual(len(server.PROBLEMS), 200)
+    def test_catalog_has_one_thousand_problems(self):
+        self.assertEqual(len(server.PROBLEMS), 1_000)
 
     def test_problem_ids_are_unique(self):
         ids = [problem["id"] for problem in server.PROBLEMS]
@@ -29,7 +29,21 @@ class ProblemBankTests(unittest.TestCase):
             kind: sum(problem["kind"] == kind for problem in server.PROBLEMS)
             for kind in {"coding", "algorithm", "knowledge"}
         }
-        self.assertEqual(counts, {"coding": 40, "algorithm": 87, "knowledge": 73})
+        self.assertEqual(counts, {"coding": 200, "algorithm": 435, "knowledge": 365})
+
+    def test_each_base_problem_has_four_traceable_variants(self):
+        derived = [
+            problem
+            for problem in server.PROBLEMS
+            if problem["provenance"].get("origin") == "aibag-derived"
+        ]
+        self.assertEqual(len(derived), 800)
+        counts = {}
+        for problem in derived:
+            base_id = problem["provenance"]["derived_from"]
+            counts[base_id] = counts.get(base_id, 0) + 1
+        self.assertEqual(len(counts), 200)
+        self.assertEqual(set(counts.values()), {4})
 
     def test_imported_handbook_items_pin_the_upstream_revision(self):
         imported = [
@@ -65,6 +79,15 @@ class ProblemBankTests(unittest.TestCase):
         self.assertNotIn("follow_ups", public)
         self.assertIn("starter_code", public)
         self.assertIn("kind", public)
+
+    def test_catalog_summary_is_lightweight(self):
+        summary = server.public_problem_summary(server.PROBLEMS[0])
+        self.assertIn("title", summary)
+        self.assertIn("summary", summary)
+        self.assertNotIn("starter_code", summary)
+        self.assertNotIn("description", summary)
+        self.assertNotIn("sources", summary)
+        self.assertNotIn("provenance", summary)
 
 
 class ReviewNormalizationTests(unittest.TestCase):
@@ -171,6 +194,31 @@ class ModelFlowTests(unittest.TestCase):
         self.assertIn('"runtime_prints": false', context)
         self.assertIn("candidate_submission", context)
         self.assertEqual(call_llm.call_args.kwargs["plain_text_key"], "reply")
+
+    @patch("server.call_llm")
+    def test_knowledge_coach_runs_pe_before_reply(self, call_llm):
+        problem = next(item for item in server.PROBLEMS if item["kind"] == "knowledge")
+        call_llm.return_value = {
+            "pe": {
+                "state": "partial",
+                "level": 2,
+                "evidence": "已经说到封闭性",
+                "core_gap": "还没解释为什么",
+                "strategy": "probe",
+            },
+            "reply": "封闭性这个点是对的，你再想想它为什么能保证线性组合仍在集合里？",
+            "focus": "封闭性的原因",
+        }
+        result = server.coach_reply(
+            problem,
+            {"action": "follow_up", "code": "我记得要满足加法和数乘封闭。", "history": []},
+        )
+        self.assertEqual(result["pe"]["state"], "partial")
+        self.assertEqual(result["pe"]["level"], 2)
+        self.assertEqual(result["pe"]["strategy"], "probe")
+        self.assertIn("为什么", result["reply"])
+        self.assertIsNone(call_llm.call_args.kwargs["plain_text_key"])
+        self.assertIn("Proficiency Evaluation", call_llm.call_args.args[0][0]["content"])
 
     @patch("server.call_llm")
     def test_reference_answer_is_generated_once_and_cached(self, call_llm):
