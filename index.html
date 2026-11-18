@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="AIBaG - AI Infra 与经典算法面试训练场" />
     <title>AIBaG · Algorithm Interview Lab</title>
-    <link rel="stylesheet" href="/style.css?v=20261118-3" />
+    <link rel="stylesheet" href="/style.css?v=20261118-4" />
   </head>
   <body>
     <header class="site-header">
@@ -24,12 +24,63 @@
     </header>
 
     <main class="catalog-view catalog-simple">
+      <section class="home-hero">
+        <div class="home-hero-copy">
+          <span class="eyebrow">LOCAL-FIRST AI INTERVIEW LAB</span>
+          <h1>把面试练习，<br />变成一场真实对话。</h1>
+          <p>1,000 道 AI Infra、简答八股与力扣手撕题。先独立作答，再让 AI 面试官根据你的当前状态给提示、反问和追问。</p>
+          <div class="home-hero-actions">
+            <a class="primary-button" href="#problem-library">开始练习</a>
+            <a class="secondary-link" href="/completed.html">查看做过的题 →</a>
+          </div>
+          <dl class="home-stats">
+            <div><dt>1,000</dt><dd>训练题目</dd></div>
+            <div><dt>PE</dt><dd>状态判断</dd></div>
+            <div><dt>&lt; 5s</dt><dd>题库加载</dd></div>
+          </dl>
+        </div>
+
+        <div class="product-demo" aria-label="AIBaG 面试训练界面演示">
+          <div class="demo-window-bar">
+            <span></span><span></span><span></span>
+            <strong>AIBaG / INTERVIEW SESSION</strong>
+            <em>LIVE DEMO</em>
+          </div>
+          <div class="demo-workspace">
+            <section class="demo-question">
+              <span class="demo-label">AI INFRA · MEDIUM</span>
+              <h2>从零实现多头自注意力</h2>
+              <p>完成 QKV 投影、拆头、缩放点积、mask 与多头合并。</p>
+              <pre><code>q, k, v = qkv.chunk(3, dim=-1)
+q = q.view(B, T, H, D).transpose(1, 2)
+scores = q @ k.transpose(-2, -1)
+# 继续完成核心实现…</code></pre>
+            </section>
+            <section class="demo-interviewer">
+              <div class="demo-interviewer-head">
+                <div><span class="demo-label">AI INTERVIEWER</span><h3>面试官反馈</h3></div>
+                <span class="demo-pe">PE · 部分掌握</span>
+              </div>
+              <div class="demo-message">
+                <strong>面试官</strong>
+                <p>QKV 一次投影再切开，这个方向是对的。你已经把拆头做出来了，再看一下 score 缩放应该使用哪个维度。</p>
+              </div>
+              <div class="demo-nudge">
+                <strong>给你一个小方向</strong>
+                <p>想想单个 head 里 Q 和 K 的最后一维是多少。</p>
+              </div>
+              <div class="demo-actions"><span>提示</span><span>反问</span><span>继续追问</span></div>
+            </section>
+          </div>
+        </div>
+      </section>
+
       <section class="catalog-intro">
         <div>
           <span class="eyebrow">INTERVIEW PRACTICE</span>
           <h1>题库</h1>
         </div>
-        <p><strong id="problem-count">200</strong> 道题 · AI Review · 多轮追问</p>
+        <p><strong id="problem-count">1000</strong> 道题 · AI Review · 多轮追问</p>
       </section>
 
       <nav class="track-tabs" aria-label="题目方向">
@@ -39,7 +90,7 @@
         <button data-kind="algorithm">力扣手撕</button>
       </nav>
 
-      <section class="problem-library">
+      <section id="problem-library" class="problem-library">
         <div class="section-heading">
           <div>
             <span class="eyebrow">PROBLEM SET</span>
