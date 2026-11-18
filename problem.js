@@ -3,7 +3,6 @@ const state = {
   latestReview: null,
   conversation: [],
   busy: false,
-  chromeAutoCollapsed: false,
   progress: JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}"),
   drafts: JSON.parse(localStorage.getItem("aibag_code_drafts_v1") || "{}"),
 };
@@ -43,8 +42,6 @@ const elements = {
   coachEmpty: document.querySelector("#coach-empty"),
   optimizeAction: document.querySelector("#optimize-action"),
   followUpAction: document.querySelector("#follow-up-action"),
-  collapseChrome: document.querySelector("#collapse-chrome"),
-  expandChrome: document.querySelector("#expand-chrome"),
 };
 
 async function request(endpoint, options = {}) {
@@ -146,11 +143,6 @@ function renderProblem(problem) {
   updateLineNumbers();
 }
 
-function setChromeCollapsed(collapsed) {
-  document.body.classList.toggle("chrome-collapsed", collapsed);
-  elements.expandChrome.setAttribute("aria-hidden", String(!collapsed));
-}
-
 function updateLineNumbers() {
   const count = Math.max(1, elements.editor.value.split("\n").length);
   elements.lineNumbers.textContent = Array.from({ length: count }, (_, index) => index + 1).join("\n");
@@ -232,11 +224,7 @@ async function toggleReferenceAnswer() {
     elements.referenceAnswer.hidden = !elements.referenceAnswer.hidden;
     return;
   }
-  const confirmed = window.confirm("标准答案会直接揭示完整实现和核心思路。确定要看吗？");
-  if (!confirmed) return;
   setBusy(true);
-  const originalLabel = elements.showAnswer.textContent;
-  elements.showAnswer.textContent = "读取中…";
   try {
     const result = await request("/api/answer", {
       method: "POST",
@@ -248,7 +236,6 @@ async function toggleReferenceAnswer() {
   } catch (error) {
     showRequestError(error);
   } finally {
-    elements.showAnswer.textContent = originalLabel;
     setBusy(false);
   }
 }
@@ -357,11 +344,6 @@ async function initialize() {
 }
 
 elements.editor.addEventListener("input", () => { updateLineNumbers(); scheduleDraftSave(); });
-elements.editor.addEventListener("focus", () => {
-  if (state.chromeAutoCollapsed) return;
-  state.chromeAutoCollapsed = true;
-  setChromeCollapsed(true);
-});
 elements.editor.addEventListener("scroll", () => { elements.lineNumbers.scrollTop = elements.editor.scrollTop; });
 elements.editor.addEventListener("keydown", (event) => {
   if (event.key !== "Tab") return;
@@ -382,14 +364,6 @@ elements.reset.addEventListener("click", () => {
 });
 elements.showAnswer.addEventListener("click", toggleReferenceAnswer);
 elements.closeAnswer.addEventListener("click", () => { elements.referenceAnswer.hidden = true; });
-elements.collapseChrome.addEventListener("click", () => {
-  state.chromeAutoCollapsed = true;
-  setChromeCollapsed(true);
-});
-elements.expandChrome.addEventListener("click", () => {
-  state.chromeAutoCollapsed = true;
-  setChromeCollapsed(false);
-});
 elements.submit.addEventListener("click", submitCode);
 elements.quickActions.addEventListener("click", (event) => {
   const action = event.target.closest("button")?.dataset.action;

@@ -14,4 +14,6 @@ AIBaG 将相关内容转换为 JSON 题库、白板面试 starter code、隐藏 
 
 运行时的 1,000 道题由 200 道基础题与 4 组 AIBaG 自有训练视角组合而成。派生题会保留基础题来源，并通过 `provenance.origin = aibag-derived`、`derived_from` 和 `variant` 明确标识，不表示上游仓库原生包含 1,000 道独立题目。
 
+`data/answers.json` 中直接抽取或整理自上游章节的标准答案继续适用同一 MIT 许可与归属说明；AIBaG 自行编写的补充实现会标记为 `aibag-authored`。
+
 本说明不表示上游作者认可、维护或参与 AIBaG。

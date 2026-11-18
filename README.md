@@ -23,6 +23,7 @@ cp .env.example .env
 ## 题库与来源
 
 - 200 道基础题保存在 [`data/catalog/`](data/catalog/)。
+- 200 份持久化标准答案保存在 [`data/answers.json`](data/answers.json)，派生题直接复用并补充对应训练视角，查看答案不调用模型。
 - 4 组训练视角保存在 [`data/variant_templates.json`](data/variant_templates.json)，运行时组合为 1,000 道稳定题目。
 - 题库部分改编自 MIT 许可的 [axiaoquan/llm-interview-handbook](https://github.com/axiaoquan/llm-interview-handbook)，上游 commit 为 `8a86e722dcdb77de472daefa9401a859deb96f63`。
 - 版权与许可证见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) 和 [`third_party/llm-interview-handbook-LICENSE`](third_party/llm-interview-handbook-LICENSE)。

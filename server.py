@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parent
 PROBLEMS_PATH = ROOT / "data" / "problems.json"
 CATALOG_DIR = ROOT / "data" / "catalog"
 VARIANTS_PATH = ROOT / "data" / "variant_templates.json"
+ANSWERS_PATH = ROOT / "data" / "answers.json"
 MAX_REQUEST_BYTES = 1_000_000
 CATALOG_LOAD_LIMIT_SECONDS = 5.0
 INTERVIEW_MODE = {
@@ -94,6 +95,11 @@ def load_problems() -> list[dict[str, Any]]:
                     str(prompt).format(title=title)
                     for prompt in template["follow_ups"][kind]
                 ]
+                notes = "；".join(base.get("reference_notes", [])) or "题面中的边界与评分点"
+                answer_addendum = str(template["answer_guidance"][kind]).format(
+                    title=title,
+                    notes=notes,
+                )
                 derived.update(
                     {
                         "id": f"{base['id']}--{key}",
@@ -105,6 +111,7 @@ def load_problems() -> list[dict[str, Any]]:
                         "tags": [*base.get("tags", []), str(template["tag"])],
                         "follow_ups": prompts,
                         "hints": prompts[:1],
+                        "answer_addendum": answer_addendum,
                         "provenance": {
                             "origin": "aibag-derived",
                             "derived_from": base["id"],
@@ -154,12 +161,29 @@ def load_problems() -> list[dict[str, Any]]:
 
 PROBLEMS = load_problems()
 PROBLEM_INDEX = {problem["id"]: problem for problem in PROBLEMS}
-ANSWER_CACHE: dict[str, dict[str, str]] = {}
+STANDARD_ANSWERS: dict[str, dict[str, str]] = json.loads(ANSWERS_PATH.read_bytes())
+enforce_catalog_deadline("reading standard answers")
+BASE_PROBLEM_IDS = {
+    problem["id"]
+    for problem in PROBLEMS
+    if problem["provenance"].get("origin") != "aibag-derived"
+}
+if set(STANDARD_ANSWERS) != BASE_PROBLEM_IDS:
+    missing = sorted(BASE_PROBLEM_IDS - set(STANDARD_ANSWERS))
+    extra = sorted(set(STANDARD_ANSWERS) - BASE_PROBLEM_IDS)
+    raise ValueError(f"Standard answer index mismatch; missing={missing}, extra={extra}")
 
 
 def public_problem(problem: dict[str, Any]) -> dict[str, Any]:
     """Return the problem statement without hidden review points or reference notes."""
-    hidden = {"review_points", "review_dimensions", "reference_notes", "hints", "follow_ups"}
+    hidden = {
+        "review_points",
+        "review_dimensions",
+        "reference_notes",
+        "hints",
+        "follow_ups",
+        "answer_addendum",
+    }
     return {key: value for key, value in problem.items() if key not in hidden}
 
 
@@ -449,33 +473,20 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, A
 
 
 def reference_answer(problem: dict[str, Any]) -> dict[str, str]:
-    """Generate and cache an explicitly revealed reference answer."""
-    cached = ANSWER_CACHE.get(problem["id"])
-    if cached is not None:
-        return cached
-    system = (ROOT / "prompts" / "answer.txt").read_text(encoding="utf-8")
-    context = {
-        "interview_mode": INTERVIEW_MODE,
-        "kind": problem["kind"],
-        "title": problem["title"],
-        "description": problem["description"],
-        "constraints": problem.get("constraints", []),
-        "starter_code": problem.get("starter_code", ""),
-        "review_points": problem["review_points"],
-        "reference_notes": problem.get("reference_notes", []),
+    """Return a persisted answer immediately; derived items reuse their base answer."""
+    provenance = problem.get("provenance", {})
+    base_id = str(provenance.get("derived_from", problem["id"]))
+    stored = STANDARD_ANSWERS.get(base_id)
+    if stored is None:
+        raise RuntimeError(f"No persisted standard answer for {base_id}")
+    answer = str(stored["answer"]).strip()
+    addendum = str(problem.get("answer_addendum", "")).strip()
+    if addendum:
+        answer = f"{answer}\n\n本题训练视角补充：\n{addendum}"
+    return {
+        "answer": answer,
+        "source": str(stored.get("source", "aibag-persisted")),
     }
-    raw = call_llm(
-        [
-            {"role": "system", "content": system},
-            {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ]
-    )
-    answer = str(raw.get("answer", "")).strip()
-    if len(answer) < 20:
-        raise RuntimeError("Model did not return a usable reference answer")
-    result = {"answer": answer[:16_000], "source": "deepseek-generated"}
-    ANSWER_CACHE[problem["id"]] = result
-    return result
 
 
 class AIBaGHandler(SimpleHTTPRequestHandler):

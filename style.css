@@ -99,7 +99,8 @@ button { cursor: pointer; }
 .difficulty.hard { color: var(--red); background: var(--red-soft); }
 .row-arrow { color: var(--blue); font-size: 18px; }
 
-.problem-view { min-height: calc(100vh - 70px); }
+.problem-page { overflow: hidden; }
+.problem-view { min-height: 100vh; }
 .problem-topbar { display: grid; grid-template-columns: 150px minmax(0, 1fr) auto; align-items: center; gap: 24px; padding: 22px 34px; border-bottom: 3px double var(--blue); background: var(--paper); }
 .text-button { padding: 0; border: 0; color: var(--blue); background: transparent; font: 650 12px/1 var(--sans); text-decoration: none; }
 .problem-identity { display: flex; align-items: center; gap: 17px; }
@@ -108,8 +109,8 @@ button { cursor: pointer; }
 .problem-meta { display: flex; gap: 8px; font-family: var(--sans); }
 .difficulty-pill, .language-pill { padding: 7px 10px; border: 1px solid var(--border); border-radius: 3px; color: var(--ink-soft); background: white; font-size: 11px; font-weight: 650; }
 
-.workbench { display: grid; grid-template-columns: minmax(340px, .618fr) minmax(560px, 1fr); min-height: calc(100vh - 160px); }
-.problem-document { height: calc(100vh - 160px); overflow-y: auto; padding: 24px 26px 54px; border-right: 1px solid var(--border); }
+.workbench { display: grid; grid-template-columns: minmax(340px, .618fr) minmax(560px, 1fr); min-height: 100vh; }
+.problem-document { height: 100vh; overflow-y: auto; padding: 24px 26px 54px; border-right: 1px solid var(--border); }
 .document-intro { padding: 20px; border-left: 4px solid var(--blue); background: var(--blue-soft); }
 .document-intro summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; list-style: none; }
 .document-intro summary::-webkit-details-marker { display: none; }
@@ -136,7 +137,7 @@ button { cursor: pointer; }
 .source-card a { color: var(--blue); font-weight: 700; }
 .source-card p { margin: 6px 0 0; color: var(--muted); font: 11px/1.55 var(--sans); }
 
-.coding-panel { min-width: 0; height: calc(100vh - 160px); overflow-y: auto; background: #f1eee5; }
+.coding-panel { min-width: 0; height: 100vh; overflow-y: auto; background: #f1eee5; }
 .editor-toolbar { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; justify-content: space-between; min-height: 47px; padding: 0 15px; border-bottom: 1px solid #353b38; color: #e8ece9; background: #202725; font-family: var(--sans); }
 .editor-toolbar > div { display: flex; align-items: center; gap: 6px; }
 .editor-toolbar strong { margin-left: 7px; font-size: 11px; }
@@ -199,14 +200,10 @@ button { cursor: pointer; }
 .load-more { display: block; min-width: 180px; margin: 18px auto 0; padding: 10px 16px; border: 1px solid var(--border); border-radius: 3px; color: var(--blue); background: white; font: 650 11px/1 var(--sans); }
 .load-more:hover { border-color: var(--blue); }
 
-.chrome-expand { display: none; position: fixed; top: 9px; left: 10px; z-index: 30; padding: 7px 10px; border: 1px solid #48534f; border-radius: 3px; color: #e8ece9; background: #202725; font: 650 10px/1 var(--sans); opacity: .82; }
-.problem-page.chrome-collapsed .site-header,
-.problem-page.chrome-collapsed .problem-topbar { display: none; }
-.problem-page.chrome-collapsed .chrome-expand { display: block; }
-.problem-page.chrome-collapsed .problem-view,
-.problem-page.chrome-collapsed .workbench { min-height: 100vh; }
-.problem-page.chrome-collapsed .problem-document,
-.problem-page.chrome-collapsed .coding-panel { height: 100vh; }
+.floating-chrome { position: fixed; inset: 0 0 auto; z-index: 40; transform: translateY(calc(-100% + 10px)); transition: transform .22s ease-out; box-shadow: 0 8px 24px rgba(23, 27, 25, .14); }
+.floating-chrome:hover, .floating-chrome:focus-within { transform: translateY(0); }
+.floating-chrome::after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: 10px; border-top: 1px solid rgba(255,255,255,.35); background: #202725; }
+.floating-chrome .site-header { position: relative; top: auto; }
 
 @media (max-width: 1000px) {
   .site-header { grid-template-columns: 1fr auto; padding: 0 20px; }

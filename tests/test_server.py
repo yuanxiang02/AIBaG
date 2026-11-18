@@ -24,6 +24,18 @@ class ProblemBankTests(unittest.TestCase):
         self.assertNotIn("starter_code", decoded[0])
         self.assertLess(len(server.PUBLIC_CATALOG_GZIP), len(server.PUBLIC_CATALOG_JSON))
 
+    def test_every_question_has_an_immediate_persisted_answer(self):
+        base_ids = {
+            problem["id"]
+            for problem in server.PROBLEMS
+            if problem["provenance"].get("origin") != "aibag-derived"
+        }
+        self.assertEqual(set(server.STANDARD_ANSWERS), base_ids)
+        for problem in server.PROBLEMS:
+            result = server.reference_answer(problem)
+            self.assertGreaterEqual(len(result["answer"]), 20, problem["id"])
+            self.assertNotEqual(result["source"], "deepseek-generated")
+
     def test_catalog_has_one_thousand_problems(self):
         self.assertEqual(len(server.PROBLEMS), 1_000)
 
@@ -239,21 +251,20 @@ class ModelFlowTests(unittest.TestCase):
         self.assertIn("Proficiency Evaluation", call_llm.call_args.args[0][0]["content"])
 
     @patch("server.call_llm")
-    def test_reference_answer_is_generated_once_and_cached(self, call_llm):
+    def test_reference_answer_does_not_call_the_model(self, call_llm):
         problem = server.PROBLEMS[0]
-        server.ANSWER_CACHE.pop(problem["id"], None)
-        call_llm.return_value = {
-            "answer": "参考实现：\n```python\ndef solution():\n    return 1\n```\n关键点是保持 shape 一致。"
-        }
-        first = server.reference_answer(problem)
-        second = server.reference_answer(problem)
-        self.assertEqual(first, second)
-        self.assertEqual(first["source"], "deepseek-generated")
-        self.assertIn("参考实现", first["answer"])
-        self.assertEqual(call_llm.call_count, 1)
-        context = call_llm.call_args.args[0][1]["content"]
-        self.assertIn('"kind": "coding"', context)
-        self.assertIn("starter_code", context)
+        result = server.reference_answer(problem)
+        self.assertIn("```python", result["answer"])
+        call_llm.assert_not_called()
+
+    def test_derived_answer_includes_variant_guidance(self):
+        problem = next(
+            item
+            for item in server.PROBLEMS
+            if item["provenance"].get("origin") == "aibag-derived"
+        )
+        result = server.reference_answer(problem)
+        self.assertIn("本题训练视角补充", result["answer"])
 
 
 if __name__ == "__main__":
