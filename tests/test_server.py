@@ -6,6 +6,24 @@ import server
 
 
 class ProblemBankTests(unittest.TestCase):
+    def test_catalog_startup_is_strictly_under_five_seconds(self):
+        self.assertLess(server.CATALOG_LOAD_SECONDS, server.CATALOG_LOAD_LIMIT_SECONDS)
+        self.assertEqual(server.CATALOG_LOAD_LIMIT_SECONDS, 5.0)
+
+    def test_catalog_deadline_raises_after_five_seconds(self):
+        with patch(
+            "server.time.perf_counter",
+            return_value=server.CATALOG_BOOT_STARTED + server.CATALOG_LOAD_LIMIT_SECONDS + 0.001,
+        ):
+            with self.assertRaises(TimeoutError):
+                server.enforce_catalog_deadline("test")
+
+    def test_public_catalog_is_preencoded_and_compressed(self):
+        decoded = json.loads(server.PUBLIC_CATALOG_JSON)
+        self.assertEqual(len(decoded), 1_000)
+        self.assertNotIn("starter_code", decoded[0])
+        self.assertLess(len(server.PUBLIC_CATALOG_GZIP), len(server.PUBLIC_CATALOG_JSON))
+
     def test_catalog_has_one_thousand_problems(self):
         self.assertEqual(len(server.PROBLEMS), 1_000)
 

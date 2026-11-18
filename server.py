@@ -3,12 +3,12 @@
 
 from __future__ import annotations
 
-import copy
 import gzip
 import json
 import os
 import re
 import sys
+import time
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -23,6 +23,7 @@ PROBLEMS_PATH = ROOT / "data" / "problems.json"
 CATALOG_DIR = ROOT / "data" / "catalog"
 VARIANTS_PATH = ROOT / "data" / "variant_templates.json"
 MAX_REQUEST_BYTES = 1_000_000
+CATALOG_LOAD_LIMIT_SECONDS = 5.0
 INTERVIEW_MODE = {
     "code_execution": False,
     "debugger": False,
@@ -47,6 +48,16 @@ def load_dotenv(path: Path) -> None:
 
 
 load_dotenv(ROOT / ".env")
+CATALOG_BOOT_STARTED = time.perf_counter()
+
+
+def enforce_catalog_deadline(stage: str) -> None:
+    elapsed = time.perf_counter() - CATALOG_BOOT_STARTED
+    if elapsed > CATALOG_LOAD_LIMIT_SECONDS:
+        raise TimeoutError(
+            f"Catalog loading exceeded {CATALOG_LOAD_LIMIT_SECONDS:.1f}s "
+            f"during {stage} ({elapsed:.3f}s)"
+        )
 
 
 def load_problems() -> list[dict[str, Any]]:
@@ -55,12 +66,14 @@ def load_problems() -> list[dict[str, Any]]:
         paths = [PROBLEMS_PATH]
     problems: list[dict[str, Any]] = []
     for path in paths:
-        shard = json.loads(path.read_text(encoding="utf-8"))
+        shard = json.loads(path.read_bytes())
+        enforce_catalog_deadline(f"reading {path.name}")
         if not isinstance(shard, list):
             raise ValueError(f"{path.relative_to(ROOT)} must contain a JSON array")
         problems.extend(shard)
     if VARIANTS_PATH.exists():
-        templates = json.loads(VARIANTS_PATH.read_text(encoding="utf-8"))
+        templates = json.loads(VARIANTS_PATH.read_bytes())
+        enforce_catalog_deadline("reading variant templates")
         if not isinstance(templates, list):
             raise ValueError("data/variant_templates.json must contain a JSON array")
         base_problems = list(problems)
@@ -68,7 +81,9 @@ def load_problems() -> list[dict[str, Any]]:
         for template in templates:
             key = str(template["key"])
             for base in base_problems:
-                derived = copy.deepcopy(base)
+                # Catalog entries are immutable after startup; a shallow copy is
+                # sufficient and avoids cloning large source/license structures.
+                derived = dict(base)
                 kind = base["kind"]
                 title = base["title"]
                 description = str(template["descriptions"][kind]).format(
@@ -101,6 +116,8 @@ def load_problems() -> list[dict[str, Any]]:
                 )
                 problems.append(derived)
                 next_number += 1
+                if next_number % 100 == 0:
+                    enforce_catalog_deadline("expanding variants")
     required = {
         "id",
         "number",
@@ -119,16 +136,19 @@ def load_problems() -> list[dict[str, Any]]:
         "provenance",
     }
     seen: set[str] = set()
-    for problem in problems:
+    for index, problem in enumerate(problems, start=1):
         missing = required - set(problem)
         if missing:
             raise ValueError(f"Problem is missing fields: {sorted(missing)}")
         if problem["id"] in seen:
             raise ValueError(f"Duplicate problem id: {problem['id']}")
         seen.add(problem["id"])
+        if index % 100 == 0:
+            enforce_catalog_deadline("validating catalog")
     numbers = [problem["number"] for problem in problems]
     if numbers != list(range(1, len(problems) + 1)):
         raise ValueError("Problem numbers must be consecutive and ordered from 1")
+    enforce_catalog_deadline("final validation")
     return problems
 
 
@@ -157,6 +177,19 @@ def public_problem_summary(problem: dict[str, Any]) -> dict[str, Any]:
         "summary",
     )
     return {field: problem[field] for field in fields}
+
+
+PUBLIC_PROBLEM_SUMMARIES = [public_problem_summary(problem) for problem in PROBLEMS]
+PUBLIC_CATALOG_JSON = json.dumps(
+    PUBLIC_PROBLEM_SUMMARIES, ensure_ascii=False, separators=(",", ":")
+).encode("utf-8")
+PUBLIC_CATALOG_GZIP = gzip.compress(PUBLIC_CATALOG_JSON, compresslevel=5)
+CATALOG_LOAD_SECONDS = time.perf_counter() - CATALOG_BOOT_STARTED
+if CATALOG_LOAD_SECONDS > CATALOG_LOAD_LIMIT_SECONDS:
+    raise TimeoutError(
+        f"Catalog startup exceeded {CATALOG_LOAD_LIMIT_SECONDS:.1f}s "
+        f"while building the public index ({CATALOG_LOAD_SECONDS:.3f}s)"
+    )
 
 
 def resolve_api_key() -> str:
@@ -476,6 +509,19 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def send_catalog(self) -> None:
+        use_gzip = "gzip" in self.headers.get("Accept-Encoding", "")
+        body = PUBLIC_CATALOG_GZIP if use_gzip else PUBLIC_CATALOG_JSON
+        self.send_response(HTTPStatus.OK)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(body)))
+        self.send_header("Cache-Control", "private, max-age=60")
+        self.send_header("Vary", "Accept-Encoding")
+        if use_gzip:
+            self.send_header("Content-Encoding", "gzip")
+        self.end_headers()
+        self.wfile.write(body)
+
     def read_json(self) -> dict[str, Any]:
         try:
             length = int(self.headers.get("Content-Length", "0"))
@@ -491,13 +537,22 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
         if path == "/api/health":
-            self.send_json({"ok": True, "problems": len(PROBLEMS), **api_config()})
+            self.send_json(
+                {
+                    "ok": True,
+                    "problems": len(PROBLEMS),
+                    "catalog_load_ms": round(CATALOG_LOAD_SECONDS * 1_000, 2),
+                    "catalog_load_limit_ms": int(CATALOG_LOAD_LIMIT_SECONDS * 1_000),
+                    "catalog_within_budget": CATALOG_LOAD_SECONDS <= CATALOG_LOAD_LIMIT_SECONDS,
+                    **api_config(),
+                }
+            )
             return
         if path == "/api/config":
             self.send_json(api_config())
             return
         if path == "/api/problems":
-            self.send_json([public_problem_summary(problem) for problem in PROBLEMS])
+            self.send_catalog()
             return
         if path == "/api/problem":
             problem_id = parse_qs(urlsplit(self.path).query).get("id", [""])[0]
