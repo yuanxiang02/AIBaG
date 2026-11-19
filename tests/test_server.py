@@ -1,6 +1,10 @@
 import json
+import sys
+from pathlib import Path
 import unittest
 from unittest.mock import patch
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import server
 
@@ -266,9 +270,15 @@ class ModelFlowTests(unittest.TestCase):
         result = server.reference_answer(problem)
         self.assertIn("本题训练视角补充", result["answer"])
 
-
-if __name__ == "__main__":
-    unittest.main()
+    def test_call_llm_raises_friendly_message_when_remote_api_key_is_missing(self):
+        with patch.dict(
+            server.os.environ,
+            {"AIBAG_BASE_URL": "https://api.deepseek.com", "AIBAG_API_KEY": ""},
+            clear=False,
+        ), patch("server.resolve_api_key", return_value=""):
+            with self.assertRaises(RuntimeError) as ctx:
+                server.call_llm([{"role": "user", "content": "hello"}])
+            self.assertIn("未检测到 API Key", str(ctx.exception))
 
 
 class CustomProblemBankTests(unittest.TestCase):
@@ -347,3 +357,52 @@ class CustomProblemBankTests(unittest.TestCase):
             self.assertEqual(created[0]["kind"], "coding")
             fallback = server.reference_answer(created[0])
             self.assertIn("自建面经参考要点", fallback["answer"])
+
+    def test_update_custom_problem_preserves_id_and_updates_fields(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            custom_path = Path(tmpdir) / "custom_problems.json"
+            created = server.add_custom_problems(
+                {
+                    "title": "初始标题",
+                    "kind": "knowledge",
+                    "difficulty": "Easy",
+                    "category": "一面",
+                    "tags": "TagA",
+                    "description": "初始描述内容",
+                    "review_points": "要点1",
+                    "answer": "初始答案",
+                },
+                path=custom_path,
+            )[0]
+
+            updated = server.update_custom_problem(
+                {
+                    "id": created["id"],
+                    "title": "更新后的标题",
+                    "kind": "coding",
+                    "difficulty": "Hard",
+                    "category": "二面算子",
+                    "tags": "CUDA, Triton",
+                    "description": "更新后的算子实现描述",
+                    "starter_code": "def kernel(x):\n    return x\n",
+                    "review_points": "要点A\n要点B",
+                    "answer": "def kernel(x):\n    return x * 2\n",
+                },
+                path=custom_path,
+            )
+            self.assertEqual(updated["id"], created["id"])
+            self.assertEqual(updated["title"], "更新后的标题")
+            self.assertEqual(updated["kind"], "coding")
+            self.assertEqual(updated["difficulty"], "Hard")
+            self.assertIn("Triton", updated["tags"])
+            self.assertEqual(len(updated["review_points"]), 2)
+
+            reloaded = server.get_problem_by_id(created["id"], path=custom_path)
+            self.assertEqual(reloaded["title"], "更新后的标题")
+            self.assertEqual(server.reference_answer(reloaded)["answer"], "def kernel(x):\n    return x * 2")
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -478,6 +478,30 @@ def add_custom_problems(payload: dict[str, Any], path: Path | None = None) -> li
         return created
 
 
+def update_custom_problem(payload: dict[str, Any], path: Path | None = None) -> dict[str, Any]:
+    target_id = str(payload.get("id") or payload.get("problem_id") or "").strip()
+    if not target_id:
+        raise ValueError("缺少要编辑的自建题目 ID")
+    with CUSTOM_LOCK:
+        existing = load_custom_problems(path)
+        target_idx = next((idx for idx, item in enumerate(existing) if item["id"] == target_id), -1)
+        if target_idx < 0:
+            raise KeyError(f"未找到自建题目：{target_id}")
+        other_ids = set(PROBLEM_INDEX) | {
+            item["id"] for idx, item in enumerate(existing) if idx != target_idx
+        }
+        merged_raw = {
+            **existing[target_idx],
+            **payload,
+            "id": target_id,
+            "imported_at": existing[target_idx].get("provenance", {}).get("imported_at"),
+        }
+        updated = normalize_custom_problem(merged_raw, existing[target_idx]["number"], other_ids)
+        existing[target_idx] = updated
+        save_custom_problems(existing, path)
+        return updated
+
+
 def delete_custom_problem(problem_id: str, path: Path | None = None) -> bool:
     with CUSTOM_LOCK:
         existing = load_custom_problems(path)
@@ -563,9 +587,16 @@ def call_llm(
     messages: list[dict[str, str]], plain_text_key: str | None = None
 ) -> dict[str, Any]:
     base_url = os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com").rstrip("/")
-    is_deepseek = urlsplit(base_url).hostname in {"api.deepseek.com", "api.deepseek.com.cn"}
+    hostname = urlsplit(base_url).hostname or ""
+    is_deepseek = hostname in {"api.deepseek.com", "api.deepseek.com.cn"}
+    is_local_provider = hostname in {"127.0.0.1", "localhost", "::1"}
     model = os.getenv("AIBAG_MODEL", "deepseek-flash")
     api_key = resolve_api_key()
+    if not api_key and not is_local_provider:
+        raise RuntimeError(
+            "未检测到 API Key。请在项目根目录 .env 文件中设置 AIBAG_API_KEY，"
+            "或先使用左侧「查看标准答案」与自评掌握度按钮进行离线训练。"
+        )
     endpoint = f"{base_url}/chat/completions"
     payload: dict[str, Any] = {
         "model": model,
@@ -910,6 +941,7 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
             "/api/chat",
             "/api/answer",
             "/api/custom-problems",
+            "/api/custom-problems/update",
             "/api/custom-problems/delete",
         }:
             self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
@@ -924,6 +956,17 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
                         "count": len(created),
                     },
                     HTTPStatus.CREATED,
+                )
+                return
+            if path == "/api/custom-problems/update":
+                try:
+                    updated = update_custom_problem(payload)
+                except KeyError as error:
+                    self.send_json({"error": str(error)}, HTTPStatus.NOT_FOUND)
+                    return
+                self.send_json(
+                    {"updated": public_problem_summary(updated), "problem": updated},
+                    HTTPStatus.OK,
                 )
                 return
             if path == "/api/custom-problems/delete":

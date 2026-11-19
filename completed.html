@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="AIBaG 做过的题与本机练习记录" />
     <title>做过的题 · AIBaG</title>
-    <link rel="stylesheet" href="/style.css?v=20261119-1" />
+    <link rel="stylesheet" href="/style.css?v=20261119-2" />
   </head>
   <body>
     <header class="site-header">
@@ -56,6 +56,10 @@
             </div>
           </div>
           <div class="library-actions">
+            <label class="secondary-button file-upload-btn" title="从 JSON 备份恢复或合并练习记录">
+              导入记录
+              <input id="import-progress-file" type="file" accept=".json,application/json" hidden />
+            </label>
             <button id="export-progress" class="secondary-button" type="button">导出练习记录</button>
             <button id="clear-progress" class="secondary-button danger-text" type="button">清空记录</button>
           </div>
@@ -111,6 +115,6 @@
       <span>AIBaG · 练习记录仅保存在当前浏览器</span>
       <span>支持随时导出备份或继续复盘</span>
     </footer>
-    <script src="/completed.js?v=20261119-1" defer></script>
+    <script src="/completed.js?v=20261119-2" defer></script>
   </body>
 </html>

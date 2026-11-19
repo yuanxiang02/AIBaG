@@ -14,10 +14,12 @@ const elements = {
   prevProblem: document.querySelector("#prev-problem"),
   nextProblem: document.querySelector("#next-problem"),
   randomProblem: document.querySelector("#random-problem"),
+  queuePos: document.querySelector("#problem-queue-pos"),
   number: document.querySelector("#problem-number"),
   category: document.querySelector("#problem-category"),
   title: document.querySelector("#problem-title"),
   customBadge: document.querySelector("#problem-custom-badge"),
+  editCustomProblem: document.querySelector("#edit-custom-problem"),
   difficulty: document.querySelector("#problem-difficulty"),
   language: document.querySelector("#problem-language"),
   description: document.querySelector("#problem-description"),
@@ -35,6 +37,7 @@ const elements = {
   draftStatus: document.querySelector("#draft-status"),
   reset: document.querySelector("#reset-code"),
   showAnswer: document.querySelector("#show-answer"),
+  selfGradeBar: document.querySelector("#self-grade-bar"),
   copyAnswer: document.querySelector("#copy-answer"),
   closeAnswer: document.querySelector("#close-answer"),
   referenceAnswer: document.querySelector("#reference-answer"),
@@ -99,18 +102,70 @@ function appendDefinition(list, term, description) {
   list.append(dt, dd);
 }
 
+function resolveActiveQueue() {
+  const allIds = state.catalog.map((item) => item.id);
+  try {
+    const raw = sessionStorage.getItem("aibag_filtered_ids_v1");
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed.ids) && parsed.ids.includes(state.problem?.id)) {
+        return { label: parsed.label || "当前筛选", ids: parsed.ids };
+      }
+    }
+  } catch (_err) {
+    // ignore
+  }
+  return { label: "题库", ids: allIds };
+}
+
 function updateNavigationButtons() {
   if (!state.problem || !state.catalog.length) return;
-  const idx = state.catalog.findIndex((item) => item.id === state.problem.id);
+  const { label, ids } = resolveActiveQueue();
+  const idx = ids.indexOf(state.problem.id);
   if (elements.prevProblem) {
     elements.prevProblem.disabled = idx <= 0;
-    elements.prevProblem.dataset.targetId = idx > 0 ? state.catalog[idx - 1].id : "";
+    elements.prevProblem.dataset.targetId = idx > 0 ? ids[idx - 1] : "";
   }
   if (elements.nextProblem) {
-    elements.nextProblem.disabled = idx < 0 || idx >= state.catalog.length - 1;
+    elements.nextProblem.disabled = idx < 0 || idx >= ids.length - 1;
     elements.nextProblem.dataset.targetId =
-      idx >= 0 && idx < state.catalog.length - 1 ? state.catalog[idx + 1].id : "";
+      idx >= 0 && idx < ids.length - 1 ? ids[idx + 1] : "";
   }
+  if (elements.queuePos) {
+    if (idx >= 0 && ids.length > 0) {
+      elements.queuePos.hidden = false;
+      elements.queuePos.textContent = `${label} ${idx + 1} / ${ids.length}`;
+    } else {
+      elements.queuePos.hidden = true;
+    }
+  }
+}
+
+function syncSelfGradeButtons() {
+  if (!elements.selfGradeBar || !state.problem) return;
+  const currentVerdict = state.progress[state.problem.id]?.verdict || "";
+  elements.selfGradeBar.querySelectorAll("button[data-verdict]").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.verdict === currentVerdict);
+  });
+}
+
+function applySelfGrade(verdict) {
+  if (!state.problem || !["pass", "partial", "retry"].includes(verdict)) return;
+  const defaultScores = { pass: 92, partial: 72, retry: 45 };
+  const prev = state.progress[state.problem.id];
+  const score = prev?.mode === "ai" && prev?.verdict === verdict ? prev.score : defaultScores[verdict];
+  state.progress[state.problem.id] = {
+    verdict,
+    score,
+    attempts: (prev?.attempts || 0) + 1,
+    updated_at: new Date().toISOString(),
+    mode: "self",
+  };
+  localStorage.setItem("aibag_code_progress_v1", JSON.stringify(state.progress));
+  const labels = { pass: "自评：已掌握", partial: "自评：待巩固", retry: "自评：需重试" };
+  elements.reviewState.textContent = `${labels[verdict]} · ${score}分`;
+  elements.reviewState.className = `review-state ${verdict}`;
+  syncSelfGradeButtons();
 }
 
 function renderProblem(problem) {
@@ -123,6 +178,12 @@ function renderProblem(problem) {
   elements.title.textContent = problem.title;
   if (elements.customBadge) {
     elements.customBadge.hidden = !problem.is_custom;
+  }
+  if (elements.editCustomProblem) {
+    elements.editCustomProblem.hidden = !problem.is_custom;
+    if (problem.is_custom) {
+      elements.editCustomProblem.href = `/?edit_custom=${encodeURIComponent(problem.id)}`;
+    }
   }
   elements.difficulty.textContent = problem.difficulty;
   elements.difficulty.className = `difficulty-pill difficulty ${problem.difficulty.toLowerCase()}`;
@@ -200,6 +261,7 @@ function renderProblem(problem) {
   elements.editor.value = state.drafts[problem.id] ?? problem.starter_code;
   updateLineNumbers();
   updateNavigationButtons();
+  syncSelfGradeButtons();
 
   const cachedSession = loadSessionChat(problem.id);
   if (cachedSession && (cachedSession.latestReview || cachedSession.conversation?.length)) {
@@ -387,8 +449,10 @@ async function submitCode() {
       score: review.score,
       attempts: (state.progress[state.problem.id]?.attempts || 0) + 1,
       updated_at: new Date().toISOString(),
+      mode: "ai",
     };
     localStorage.setItem("aibag_code_progress_v1", JSON.stringify(state.progress));
+    syncSelfGradeButtons();
     renderReview(review, true);
   } catch (error) {
     pending.remove();
@@ -523,6 +587,10 @@ elements.reset.addEventListener("click", () => {
   updateLineNumbers();
 });
 elements.showAnswer.addEventListener("click", toggleReferenceAnswer);
+elements.selfGradeBar?.addEventListener("click", (event) => {
+  const btn = event.target.closest("button[data-verdict]");
+  if (btn) applySelfGrade(btn.dataset.verdict);
+});
 elements.copyAnswer?.addEventListener("click", async () => {
   const text = elements.referenceAnswerContent.textContent;
   if (!text) return;
@@ -564,11 +632,11 @@ elements.nextProblem?.addEventListener("click", () => {
 });
 elements.randomProblem?.addEventListener("click", () => {
   if (!state.catalog.length) return;
-  const pool = state.catalog.filter((item) => item.id !== state.problem?.id);
-  const picked = (pool.length ? pool : state.catalog)[
-    Math.floor(Math.random() * (pool.length || state.catalog.length))
-  ];
-  if (picked) window.location.assign(`/problem.html?id=${encodeURIComponent(picked.id)}`);
+  const { ids } = resolveActiveQueue();
+  const pool = ids.filter((id) => id !== state.problem?.id);
+  const candidates = pool.length ? pool : ids;
+  const pickedId = candidates[Math.floor(Math.random() * candidates.length)];
+  if (pickedId) window.location.assign(`/problem.html?id=${encodeURIComponent(pickedId)}`);
 });
 
 window.addEventListener("keydown", (event) => {

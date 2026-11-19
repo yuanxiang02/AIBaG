@@ -15,6 +15,7 @@ const elements = {
   difficultyFilter: document.querySelector("#difficulty-filter"),
   statusFilter: document.querySelector("#status-filter"),
   search: document.querySelector("#problem-search"),
+  resetFilters: document.querySelector("#reset-filters"),
   pickRandom: document.querySelector("#pick-random"),
   apiDot: document.querySelector("#api-dot"),
   apiStatus: document.querySelector("#api-status"),
@@ -31,11 +32,13 @@ const elements = {
   heroOpenCustom: document.querySelector("#hero-open-custom"),
   openCustomModal: document.querySelector("#open-custom-modal"),
   customModal: document.querySelector("#custom-modal"),
+  customModalTitle: document.querySelector("#custom-modal-title"),
   closeCustomModal: document.querySelector("#close-custom-modal"),
   cancelCustomModal: document.querySelector("#cancel-custom-modal"),
   modalTabs: document.querySelector(".modal-tabs"),
   singleForm: document.querySelector("#custom-single-form"),
   batchPanel: document.querySelector("#custom-batch-panel"),
+  customEditId: document.querySelector("#custom-edit-id"),
   customTitle: document.querySelector("#custom-title"),
   customKind: document.querySelector("#custom-kind"),
   customDifficulty: document.querySelector("#custom-difficulty"),
@@ -63,6 +66,73 @@ const TRACK_TITLES = {
   algorithm: "力扣手撕",
   custom: "我的自建面经",
 };
+
+const FILTER_STATE_KEY = "aibag_filter_state_v1";
+const FILTERED_IDS_KEY = "aibag_filtered_ids_v1";
+
+function saveFilterContext(filteredList) {
+  try {
+    sessionStorage.setItem(
+      FILTER_STATE_KEY,
+      JSON.stringify({
+        activeKind: state.activeKind,
+        activeDifficulty: state.activeDifficulty,
+        activeStatus: state.activeStatus,
+        search: elements.search?.value || "",
+      })
+    );
+    sessionStorage.setItem(
+      FILTERED_IDS_KEY,
+      JSON.stringify({
+        label: TRACK_TITLES[state.activeKind] || "全部题目",
+        ids: filteredList.map((item) => item.id),
+      })
+    );
+  } catch (_err) {
+    // ignore sessionStorage quota errors
+  }
+}
+
+function restoreFilterState() {
+  try {
+    const raw = sessionStorage.getItem(FILTER_STATE_KEY);
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (typeof saved.activeKind === "string" && saved.activeKind in TRACK_TITLES) {
+      state.activeKind = saved.activeKind;
+      elements.trackTabs?.querySelectorAll("button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.kind === state.activeKind);
+      });
+      if (elements.trackTitle) {
+        elements.trackTitle.textContent = TRACK_TITLES[state.activeKind] || "全部题目";
+      }
+    }
+    if (typeof saved.activeDifficulty === "string" && elements.difficultyFilter) {
+      state.activeDifficulty = saved.activeDifficulty;
+      elements.difficultyFilter.value = saved.activeDifficulty;
+    }
+    if (typeof saved.activeStatus === "string" && elements.statusFilter) {
+      state.activeStatus = saved.activeStatus;
+      elements.statusFilter.value = saved.activeStatus;
+    }
+    if (typeof saved.search === "string" && elements.search) {
+      elements.search.value = saved.search;
+    }
+  } catch (_err) {
+    // ignore
+  }
+}
+
+function syncResetFilterButton() {
+  if (!elements.resetFilters) return;
+  const hasActiveFilter = Boolean(
+    state.activeKind ||
+      state.activeDifficulty ||
+      state.activeStatus ||
+      elements.search?.value.trim()
+  );
+  elements.resetFilters.hidden = !hasActiveFilter;
+}
 
 const BATCH_EXAMPLE_TEMPLATE = [
   {
@@ -183,6 +253,8 @@ async function handleDeleteCustomProblem(problem, event) {
 
 function renderProblems() {
   const problems = filteredProblems();
+  saveFilterContext(problems);
+  syncResetFilterButton();
   if (elements.filteredSummary) {
     elements.filteredSummary.textContent = `当前筛选共 ${problems.length} 道题`;
   }
@@ -243,13 +315,22 @@ function renderProblems() {
     const actionCell = document.createElement("td");
     actionCell.className = "row-arrow";
     if (problem.is_custom) {
+      const actionsGroup = document.createElement("div");
+      actionsGroup.className = "row-actions-group";
+      const editBtn = document.createElement("button");
+      editBtn.type = "button";
+      editBtn.className = "row-edit-btn";
+      editBtn.title = "编辑这道自建题目";
+      editBtn.textContent = "编辑";
+      editBtn.addEventListener("click", (event) => handleEditCustomProblem(problem.id, event));
       const delBtn = document.createElement("button");
       delBtn.type = "button";
       delBtn.className = "row-delete-btn";
       delBtn.title = "删除这道自建题目";
       delBtn.textContent = "删除";
       delBtn.addEventListener("click", (event) => handleDeleteCustomProblem(problem, event));
-      actionCell.appendChild(delBtn);
+      actionsGroup.append(editBtn, delBtn);
+      actionCell.appendChild(actionsGroup);
     } else {
       actionCell.textContent = "→";
     }
@@ -275,6 +356,13 @@ function showFeedback(target, message, isError = false) {
 
 function openCustomDialog(tab = "single") {
   if (!elements.customModal) return;
+  if (elements.customEditId) elements.customEditId.value = "";
+  if (elements.customModalTitle) {
+    elements.customModalTitle.textContent = "提交自建 AI 面经 / 自定义题目";
+  }
+  if (elements.submitCustomSingle) {
+    elements.submitCustomSingle.textContent = "保存并加入题库";
+  }
   switchModalTab(tab);
   elements.customFormFeedback.hidden = true;
   elements.customBatchFeedback.hidden = true;
@@ -282,6 +370,41 @@ function openCustomDialog(tab = "single") {
     elements.customModal.showModal();
   } else {
     elements.customModal.setAttribute("open", "open");
+  }
+}
+
+async function handleEditCustomProblem(problemId, event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  try {
+    const data = await request("/api/custom-problems");
+    const item = (data.problems || []).find((p) => p.id === problemId);
+    if (!item) {
+      window.alert("未找到该自建题目");
+      return;
+    }
+    openCustomDialog("single");
+    if (elements.customEditId) elements.customEditId.value = item.id;
+    if (elements.customModalTitle) {
+      elements.customModalTitle.textContent = "编辑自建 AI 面经 / 自定义题目";
+    }
+    if (elements.submitCustomSingle) {
+      elements.submitCustomSingle.textContent = "保存修改";
+    }
+    elements.customTitle.value = item.title || "";
+    elements.customKind.value = item.kind || "knowledge";
+    elements.customDifficulty.value = item.difficulty || "Medium";
+    elements.customCategory.value = item.category || "";
+    elements.customTags.value = (item.tags || []).filter((t) => t !== "自建面经").join(", ");
+    elements.customDescription.value = item.description || "";
+    elements.customStarter.value = item.starter_code || "";
+    elements.customReviewPoints.value = (item.review_points || []).join("\n");
+    elements.customAnswer.value = item.answer || "";
+    syncStarterFieldVisibility();
+  } catch (error) {
+    window.alert(error.message || "读取自建题目失败");
   }
 }
 
@@ -310,7 +433,9 @@ function syncStarterFieldVisibility() {
 
 async function submitSingleCustomProblem(event) {
   event.preventDefault();
+  const editingId = elements.customEditId?.value.trim() || "";
   const payload = {
+    ...(editingId ? { id: editingId } : {}),
     title: elements.customTitle.value.trim(),
     kind: elements.customKind.value,
     difficulty: elements.customDifficulty.value,
@@ -323,7 +448,8 @@ async function submitSingleCustomProblem(event) {
   };
   elements.submitCustomSingle.disabled = true;
   try {
-    const res = await request("/api/custom-problems", {
+    const endpoint = editingId ? "/api/custom-problems/update" : "/api/custom-problems";
+    const res = await request(endpoint, {
       method: "POST",
       body: JSON.stringify(payload),
     });
@@ -336,11 +462,14 @@ async function submitSingleCustomProblem(event) {
     elements.trackTitle.textContent = TRACK_TITLES.custom;
     renderProblems();
     elements.singleForm.reset();
+    if (elements.customEditId) elements.customEditId.value = "";
     syncStarterFieldVisibility();
-    const createdItem = res.created?.[0];
+    const savedItem = res.updated || res.created?.[0];
     showFeedback(
       elements.customFormFeedback,
-      `已成功加入自建面经「${createdItem?.title || payload.title}」！可关闭弹窗在列表中查看，或直接点击练习。`
+      editingId
+        ? `已更新自建面经「${savedItem?.title || payload.title}」！`
+        : `已成功加入自建面经「${savedItem?.title || payload.title}」！可关闭弹窗在列表中查看，或直接点击练习。`
     );
     setTimeout(() => closeCustomDialog(), 900);
   } catch (error) {
@@ -415,13 +544,18 @@ async function initialize() {
   try {
     const [problems, config] = await Promise.all([request("/api/problems"), request("/api/config")]);
     state.problems = problems;
+    restoreFilterState();
     updateOverviewStats();
     const provider = new URL(config.base_url).host;
     elements.apiStatus.textContent = `${config.model} · ${provider}`;
     elements.apiDot.className = config.has_api_key ? "status-dot ok" : "status-dot warn";
     if (!config.has_api_key) elements.apiStatus.textContent += " · key missing";
     renderProblems();
-    if (new URLSearchParams(window.location.search).get("custom") === "1") {
+    const params = new URLSearchParams(window.location.search);
+    const editCustomId = params.get("edit_custom");
+    if (editCustomId) {
+      handleEditCustomProblem(editCustomId);
+    } else if (params.get("custom") === "1") {
       openCustomDialog("single");
     }
   } catch (error) {
@@ -454,6 +588,20 @@ elements.search.addEventListener("input", () => {
   state.visibleLimit = 80;
   renderProblems();
 });
+elements.resetFilters?.addEventListener("click", () => {
+  state.activeKind = "";
+  state.activeDifficulty = "";
+  state.activeStatus = "";
+  state.visibleLimit = 80;
+  if (elements.difficultyFilter) elements.difficultyFilter.value = "";
+  if (elements.statusFilter) elements.statusFilter.value = "";
+  if (elements.search) elements.search.value = "";
+  elements.trackTabs?.querySelectorAll("button").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.kind === "");
+  });
+  if (elements.trackTitle) elements.trackTitle.textContent = TRACK_TITLES[""];
+  renderProblems();
+});
 elements.pickRandom?.addEventListener("click", () => {
   const candidates = filteredProblems();
   if (!candidates.length) return;
@@ -466,7 +614,11 @@ elements.loadMore.addEventListener("click", () => {
 });
 
 [elements.navOpenCustom, elements.heroOpenCustom, elements.openCustomModal].forEach((btn) => {
-  btn?.addEventListener("click", () => openCustomDialog("single"));
+  btn?.addEventListener("click", () => {
+    elements.singleForm?.reset();
+    syncStarterFieldVisibility();
+    openCustomDialog("single");
+  });
 });
 elements.closeCustomModal?.addEventListener("click", closeCustomDialog);
 elements.cancelCustomModal?.addEventListener("click", closeCustomDialog);

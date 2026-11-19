@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="AIBaG 算法与 AI 面试作答工作台" />
     <title>题目作答 · AIBaG</title>
-    <link rel="stylesheet" href="/style.css?v=20261119-1" />
+    <link rel="stylesheet" href="/style.css?v=20261119-2" />
   </head>
   <body class="problem-page">
     <div class="workbench-chrome">
@@ -31,6 +31,7 @@
             <button id="prev-problem" class="small-button" type="button" title="上一题 (Alt + ←)">← 上一题</button>
             <button id="next-problem" class="small-button" type="button" title="下一题 (Alt + →)">下一题 →</button>
             <button id="random-problem" class="small-button" type="button" title="随机抽一题">随机一题</button>
+            <span id="problem-queue-pos" class="nav-position-badge" hidden></span>
           </div>
         </div>
         <div class="problem-identity">
@@ -42,6 +43,7 @@
         </div>
         <div class="problem-meta">
           <span id="problem-custom-badge" class="custom-pill" hidden>自建面经</span>
+          <a id="edit-custom-problem" class="row-edit-btn" href="/" hidden>编辑题目</a>
           <span id="problem-difficulty" class="difficulty-pill">—</span>
           <span id="problem-language" class="language-pill">—</span>
         </div>
@@ -87,8 +89,16 @@
 
           <section class="answer-reveal-section">
             <h2><span>05</span> 标准答案</h2>
-            <p>完成独立思考或练习后，可以在这里对照完整参考实现与核心要点。</p>
-            <button id="show-answer" class="primary-button" type="button">查看标准答案</button>
+            <p>完成独立思考或练习后，可以在这里对照完整参考实现与核心要点，或直接记录自评掌握度。</p>
+            <div class="answer-actions-bar">
+              <button id="show-answer" class="primary-button" type="button">查看标准答案</button>
+              <div id="self-grade-bar" class="self-grade-bar" role="group" aria-label="自评掌握度">
+                <span class="self-grade-label">自评记录：</span>
+                <button class="self-grade-btn pass" data-verdict="pass" type="button" title="标记为已掌握 (Pass)">✓ 已掌握</button>
+                <button class="self-grade-btn partial" data-verdict="partial" type="button" title="标记为待巩固 (Partial)">~ 待巩固</button>
+                <button class="self-grade-btn retry" data-verdict="retry" type="button" title="标记为需重试 (Retry)">↻ 需重试</button>
+              </div>
+            </div>
             <div id="reference-answer" class="reference-answer" hidden>
               <div class="reference-answer-heading">
                 <div>
@@ -153,6 +163,6 @@
         </section>
       </div>
     </main>
-    <script src="/problem.js?v=20261119-1" defer></script>
+    <script src="/problem.js?v=20261119-2" defer></script>
   </body>
 </html>

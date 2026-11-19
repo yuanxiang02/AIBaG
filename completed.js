@@ -12,6 +12,7 @@ const elements = {
   kindFilter: document.querySelector("#completed-kind-filter"),
   verdictFilter: document.querySelector("#completed-verdict-filter"),
   search: document.querySelector("#completed-search"),
+  importInput: document.querySelector("#import-progress-file"),
   exportBtn: document.querySelector("#export-progress"),
   clearBtn: document.querySelector("#clear-progress"),
   apiDot: document.querySelector("#api-dot"),
@@ -64,7 +65,7 @@ function render() {
     }
     if (verdictVal && rec?.verdict !== verdictVal) return false;
     if (!query) return true;
-    return `${problem.number} ${problem.title} ${problem.topic} ${(problem.tags || []).join(" ")}`
+    return `${problem.number} ${problem.title} ${problem.category || ""} ${problem.summary || ""} ${(problem.tags || []).join(" ")}`
       .toLowerCase()
       .includes(query);
   });
@@ -139,6 +140,37 @@ async function initialize() {
 elements.search.addEventListener("input", render);
 elements.kindFilter?.addEventListener("change", render);
 elements.verdictFilter?.addEventListener("change", render);
+elements.importInput?.addEventListener("change", async (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  try {
+    const text = await file.text();
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+      throw new Error("练习记录文件格式不正确，应为 JSON 对象。");
+    }
+    let importedCount = 0;
+    Object.entries(parsed).forEach(([id, entry]) => {
+      if (entry && typeof entry === "object" && ["pass", "partial", "retry"].includes(entry.verdict)) {
+        state.progress[id] = {
+          verdict: entry.verdict,
+          score: Number(entry.score) || 0,
+          attempts: Math.max(1, Number(entry.attempts) || 1),
+          updated_at: entry.updated_at || new Date().toISOString(),
+          mode: entry.mode || "imported",
+        };
+        importedCount += 1;
+      }
+    });
+    localStorage.setItem("aibag_code_progress_v1", JSON.stringify(state.progress));
+    render();
+    window.alert(`已成功导入/合并 ${importedCount} 条练习记录。`);
+  } catch (error) {
+    window.alert(error.message || "导入练习记录失败");
+  } finally {
+    event.target.value = "";
+  }
+});
 elements.exportBtn?.addEventListener("click", () => {
   const blob = new Blob([JSON.stringify(state.progress, null, 2)], {
     type: "application/json;charset=utf-8",

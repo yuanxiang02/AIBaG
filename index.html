@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="AIBaG - AI Infra 与经典算法面试训练场" />
     <title>AIBaG · AI 面试与算法训练场</title>
-    <link rel="stylesheet" href="/style.css?v=20261119-1" />
+    <link rel="stylesheet" href="/style.css?v=20261119-2" />
   </head>
   <body>
     <header class="site-header">
@@ -149,6 +149,7 @@ scores = q @ k.transpose(-2, -1)
               <span>搜索</span>
               <input id="problem-search" type="search" placeholder="搜索题号、标题或标签…" />
             </label>
+            <button id="reset-filters" class="reset-filter-btn" type="button" hidden>重置筛选</button>
           </div>
         </div>
 
@@ -188,6 +189,7 @@ scores = q @ k.transpose(-2, -1)
         </div>
 
         <form id="custom-single-form" class="modal-body">
+          <input id="custom-edit-id" type="hidden" value="" />
           <div class="form-row-grid">
             <label class="form-field">
               <span>题目标题 <em>*</em></span>
@@ -285,6 +287,6 @@ scores = q @ k.transpose(-2, -1)
       <span>AIBaG · 本地优先的 AI 面试与算法训练工作台</span>
       <span>练习记录与自建面经均安全保存在本机</span>
     </footer>
-    <script src="/app.js?v=20261119-1" defer></script>
+    <script src="/app.js?v=20261119-2" defer></script>
   </body>
 </html>
