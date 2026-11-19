@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Dependencies-Zero-059669.svg" alt="Zero Dependencies">
 </p>
 
-**简体中文** | [English](README_EN.md) · [版本更新日志](CHANGELOG.md) · [社区分享与推广文案](docs/PROMOTION.md)
+**简体中文** | [English](README_EN.md) · [版本更新日志](CHANGELOG.md) · [MIT 开源协议](LICENSE)
 
 **AIBaG (Algorithm & AI Interview Lab)** 是一个**零第三方依赖、本地优先**的大模型算法与 AI Infra 面试训练工作台。内置 **2,000 道** 结构化面试真题（覆盖 **AI Infra 手撕算子 `480` 题**、**大模型全栈八股 `720` 题**、**经典力扣手撕 `800` 题**），每题均内置**毫秒级展开的持久化标准答案**，并支持一键录入或批量导入个人专属面经（`自建面经`）。
 
@@ -161,7 +161,8 @@ AIBaG/
 
 ### 致谢与开源许可
 
-- 本项目代码采用 **[MIT License](LICENSE)** 开源，欢迎自由使用、修改与二次开发。
+- **欢迎使用与共建**：如果你正在准备大模型算法、AI Infra 或经典代码面试，欢迎直接克隆到本地自用、录入个人面经，或将它改造为团队内部的面试题库工具；遇到任何问题或希望补充新题，非常欢迎提交 Issue 与 Pull Request。
+- **MIT 开源许可**：本项目采用 **[MIT License](LICENSE)** 开源，允许个人与商业场景自由使用、修改、分发和二次开发（仅需保留版权与许可声明）。
 - 内置题库中包含 250 道基础题与 7 组结构化训练变体（共 2,000 道练习题）。
 - 部分大模型八股与算法题目改编自 MIT 许可的开源项目 [axiaoquan/llm-interview-handbook](https://github.com/axiaoquan/llm-interview-handbook)（上游 commit `8a86e722dcdb77de472daefa9401a859deb96f63`）。
 - 完整版权声明与第三方许可请参见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) 与 [`third_party/llm-interview-handbook-LICENSE`](third_party/llm-interview-handbook-LICENSE)。

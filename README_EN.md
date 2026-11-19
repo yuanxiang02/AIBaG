@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Dependencies-Zero-059669.svg" alt="Zero Dependencies">
 </p>
 
-[简体中文](README.md) | **English** · [Changelog](CHANGELOG.md)
+[简体中文](README.md) | **English** · [Changelog](CHANGELOG.md) · [MIT License](LICENSE)
 
 **AIBaG (Algorithm & AI Interview Lab)** is a zero-dependency, local-first AI interview workbench with **2,000 structured exercises** across **AI Infrastructure (`480`)**, **LLM/ML System & Theory Q&A (`720`)**, and **Algorithmic Coding (`800`)**.
 
@@ -40,7 +40,8 @@ The script starts the service and opens <http://127.0.0.1:8787>. Only Python 3 i
 
 ## Data and attribution
 
-- Released under the **[MIT License](LICENSE)**.
+- **Open to Use & Contribute**: Feel free to use AIBaG for your own interview prep, add your personal question bank, or adapt it for your team. Issues and PRs are always welcome!
+- **MIT License**: Released under the **[MIT License](LICENSE)** — free for personal, academic, and commercial use, modification, and redistribution.
 - 250 canonical questions live in [`data/catalog/`](data/catalog/) (`part-001.json` – `part-005.json`).
 - Seven structured interview variant templates in [`data/variant_templates.json`](data/variant_templates.json) expand them into 2,000 stable exercises in under 50ms at startup.
 - Persisted answers live in [`data/answers.json`](data/answers.json); revealing an answer does not call the model.
