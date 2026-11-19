@@ -24,7 +24,7 @@ class ProblemBankTests(unittest.TestCase):
 
     def test_public_catalog_is_preencoded_and_compressed(self):
         decoded = json.loads(server.PUBLIC_CATALOG_JSON)
-        self.assertEqual(len(decoded), 1_000)
+        self.assertEqual(len(decoded), 2_000)
         self.assertNotIn("starter_code", decoded[0])
         self.assertLess(len(server.PUBLIC_CATALOG_GZIP), len(server.PUBLIC_CATALOG_JSON))
 
@@ -41,7 +41,7 @@ class ProblemBankTests(unittest.TestCase):
             self.assertNotEqual(result["source"], "deepseek-generated")
 
     def test_catalog_has_one_thousand_problems(self):
-        self.assertEqual(len(server.PROBLEMS), 1_000)
+        self.assertEqual(len(server.PROBLEMS), 2_000)
 
     def test_problem_ids_are_unique(self):
         ids = [problem["id"] for problem in server.PROBLEMS]
@@ -63,7 +63,7 @@ class ProblemBankTests(unittest.TestCase):
             kind: sum(problem["kind"] == kind for problem in server.PROBLEMS)
             for kind in {"coding", "algorithm", "knowledge"}
         }
-        self.assertEqual(counts, {"coding": 200, "algorithm": 435, "knowledge": 365})
+        self.assertEqual(counts, {"coding": 480, "algorithm": 800, "knowledge": 720})
 
     def test_each_base_problem_has_four_traceable_variants(self):
         derived = [
@@ -71,13 +71,13 @@ class ProblemBankTests(unittest.TestCase):
             for problem in server.PROBLEMS
             if problem["provenance"].get("origin") == "aibag-derived"
         ]
-        self.assertEqual(len(derived), 800)
+        self.assertEqual(len(derived), 1_750)
         counts = {}
         for problem in derived:
             base_id = problem["provenance"]["derived_from"]
             counts[base_id] = counts.get(base_id, 0) + 1
-        self.assertEqual(len(counts), 200)
-        self.assertEqual(set(counts.values()), {4})
+        self.assertEqual(len(counts), 250)
+        self.assertEqual(set(counts.values()), {7})
 
     def test_imported_handbook_items_pin_the_upstream_revision(self):
         imported = [
@@ -85,7 +85,7 @@ class ProblemBankTests(unittest.TestCase):
             for problem in server.PROBLEMS
             if problem["provenance"].get("origin") == "axiaoquan/llm-interview-handbook"
         ]
-        self.assertEqual(len(imported), 180)
+        self.assertEqual(len(imported), 210)
         for problem in imported:
             provenance = problem["provenance"]
             self.assertEqual(

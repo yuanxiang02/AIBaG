@@ -1,0 +1,4122 @@
+[
+  {
+    "id": "implement-gqa",
+    "number": 201,
+    "kind": "coding",
+    "title": "实现分组查询注意力（GQA）",
+    "slug": "implement-gqa",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Attention",
+      "PyTorch"
+    ],
+    "summary": "实现 Grouped-Query Attention 前向传播，支持 num_q_heads 是 num_kv_heads 的整数倍。",
+    "description": "实现 Grouped-Query Attention 前向传播，支持 num_q_heads 是 num_kv_heads 的整数倍。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\nimport torch.nn as nn\n\nclass GroupedQueryAttention(nn.Module):\n    def __init__(self, d_model: int, n_q_heads: int, n_kv_heads: int):\n        super().__init__()\n        # TODO: init projections\n        raise NotImplementedError\n\n    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:\n        raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "KV 组重复对齐 Q 头",
+        "required": true,
+        "description": "KV 组重复对齐 Q 头"
+      },
+      {
+        "label": "缩放点积与掩码处理",
+        "required": true,
+        "description": "缩放点积与掩码处理"
+      },
+      {
+        "label": "显存优势分析",
+        "required": true,
+        "description": "显存优势分析"
+      }
+    ],
+    "review_dimensions": [
+      "KV 组重复对齐 Q 头",
+      "缩放点积与掩码处理",
+      "显存优势分析"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "KV 组重复对齐 Q 头"
+    ],
+    "reference_notes": [
+      "KV 组重复对齐 Q 头",
+      "缩放点积与掩码处理",
+      "显存优势分析"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现分组查询注意力（GQA）",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "implement-mqa",
+    "number": 202,
+    "kind": "coding",
+    "title": "实现多查询注意力（MQA）",
+    "slug": "implement-mqa",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Attention",
+      "PyTorch"
+    ],
+    "summary": "实现 Multi-Query Attention，所有 Query 头共享同一组 Key/Value 头以压缩推理 KV Cache。",
+    "description": "实现 Multi-Query Attention，所有 Query 头共享同一组 Key/Value 头以压缩推理 KV Cache。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\nimport torch.nn as nn\n\nclass MultiQueryAttention(nn.Module):\n    def __init__(self, d_model: int, n_heads: int):\n        super().__init__()\n        raise NotImplementedError\n\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "单头 KV 广播到多头 Q",
+        "required": true,
+        "description": "单头 KV 广播到多头 Q"
+      },
+      {
+        "label": "张量维度对齐",
+        "required": true,
+        "description": "张量维度对齐"
+      },
+      {
+        "label": "Decode 带宽收益",
+        "required": true,
+        "description": "Decode 带宽收益"
+      }
+    ],
+    "review_dimensions": [
+      "单头 KV 广播到多头 Q",
+      "张量维度对齐",
+      "Decode 带宽收益"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "单头 KV 广播到多头 Q"
+    ],
+    "reference_notes": [
+      "单头 KV 广播到多头 Q",
+      "张量维度对齐",
+      "Decode 带宽收益"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现多查询注意力（MQA）",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "implement-mla-kv-proj",
+    "number": 203,
+    "kind": "coding",
+    "title": "实现 DeepSeek MLA 低秩 KV 压缩投影",
+    "slug": "implement-mla-kv-proj",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Hard",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Attention",
+      "PyTorch"
+    ],
+    "summary": "实现 Multi-head Latent Attention 的 KV 下投影压缩与矩阵吸收上投影。",
+    "description": "实现 Multi-head Latent Attention 的 KV 下投影压缩与矩阵吸收上投影。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\nimport torch.nn as nn\n\nclass MLAKVProjection(nn.Module):\n    def __init__(self, d_model: int, d_latent: int, n_heads: int, d_head: int):\n        super().__init__()\n        raise NotImplementedError\n\n    def forward(self, h: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:\n        raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "潜向量 c_kv 压缩",
+        "required": true,
+        "description": "潜向量 c_kv 压缩"
+      },
+      {
+        "label": "上投影恢复 K/V",
+        "required": true,
+        "description": "上投影恢复 K/V"
+      },
+      {
+        "label": "推理仅缓存 c_kv 的原理",
+        "required": true,
+        "description": "推理仅缓存 c_kv 的原理"
+      }
+    ],
+    "review_dimensions": [
+      "潜向量 c_kv 压缩",
+      "上投影恢复 K/V",
+      "推理仅缓存 c_kv 的原理"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "潜向量 c_kv 压缩"
+    ],
+    "reference_notes": [
+      "潜向量 c_kv 压缩",
+      "上投影恢复 K/V",
+      "推理仅缓存 c_kv 的原理"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现 DeepSeek MLA 低秩 KV 压缩投影",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "sliding-window-causal-mask",
+    "number": 204,
+    "kind": "coding",
+    "title": "构造 Sliding Window Causal Mask",
+    "slug": "sliding-window-causal-mask",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Easy",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Attention",
+      "PyTorch"
+    ],
+    "summary": "构造带局部窗口限制的因果注意力掩码，使每个位置仅关注过去 window_size 个 token。",
+    "description": "构造带局部窗口限制的因果注意力掩码，使每个位置仅关注过去 window_size 个 token。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef build_sliding_window_mask(seq_len: int, window_size: int) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "因果上三角屏蔽",
+        "required": true,
+        "description": "因果上三角屏蔽"
+      },
+      {
+        "label": "窗口下边界屏蔽",
+        "required": true,
+        "description": "窗口下边界屏蔽"
+      },
+      {
+        "label": "布尔掩码形状 [L, L]",
+        "required": true,
+        "description": "布尔掩码形状 [L, L]"
+      }
+    ],
+    "review_dimensions": [
+      "因果上三角屏蔽",
+      "窗口下边界屏蔽",
+      "布尔掩码形状 [L, L]"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "因果上三角屏蔽"
+    ],
+    "reference_notes": [
+      "因果上三角屏蔽",
+      "窗口下边界屏蔽",
+      "布尔掩码形状 [L, L]"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 构造 Sliding Window Causal Mask",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "online-softmax-1d",
+    "number": 205,
+    "kind": "coding",
+    "title": "实现单趟 Online Softmax",
+    "slug": "online-softmax-1d",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Kernel",
+      "PyTorch"
+    ],
+    "summary": "使用维护运行最大值 m 与归一化累加器 d 的方式实现数值稳定的 Online Softmax。",
+    "description": "使用维护运行最大值 m 与归一化累加器 d 的方式实现数值稳定的 Online Softmax。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef online_softmax(x: torch.Tensor) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "运行最大值动态修正 exp(m_old - m_new)",
+        "required": true,
+        "description": "运行最大值动态修正 exp(m_old - m_new)"
+      },
+      {
+        "label": "分母在线更新",
+        "required": true,
+        "description": "分母在线更新"
+      },
+      {
+        "label": "与标准 Softmax 等价性",
+        "required": true,
+        "description": "与标准 Softmax 等价性"
+      }
+    ],
+    "review_dimensions": [
+      "运行最大值动态修正 exp(m_old - m_new)",
+      "分母在线更新",
+      "与标准 Softmax 等价性"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "运行最大值动态修正 exp(m_old - m_new)"
+    ],
+    "reference_notes": [
+      "运行最大值动态修正 exp(m_old - m_new)",
+      "分母在线更新",
+      "与标准 Softmax 等价性"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现单趟 Online Softmax",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "cosine-warmup-lr",
+    "number": 206,
+    "kind": "coding",
+    "title": "实现 Cosine Warmup 学习率调度函数",
+    "slug": "cosine-warmup-lr",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Easy",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Training",
+      "PyTorch"
+    ],
+    "summary": "实现大模型预训练常用的线性 Warmup + 余弦退火学习率计算函数。",
+    "description": "实现大模型预训练常用的线性 Warmup + 余弦退火学习率计算函数。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import math\n\ndef get_cosine_warmup_lr(step: int, warmup_steps: int, max_steps: int, max_lr: float, min_lr: float) -> float:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "Warmup 阶段线性增长",
+        "required": true,
+        "description": "Warmup 阶段线性增长"
+      },
+      {
+        "label": "余弦退火区间映射",
+        "required": true,
+        "description": "余弦退火区间映射"
+      },
+      {
+        "label": "超出 max_steps 截断为 min_lr",
+        "required": true,
+        "description": "超出 max_steps 截断为 min_lr"
+      }
+    ],
+    "review_dimensions": [
+      "Warmup 阶段线性增长",
+      "余弦退火区间映射",
+      "超出 max_steps 截断为 min_lr"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "Warmup 阶段线性增长"
+    ],
+    "reference_notes": [
+      "Warmup 阶段线性增长",
+      "余弦退火区间映射",
+      "超出 max_steps 截断为 min_lr"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现 Cosine Warmup 学习率调度函数",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "clip-grad-norm-manual",
+    "number": 207,
+    "kind": "coding",
+    "title": "手写全局梯度范数裁剪（clip_grad_norm_）",
+    "slug": "clip-grad-norm-manual",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Training",
+      "PyTorch"
+    ],
+    "summary": "不调用 torch.nn.utils.clip_grad_norm_，计算参数列表的全局 L2 梯度范数并原地缩放。",
+    "description": "不调用 torch.nn.utils.clip_grad_norm_，计算参数列表的全局 L2 梯度范数并原地缩放。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef clip_grad_norm_manual(parameters, max_norm: float, eps: float = 1e-6) -> float:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "过滤无梯度参数",
+        "required": true,
+        "description": "过滤无梯度参数"
+      },
+      {
+        "label": "全局 L2 范数聚合",
+        "required": true,
+        "description": "全局 L2 范数聚合"
+      },
+      {
+        "label": "clip_coef < 1 时原地缩放",
+        "required": true,
+        "description": "clip_coef < 1 时原地缩放"
+      }
+    ],
+    "review_dimensions": [
+      "过滤无梯度参数",
+      "全局 L2 范数聚合",
+      "clip_coef < 1 时原地缩放"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "过滤无梯度参数"
+    ],
+    "reference_notes": [
+      "过滤无梯度参数",
+      "全局 L2 范数聚合",
+      "clip_coef < 1 时原地缩放"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 手写全局梯度范数裁剪（clip_grad_norm_）",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "adamw-single-step",
+    "number": 208,
+    "kind": "coding",
+    "title": "手写 AdamW 单步参数更新",
+    "slug": "adamw-single-step",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Training",
+      "PyTorch"
+    ],
+    "summary": "实现解耦权重衰减（Decoupled Weight Decay）的 AdamW 单步状态更新。",
+    "description": "实现解耦权重衰减（Decoupled Weight Decay）的 AdamW 单步状态更新。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef adamw_step(param: torch.Tensor, grad: torch.Tensor, exp_avg: torch.Tensor, exp_avg_sq: torch.Tensor, step: int, lr: float = 1e-3, beta1: float = 0.9, beta2: float = 0.999, eps: float = 1e-8, weight_decay: float = 0.01) -> None:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "先执行解耦权重衰减",
+        "required": true,
+        "description": "先执行解耦权重衰减"
+      },
+      {
+        "label": "一阶/二阶矩指数滑动平均",
+        "required": true,
+        "description": "一阶/二阶矩指数滑动平均"
+      },
+      {
+        "label": "偏差修正 bias correction",
+        "required": true,
+        "description": "偏差修正 bias correction"
+      }
+    ],
+    "review_dimensions": [
+      "先执行解耦权重衰减",
+      "一阶/二阶矩指数滑动平均",
+      "偏差修正 bias correction"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "先执行解耦权重衰减"
+    ],
+    "reference_notes": [
+      "先执行解耦权重衰减",
+      "一阶/二阶矩指数滑动平均",
+      "偏差修正 bias correction"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 手写 AdamW 单步参数更新",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "per-channel-int8-quant",
+    "number": 209,
+    "kind": "coding",
+    "title": "实现对称 Per-Channel INT8 权重量化与反量化",
+    "slug": "per-channel-int8-quant",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Quantization",
+      "PyTorch"
+    ],
+    "summary": "对线性层权重 [out_features, in_features] 按输出通道计算 scale 并量化到 [-127, 127]。",
+    "description": "对线性层权重 [out_features, in_features] 按输出通道计算 scale 并量化到 [-127, 127]。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef quantize_per_channel_int8(weight: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "沿 in_features 维取绝对值最大",
+        "required": true,
+        "description": "沿 in_features 维取绝对值最大"
+      },
+      {
+        "label": "除零保护与 round/clamp",
+        "required": true,
+        "description": "除零保护与 round/clamp"
+      },
+      {
+        "label": "反量化乘法恢复",
+        "required": true,
+        "description": "反量化乘法恢复"
+      }
+    ],
+    "review_dimensions": [
+      "沿 in_features 维取绝对值最大",
+      "除零保护与 round/clamp",
+      "反量化乘法恢复"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "沿 in_features 维取绝对值最大"
+    ],
+    "reference_notes": [
+      "沿 in_features 维取绝对值最大",
+      "除零保护与 round/clamp",
+      "反量化乘法恢复"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现对称 Per-Channel INT8 权重量化与反量化",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "kv-cache-int8-quant",
+    "number": 210,
+    "kind": "coding",
+    "title": "实现 KV Cache 按 Token 动态 INT8 量化",
+    "slug": "kv-cache-int8-quant",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Inference",
+      "PyTorch"
+    ],
+    "summary": "对形状 [B, H, L, D] 的 KV 张量沿 head_dim 动态做对称 INT8 量化以节省显存带宽。",
+    "description": "对形状 [B, H, L, D] 的 KV 张量沿 head_dim 动态做对称 INT8 量化以节省显存带宽。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef quantize_kv_int8(kv: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:\n    raise NotImplementedError\n\ndef dequantize_kv_int8(q_kv: torch.Tensor, scale: torch.Tensor) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "沿最后一维 D 求 scale",
+        "required": true,
+        "description": "沿最后一维 D 求 scale"
+      },
+      {
+        "label": "保持 [B, H, L, 1] 广播维度",
+        "required": true,
+        "description": "保持 [B, H, L, 1] 广播维度"
+      },
+      {
+        "label": "反量化精度恢复",
+        "required": true,
+        "description": "反量化精度恢复"
+      }
+    ],
+    "review_dimensions": [
+      "沿最后一维 D 求 scale",
+      "保持 [B, H, L, 1] 广播维度",
+      "反量化精度恢复"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "沿最后一维 D 求 scale"
+    ],
+    "reference_notes": [
+      "沿最后一维 D 求 scale",
+      "保持 [B, H, L, 1] 广播维度",
+      "反量化精度恢复"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现 KV Cache 按 Token 动态 INT8 量化",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "speculative-sampling-accept",
+    "number": 211,
+    "kind": "coding",
+    "title": "实现投机采样（Speculative Decoding）拒绝采样校验",
+    "slug": "speculative-sampling-accept",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Hard",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Inference",
+      "PyTorch"
+    ],
+    "summary": "给定草稿模型概率 p_draft、目标模型概率 p_target 与草稿 token，实现无损拒绝采样判定。",
+    "description": "给定草稿模型概率 p_draft、目标模型概率 p_target 与草稿 token，实现无损拒绝采样判定。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef speculative_accept_step(p_draft: torch.Tensor, p_target: torch.Tensor, draft_tokens: torch.Tensor) -> list[int]:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "接受率 min(1, p_target / p_draft)",
+        "required": true,
+        "description": "接受率 min(1, p_target / p_draft)"
+      },
+      {
+        "label": "首次拒绝后从修正分布重采样",
+        "required": true,
+        "description": "首次拒绝后从修正分布重采样"
+      },
+      {
+        "label": "分布无损性保证",
+        "required": true,
+        "description": "分布无损性保证"
+      }
+    ],
+    "review_dimensions": [
+      "接受率 min(1, p_target / p_draft)",
+      "首次拒绝后从修正分布重采样",
+      "分布无损性保证"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "接受率 min(1, p_target / p_draft)"
+    ],
+    "reference_notes": [
+      "接受率 min(1, p_target / p_draft)",
+      "首次拒绝后从修正分布重采样",
+      "分布无损性保证"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现投机采样（Speculative Decoding）拒绝采样校验",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "paged-kv-block-table",
+    "number": 212,
+    "kind": "coding",
+    "title": "实现 PagedAttention 逻辑位置到物理块映射",
+    "slug": "paged-kv-block-table",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Inference",
+      "PyTorch"
+    ],
+    "summary": "给定序列的 block_table 与 token 逻辑下标 pos，计算对应的物理 block_id 与 block_offset。",
+    "description": "给定序列的 block_table 与 token 逻辑下标 pos，计算对应的物理 block_id 与 block_offset。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "def resolve_paged_kv_slot(block_table: list[int], pos: int, block_size: int) -> tuple[int, int]:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "逻辑块号 pos // block_size",
+        "required": true,
+        "description": "逻辑块号 pos // block_size"
+      },
+      {
+        "label": "块内偏移 pos % block_size",
+        "required": true,
+        "description": "块内偏移 pos % block_size"
+      },
+      {
+        "label": "越界检查",
+        "required": true,
+        "description": "越界检查"
+      }
+    ],
+    "review_dimensions": [
+      "逻辑块号 pos // block_size",
+      "块内偏移 pos % block_size",
+      "越界检查"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "逻辑块号 pos // block_size"
+    ],
+    "reference_notes": [
+      "逻辑块号 pos // block_size",
+      "块内偏移 pos % block_size",
+      "越界检查"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现 PagedAttention 逻辑位置到物理块映射",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "sequence-packing-causal-mask",
+    "number": 213,
+    "kind": "coding",
+    "title": "构造打包序列（Sequence Packing）块对角因果掩码",
+    "slug": "sequence-packing-causal-mask",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Training",
+      "PyTorch"
+    ],
+    "summary": "给定一条拼接序列中各样本的文档 ID（doc_ids），构造互不串扰的块对角下三角掩码。",
+    "description": "给定一条拼接序列中各样本的文档 ID（doc_ids），构造互不串扰的块对角下三角掩码。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef build_packed_causal_mask(doc_ids: torch.Tensor) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "同文档匹配 doc_ids[:, None] == doc_ids[None, :]",
+        "required": true,
+        "description": "同文档匹配 doc_ids[:, None] == doc_ids[None, :]"
+      },
+      {
+        "label": "下三角因果约束",
+        "required": true,
+        "description": "下三角因果约束"
+      },
+      {
+        "label": "时间复杂度与广播",
+        "required": true,
+        "description": "时间复杂度与广播"
+      }
+    ],
+    "review_dimensions": [
+      "同文档匹配 doc_ids[:, None] == doc_ids[None, :]",
+      "下三角因果约束",
+      "时间复杂度与广播"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "同文档匹配 doc_ids[:, None] == doc_ids[None, :]"
+    ],
+    "reference_notes": [
+      "同文档匹配 doc_ids[:, None] == doc_ids[None, :]",
+      "下三角因果约束",
+      "时间复杂度与广播"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 构造打包序列（Sequence Packing）块对角因果掩码",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "sft-masked-lm-loss",
+    "number": 214,
+    "kind": "coding",
+    "title": "实现指令微调（SFT）仅计算回答区间的 Masked CE Loss",
+    "slug": "sft-masked-lm-loss",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Easy",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Training",
+      "PyTorch"
+    ],
+    "summary": "给定 logits [B, L, V] 与 labels [B, L]（Prompt 部分标记为 -100），实现自回归下一词交叉熵。",
+    "description": "给定 logits [B, L, V] 与 labels [B, L]（Prompt 部分标记为 -100），实现自回归下一词交叉熵。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\nimport torch.nn.functional as F\n\ndef sft_causal_lm_loss(logits: torch.Tensor, labels: torch.Tensor, ignore_index: int = -100) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "logits[:-1] 与 labels[1:] 错位对齐",
+        "required": true,
+        "description": "logits[:-1] 与 labels[1:] 错位对齐"
+      },
+      {
+        "label": "ignore_index 屏蔽 Prompt",
+        "required": true,
+        "description": "ignore_index 屏蔽 Prompt"
+      },
+      {
+        "label": "有效 token 均值归一化",
+        "required": true,
+        "description": "有效 token 均值归一化"
+      }
+    ],
+    "review_dimensions": [
+      "logits[:-1] 与 labels[1:] 错位对齐",
+      "ignore_index 屏蔽 Prompt",
+      "有效 token 均值归一化"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "logits[:-1] 与 labels[1:] 错位对齐"
+    ],
+    "reference_notes": [
+      "logits[:-1] 与 labels[1:] 错位对齐",
+      "ignore_index 屏蔽 Prompt",
+      "有效 token 均值归一化"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现指令微调（SFT）仅计算回答区间的 Masked CE Loss",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "simpo-reference-free-loss",
+    "number": 215,
+    "kind": "coding",
+    "title": "实现无参考模型 SimPO 偏好损失",
+    "slug": "simpo-reference-free-loss",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Alignment",
+      "PyTorch"
+    ],
+    "summary": "实现 SimPO 损失：使用长度归一化的对数概率差与目标间隔 gamma 计算偏好分类损失。",
+    "description": "实现 SimPO 损失：使用长度归一化的对数概率差与目标间隔 gamma 计算偏好分类损失。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\nimport torch.nn.functional as F\n\ndef simpo_loss(chosen_logps: torch.Tensor, chosen_lens: torch.Tensor, rejected_logps: torch.Tensor, rejected_lens: torch.Tensor, beta: float = 2.0, gamma: float = 0.5) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "按生成长度平均 logp",
+        "required": true,
+        "description": "按生成长度平均 logp"
+      },
+      {
+        "label": "减去 margin gamma",
+        "required": true,
+        "description": "减去 margin gamma"
+      },
+      {
+        "label": "logsigmoid 数值稳定计算",
+        "required": true,
+        "description": "logsigmoid 数值稳定计算"
+      }
+    ],
+    "review_dimensions": [
+      "按生成长度平均 logp",
+      "减去 margin gamma",
+      "logsigmoid 数值稳定计算"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "按生成长度平均 logp"
+    ],
+    "reference_notes": [
+      "按生成长度平均 logp",
+      "减去 margin gamma",
+      "logsigmoid 数值稳定计算"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现无参考模型 SimPO 偏好损失",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "kl-divergence-estimators",
+    "number": 216,
+    "kind": "coding",
+    "title": "实现 RLHF 中的 k1 / k2 / k3 KL 散度近似估计器",
+    "slug": "kl-divergence-estimators",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Alignment",
+      "PyTorch"
+    ],
+    "summary": "给定策略 log_pi 与参考策略 log_ref，计算 Schulman k1、k2、k3 三种逐 token KL 估计。",
+    "description": "给定策略 log_pi 与参考策略 log_ref，计算 Schulman k1、k2、k3 三种逐 token KL 估计。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef estimate_kl(log_pi: torch.Tensor, log_ref: torch.Tensor) -> dict[str, torch.Tensor]:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "k1 = log_pi - log_ref",
+        "required": true,
+        "description": "k1 = log_pi - log_ref"
+      },
+      {
+        "label": "k2 = 0.5 * (log_pi - log_ref)^2",
+        "required": true,
+        "description": "k2 = 0.5 * (log_pi - log_ref)^2"
+      },
+      {
+        "label": "k3 = (r - 1) - log(r) 非负无偏性质",
+        "required": true,
+        "description": "k3 = (r - 1) - log(r) 非负无偏性质"
+      }
+    ],
+    "review_dimensions": [
+      "k1 = log_pi - log_ref",
+      "k2 = 0.5 * (log_pi - log_ref)^2",
+      "k3 = (r - 1) - log(r) 非负无偏性质"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "k1 = log_pi - log_ref"
+    ],
+    "reference_notes": [
+      "k1 = log_pi - log_ref",
+      "k2 = 0.5 * (log_pi - log_ref)^2",
+      "k3 = (r - 1) - log(r) 非负无偏性质"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现 RLHF 中的 k1 / k2 / k3 KL 散度近似估计器",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "info-nce-contrastive-loss",
+    "number": 217,
+    "kind": "coding",
+    "title": "实现双塔检索/CLIP 对称 InfoNCE 对比损失",
+    "slug": "info-nce-contrastive-loss",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Multimodal",
+      "PyTorch"
+    ],
+    "summary": "给定批次内两组归一化特征 z_a, z_b [B, D] 与温度 tau，实现双向交叉熵对比损失。",
+    "description": "给定批次内两组归一化特征 z_a, z_b [B, D] 与温度 tau，实现双向交叉熵对比损失。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\nimport torch.nn.functional as F\n\ndef symmetric_infonce_loss(z_a: torch.Tensor, z_b: torch.Tensor, tau: float = 0.07) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "L2 归一化余弦相似度矩阵",
+        "required": true,
+        "description": "L2 归一化余弦相似度矩阵"
+      },
+      {
+        "label": "温度缩放除以 tau",
+        "required": true,
+        "description": "温度缩放除以 tau"
+      },
+      {
+        "label": "行/列双向交叉熵平均",
+        "required": true,
+        "description": "行/列双向交叉熵平均"
+      }
+    ],
+    "review_dimensions": [
+      "L2 归一化余弦相似度矩阵",
+      "温度缩放除以 tau",
+      "行/列双向交叉熵平均"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "L2 归一化余弦相似度矩阵"
+    ],
+    "reference_notes": [
+      "L2 归一化余弦相似度矩阵",
+      "温度缩放除以 tau",
+      "行/列双向交叉熵平均"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现双塔检索/CLIP 对称 InfoNCE 对比损失",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "tensor-parallel-col-row-linear",
+    "number": 218,
+    "kind": "coding",
+    "title": "模拟 Megatron 列并行 + 行并行 MLP 切分",
+    "slug": "tensor-parallel-col-row-linear",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Hard",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Distributed",
+      "PyTorch"
+    ],
+    "summary": "用单机张量切分模拟 2 卡 Tensor Parallelism 的 ColumnParallel + RowParallel 前向与规约。",
+    "description": "用单机张量切分模拟 2 卡 Tensor Parallelism 的 ColumnParallel + RowParallel 前向与规约。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import torch\n\ndef tp2_mlp_forward(x: torch.Tensor, w1: torch.Tensor, w2: torch.Tensor) -> torch.Tensor:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "w1 按列切分独立激活",
+        "required": true,
+        "description": "w1 按列切分独立激活"
+      },
+      {
+        "label": "w2 按行切分局部乘积",
+        "required": true,
+        "description": "w2 按行切分局部乘积"
+      },
+      {
+        "label": "AllReduce 求和等价验证",
+        "required": true,
+        "description": "AllReduce 求和等价验证"
+      }
+    ],
+    "review_dimensions": [
+      "w1 按列切分独立激活",
+      "w2 按行切分局部乘积",
+      "AllReduce 求和等价验证"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "w1 按列切分独立激活"
+    ],
+    "reference_notes": [
+      "w1 按列切分独立激活",
+      "w2 按行切分局部乘积",
+      "AllReduce 求和等价验证"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 模拟 Megatron 列并行 + 行并行 MLP 切分",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "ring-attention-step",
+    "number": 219,
+    "kind": "coding",
+    "title": "模拟 Ring Attention 单步 KV 环状轮转与块在线归并",
+    "slug": "ring-attention-step",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Hard",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "Distributed",
+      "PyTorch"
+    ],
+    "summary": "给定本地 Q 块与环上传入的 K/V 块，使用 log-sum-exp 状态合并更新局部注意力输出。",
+    "description": "给定本地 Q 块与环上传入的 K/V 块，使用 log-sum-exp 状态合并更新局部注意力输出。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import math, torch\n\ndef ring_attn_merge_block(q: torch.Tensor, k_block: torch.Tensor, v_block: torch.Tensor, out: torch.Tensor, lse: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "块注意力得分与局部 lse",
+        "required": true,
+        "description": "块注意力得分与局部 lse"
+      },
+      {
+        "label": "全局新 lse 合并公式",
+        "required": true,
+        "description": "全局新 lse 合并公式"
+      },
+      {
+        "label": "输出向量按指数权重重缩放",
+        "required": true,
+        "description": "输出向量按指数权重重缩放"
+      }
+    ],
+    "review_dimensions": [
+      "块注意力得分与局部 lse",
+      "全局新 lse 合并公式",
+      "输出向量按指数权重重缩放"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "块注意力得分与局部 lse"
+    ],
+    "reference_notes": [
+      "块注意力得分与局部 lse",
+      "全局新 lse 合并公式",
+      "输出向量按指数权重重缩放"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 模拟 Ring Attention 单步 KV 环状轮转与块在线归并",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "moe-capacity-token-drop",
+    "number": 220,
+    "kind": "coding",
+    "title": "实现带容量因子（Capacity Factor）的 MoE Token 路由限流",
+    "slug": "moe-capacity-token-drop",
+    "category": "AI Infra",
+    "topic": "AI Infra",
+    "difficulty": "Medium",
+    "language": "Python / PyTorch",
+    "tags": [
+      "AI Infra",
+      "MoE",
+      "PyTorch"
+    ],
+    "summary": "给定每个 token 的 top-1 专家编号与 capacity_factor，计算各专家容量上限并标记溢出丢弃的 token。",
+    "description": "给定每个 token 的 top-1 专家编号与 capacity_factor，计算各专家容量上限并标记溢出丢弃的 token。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。",
+      "显式说明关键张量 shape 与数值边界。"
+    ],
+    "starter_code": "import math, torch\n\ndef route_with_capacity(top1_expert: torch.Tensor, num_experts: int, capacity_factor: float = 1.25) -> tuple[torch.Tensor, int]:\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "capacity = ceil(num_tokens / num_experts * factor)",
+        "required": true,
+        "description": "capacity = ceil(num_tokens / num_experts * factor)"
+      },
+      {
+        "label": "专家内累加计数",
+        "required": true,
+        "description": "专家内累加计数"
+      },
+      {
+        "label": "超出 capacity 的 token 掩码",
+        "required": true,
+        "description": "超出 capacity 的 token 掩码"
+      }
+    ],
+    "review_dimensions": [
+      "capacity = ceil(num_tokens / num_experts * factor)",
+      "专家内累加计数",
+      "超出 capacity 的 token 掩码"
+    ],
+    "follow_ups": [
+      "你能口头推导一下关键张量 shape 是怎么变化的吗？",
+      "放到多卡或半精度环境下哪里最容易出问题？"
+    ],
+    "hints": [
+      "capacity = ceil(num_tokens / num_experts * factor)"
+    ],
+    "reference_notes": [
+      "capacity = ceil(num_tokens / num_experts * factor)",
+      "专家内累加计数",
+      "超出 capacity 的 token 掩码"
+    ],
+    "sources": [
+      {
+        "title": "AIBaG Curated · AI Infra · 实现带容量因子（Capacity Factor）的 MoE Token 路由限流",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md",
+        "license": "MIT",
+        "note": "AIBaG 原创整理的 AI Infra 高频白板手撕题。"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "notice": "See per-item sources and THIRD_PARTY_NOTICES.md."
+    },
+    "provenance": {
+      "origin": "aibag-curated",
+      "catalog_upstream": "axiaoquan/llm-interview-handbook",
+      "catalog_upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "catalog_upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19",
+      "source_urls": [
+        "https://github.com/axiaoquan/llm-interview-handbook/blob/main/llm-coding/README.md"
+      ]
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc049",
+    "number": 221,
+    "kind": "algorithm",
+    "title": "字母异位词分组",
+    "slug": "handbook-algorithms-10-hot100-lc049",
+    "category": "经典算法",
+    "topic": "哈希",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "哈希",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「字母异位词分组」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「字母异位词分组」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "判断异位词的标准：26 长度的字符计数 tuple 作为哈希表 key"
+    ],
+    "reference_notes": [
+      "判断异位词的标准：26 长度的字符计数 tuple 作为哈希表 key",
+      "list 不能直接作为 dict key，需转为 tuple，或使用 ''.join(sorted(s))"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 49. 字母异位词分组",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "49. 字母异位词分组",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc128",
+    "number": 222,
+    "kind": "algorithm",
+    "title": "最长连续序列",
+    "slug": "handbook-algorithms-10-hot100-lc128",
+    "category": "经典算法",
+    "topic": "哈希",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "哈希",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最长连续序列」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最长连续序列」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "先用 set 去重；遍历元素，只从序列起点开始计数（即 x - 1 不在 set 中）"
+    ],
+    "reference_notes": [
+      "先用 set 去重；遍历元素，只从序列起点开始计数（即 x - 1 不在 set 中）",
+      "每个连续段只会被内层 while 遍历一次，整体时间复杂度 O(n)"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 128. 最长连续序列",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "128. 最长连续序列",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc283",
+    "number": 223,
+    "kind": "algorithm",
+    "title": "移动零",
+    "slug": "handbook-algorithms-10-hot100-lc283",
+    "category": "经典算法",
+    "topic": "双指针",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "双指针",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「移动零」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「移动零」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "快慢指针：slow 维护非零区下一个写入位，fast 扫描数组"
+    ],
+    "reference_notes": [
+      "快慢指针：slow 维护非零区下一个写入位，fast 扫描数组",
+      "遇到非零元素时交换 nums[slow] 与 nums[fast] 并令 slow += 1，保持相对顺序"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 283. 移动零",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "283. 移动零",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc011",
+    "number": 224,
+    "kind": "algorithm",
+    "title": "盛最多水的容器",
+    "slug": "handbook-algorithms-10-hot100-lc011",
+    "category": "经典算法",
+    "topic": "双指针",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "双指针",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「盛最多水的容器」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「盛最多水的容器」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "容量由短板决定：min(h[l], h[r]) * (r - l)"
+    ],
+    "reference_notes": [
+      "容量由短板决定：min(h[l], h[r]) * (r - l)",
+      "每次向内移动较短的一侧指针，因为底边缩小后只有提高短板才可能增大面积"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 11. 盛最多水的容器",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "11. 盛最多水的容器",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc003",
+    "number": 225,
+    "kind": "algorithm",
+    "title": "无重复字符的最长子串",
+    "slug": "handbook-algorithms-10-hot100-lc003",
+    "category": "经典算法",
+    "topic": "滑动窗口",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "滑动窗口",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「无重复字符的最长子串」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「无重复字符的最长子串」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "滑动窗口维护窗口内无重复字符集合 seen"
+    ],
+    "reference_notes": [
+      "滑动窗口维护窗口内无重复字符集合 seen",
+      "右指针遇到重复字符时持续右移左指针并从 seen 移除，直到窗口恢复无重复不变量"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 3. 无重复字符的最长子串",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "3. 无重复字符的最长子串",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc438",
+    "number": 226,
+    "kind": "algorithm",
+    "title": "找到字符串中所有字母异位词",
+    "slug": "handbook-algorithms-10-hot100-lc438",
+    "category": "经典算法",
+    "topic": "滑动窗口",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "滑动窗口",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「找到字符串中所有字母异位词」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「找到字符串中所有字母异位词」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "维护长度为 len(p) 的定长滑动窗口与长度为 26 的频次数组"
+    ],
+    "reference_notes": [
+      "维护长度为 len(p) 的定长滑动窗口与长度为 26 的频次数组",
+      "每次右移一格同步增删进出窗口的字符计数并比对 cur == need"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 438. 找到字符串中所有字母异位词",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "438. 找到字符串中所有字母异位词",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc560",
+    "number": 227,
+    "kind": "algorithm",
+    "title": "和为 K 的子数组",
+    "slug": "handbook-algorithms-10-hot100-lc560",
+    "category": "经典算法",
+    "topic": "前缀和",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "前缀和",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「和为 K 的子数组」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「和为 K 的子数组」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "数组含负数时无单调性，不能使用滑动窗口"
+    ],
+    "reference_notes": [
+      "数组含负数时无单调性，不能使用滑动窗口",
+      "使用前缀和 + 哈希表统计 prefix - k 出现次数，初始化 cnt[0] = 1 处理从下标 0 开始的子数组"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 560. 和为 K 的子数组",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "560. 和为 K 的子数组",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc076",
+    "number": 228,
+    "kind": "algorithm",
+    "title": "最小覆盖子串",
+    "slug": "handbook-algorithms-10-hot100-lc076",
+    "category": "经典算法",
+    "topic": "滑动窗口",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "滑动窗口",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「最小覆盖子串」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「最小覆盖子串」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "用 need 和 have 两个哈希表加 valid 计数器跟踪已满足频次要求的字符种类数"
+    ],
+    "reference_notes": [
+      "用 need 和 have 两个哈希表加 valid 计数器跟踪已满足频次要求的字符种类数",
+      "当 valid == len(need) 时持续收缩左边界更新最优子串"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 76. 最小覆盖子串",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "76. 最小覆盖子串",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc056",
+    "number": 229,
+    "kind": "algorithm",
+    "title": "合并区间",
+    "slug": "handbook-algorithms-10-hot100-lc056",
+    "category": "经典算法",
+    "topic": "区间与数组",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "区间与数组",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「合并区间」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「合并区间」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "先按区间左端点升序排序"
+    ],
+    "reference_notes": [
+      "先按区间左端点升序排序",
+      "若当前区间起点 <= 结果末尾区间右端点则合并并取右端点 max，否则直接追加"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 56. 合并区间",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "56. 合并区间",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc240",
+    "number": 230,
+    "kind": "algorithm",
+    "title": "搜索二维矩阵 II",
+    "slug": "handbook-algorithms-10-hot100-lc240",
+    "category": "经典算法",
+    "topic": "矩阵搜索",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "矩阵搜索",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「搜索二维矩阵 II」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「搜索二维矩阵 II」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "从右上角 (0, n-1) 出发，利用行递增、列递增的单调性做折线搜索"
+    ],
+    "reference_notes": [
+      "从右上角 (0, n-1) 出发，利用行递增、列递增的单调性做折线搜索",
+      "当前值 < target 则行号 +1，> target 则列号 -1，复杂度 O(m + n)"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 240. 搜索二维矩阵 II",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "240. 搜索二维矩阵 II",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc958",
+    "number": 231,
+    "kind": "algorithm",
+    "title": "二叉树的完全性检验",
+    "slug": "handbook-algorithms-10-hot100-lc958",
+    "category": "经典算法",
+    "topic": "二叉树",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "二叉树",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「二叉树的完全性检验」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「二叉树的完全性检验」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "层序遍历（BFS）将空子节点也入队"
+    ],
+    "reference_notes": [
+      "层序遍历（BFS）将空子节点也入队",
+      "一旦遇到第一个 None 节点后，后续出队若再出现非空节点则不是完全二叉树"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 958. 二叉树的完全性检验",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "958. 二叉树的完全性检验",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc416",
+    "number": 232,
+    "kind": "algorithm",
+    "title": "分割等和子集",
+    "slug": "handbook-algorithms-10-hot100-lc416",
+    "category": "经典算法",
+    "topic": "动态规划",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "动态规划",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「分割等和子集」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「分割等和子集」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "转化为 0-1 背包：总和为奇数直接返回 False，否则判断能否凑出 target = sum // 2"
+    ],
+    "reference_notes": [
+      "转化为 0-1 背包：总和为奇数直接返回 False，否则判断能否凑出 target = sum // 2",
+      "一维布尔 DP 必须从 target 到 x 逆序遍历，防止同一元素被重复使用"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 416. 分割等和子集",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "416. 分割等和子集",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-algorithms-10-hot100-lc075",
+    "number": 233,
+    "kind": "algorithm",
+    "title": "颜色分类",
+    "slug": "handbook-algorithms-10-hot100-lc075",
+    "category": "经典算法",
+    "topic": "双指针",
+    "difficulty": "Medium",
+    "language": "Python 3",
+    "tags": [
+      "双指针",
+      "Hot100",
+      "algorithm"
+    ],
+    "summary": "请现场实现「颜色分类」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "description": "请现场实现「颜色分类」的核心算法。先根据题名说明你理解的输入输出，再给出可完成的实现，并解释关键不变量、边界条件和复杂度。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "class Solution:\n    # TODO: define the required state and methods\n    raise NotImplementedError\n",
+    "review_points": [
+      {
+        "label": "核心算法",
+        "required": true,
+        "description": "给出正确且可完成的解题路径"
+      },
+      {
+        "label": "不变量",
+        "required": true,
+        "description": "说明循环、递归或数据结构维持的条件"
+      },
+      {
+        "label": "边界条件",
+        "required": true,
+        "description": "覆盖空输入、极值或特殊结构"
+      },
+      {
+        "label": "复杂度",
+        "required": true,
+        "description": "正确分析时间与空间复杂度"
+      }
+    ],
+    "review_dimensions": [
+      "核心算法",
+      "不变量",
+      "边界条件",
+      "复杂度"
+    ],
+    "follow_ups": [
+      "你维护的核心不变量是什么？",
+      "时间与空间复杂度分别是多少？"
+    ],
+    "hints": [
+      "荷兰国旗三指针：l 维护 0 区右边界，r 维护 2 区左边界，i 扫描未定区"
+    ],
+    "reference_notes": [
+      "荷兰国旗三指针：l 维护 0 区右边界，r 维护 2 区左边界，i 扫描未定区",
+      "遇到 2 与 r 交换后 r -= 1 但 i 不能递增，因为换回来的元素尚未检查"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · algorithms/10-hot100.md · 75. 颜色分类",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/algorithms/10-hot100.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "algorithms/10-hot100.md",
+      "source_section": "75. 颜色分类",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q01",
+    "number": 234,
+    "kind": "knowledge",
+    "title": "Perplexity 与局限",
+    "slug": "handbook-docs-09-evaluation-q01",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Perplexity 与局限」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Perplexity 与局限」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「Perplexity 与局限」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "PPL 等于平均负对数似然的指数 exp(-1/N * sum log P(x_i | x_<i))"
+    ],
+    "reference_notes": [
+      "PPL 等于平均负对数似然的指数 exp(-1/N * sum log P(x_i | x_<i))",
+      "不能直接跨不同 tokenizer 比较（分词粒度改变 N），跨词表需使用 bits-per-byte",
+      "PPL 低不代表指令遵循、校准度或安全性好"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q01 · Perplexity 与局限",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q02",
+    "number": 235,
+    "kind": "knowledge",
+    "title": "主流基准（MMLU / GSM8K / HumanEval / HELM）",
+    "slug": "handbook-docs-09-evaluation-q02",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「主流基准（MMLU / GSM8K / HumanEval / HELM）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「主流基准（MMLU / GSM8K / HumanEval / HELM）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「主流基准（MMLU / GSM8K / HumanEval / HELM）」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "MMLU 测多学科知识，GSM8K/MATH 测数学推理，HumanEval/MBPP 用 pass@k 测代码生成"
+    ],
+    "reference_notes": [
+      "MMLU 测多学科知识，GSM8K/MATH 测数学推理，HumanEval/MBPP 用 pass@k 测代码生成",
+      "pass@k 无偏估计公式：1 - C(n-c, k) / C(n, k)，需固定温度与单测环境",
+      "防止刷分需结合近重复去污染、动态测试集与盲评"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q02 · 主流基准",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q03",
+    "number": 236,
+    "kind": "knowledge",
+    "title": "LLM-as-Judge 偏差与校准",
+    "slug": "handbook-docs-09-evaluation-q03",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「LLM-as-Judge 偏差与校准」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「LLM-as-Judge 偏差与校准」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「LLM-as-Judge 偏差与校准」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "四大典型偏差：位置偏好、冗长偏好、自我偏好、格式风格偏好"
+    ],
+    "reference_notes": [
+      "四大典型偏差：位置偏好、冗长偏好、自我偏好、格式风格偏好",
+      "缓解方案：双向交换位置、匿名化模型身份、允许平局（Tie）、明确分项 Rubric",
+      "使用分层人工复核集计算胜/负/平混淆矩阵与一致率来校准 Judge"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q03 · LLM-as-Judge 偏差",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q04",
+    "number": 237,
+    "kind": "knowledge",
+    "title": "Hallucination 幻觉分类与检测",
+    "slug": "handbook-docs-09-evaluation-q04",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Hallucination 幻觉分类与检测」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Hallucination 幻觉分类与检测」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「Hallucination 幻觉分类与检测」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "分为事实性幻觉、逻辑性幻觉与指令遵循幻觉"
+    ],
+    "reference_notes": [
+      "分为事实性幻觉、逻辑性幻觉与指令遵循幻觉",
+      "检测手段包括多采样自洽性（SelfCheckGPT）、外部检索验证、NLI 蕴含判断与语义熵",
+      "需区分开放域事实验证与给定 Context 的 RAG 忠实度验证"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q04 · Hallucination 检测",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q05",
+    "number": 238,
+    "kind": "knowledge",
+    "title": "Lost in the Middle 长上下文位置偏差",
+    "slug": "handbook-docs-09-evaluation-q05",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Lost in the Middle 长上下文位置偏差」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Lost in the Middle 长上下文位置偏差」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「Lost in the Middle 长上下文位置偏差」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "模型对长上下文开头和结尾信息利用率高、中间位置显著下降，呈 U 型曲线"
+    ],
+    "reference_notes": [
+      "模型对长上下文开头和结尾信息利用率高、中间位置显著下降，呈 U 型曲线",
+      "工程缓解：关键证据前置或后置、RAG 精选高相关 chunk 控制总长",
+      "评测不能只看大海捞针（Needle），还需测试多证据聚合与跨段推理"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q05 · Lost in the Middle",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q06",
+    "number": 239,
+    "kind": "knowledge",
+    "title": "评测提升是否可信：配对比较与置信区间",
+    "slug": "handbook-docs-09-evaluation-q06",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「评测提升是否可信：配对比较与置信区间」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「评测提升是否可信：配对比较与置信区间」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「评测提升是否可信：配对比较与置信区间」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "在同一批题目上计算配对差值 d_i = b_i - a_i，消去题目难度方差"
+    ],
+    "reference_notes": [
+      "在同一批题目上计算配对差值 d_i = b_i - a_i，消去题目难度方差",
+      "使用 Paired Bootstrap 或 McNemar 检验评估置信区间，重采样单位需对齐独立题目簇",
+      "汇报胜率与 pass@k 时必须明确平局、超时与解析失败的分母口径"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q06 · 提升是否可信：配对比较与置信区间",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-09-evaluation-q07",
+    "number": 240,
+    "kind": "knowledge",
+    "title": "数据去污染、模型选择与可复现评测报告",
+    "slug": "handbook-docs-09-evaluation-q07",
+    "category": "知识问答",
+    "topic": "大模型评测",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "大模型评测",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「数据去污染、模型选择与可复现评测报告」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「数据去污染、模型选择与可复现评测报告」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「数据去污染、模型选择与可复现评测报告」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "污染包含原文重复、n-gram 重合、改写/翻译变体及测试集反馈回流"
+    ],
+    "reference_notes": [
+      "污染包含原文重复、n-gram 重合、改写/翻译变体及测试集反馈回流",
+      "高频依据测试集挑 checkpoint 会造成选择性过拟合，必须隔离验证集与最终测试集",
+      "最小可复现报告需锁死模型/量化版本、prompt 模板、采样超参与评分器版本"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/09-evaluation.md · Q07",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/09-evaluation.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/09-evaluation.md",
+      "source_section": "Q07 · 去污染、模型选择与可复现报告",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-10-system-q01",
+    "number": 241,
+    "kind": "knowledge",
+    "title": "GPU 训练与推理显存精确估算",
+    "slug": "handbook-docs-10-system-q01",
+    "category": "知识问答",
+    "topic": "工程系统",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "工程系统",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「GPU 训练与推理显存精确估算」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「GPU 训练与推理显存精确估算」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「GPU 训练与推理显存精确估算」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "混合精度 AdamW 常驻状态约 16 bytes/param（FP16 参数2 + 梯度2 + FP32 主权重4 + 一二阶矩8）"
+    ],
+    "reference_notes": [
+      "混合精度 AdamW 常驻状态约 16 bytes/param（FP16 参数2 + 梯度2 + FP32 主权重4 + 一二阶矩8）",
+      "推理显存主要由权重（2P）与 KV Cache（2 * B * S * H_kv * d_h * N * bytes）构成",
+      "GQA 必须按 H_kv 而非 H_q 计算 KV 显存，峰值还需计入激活、通信 buffer 与碎片"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/10-system.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/10-system.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/10-system.md",
+      "source_section": "Q01 · GPU 显存计算",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-10-system-q02",
+    "number": 242,
+    "kind": "knowledge",
+    "title": "大模型推理服务化框架对比（vLLM / SGLang / TGI / TensorRT-LLM）",
+    "slug": "handbook-docs-10-system-q02",
+    "category": "知识问答",
+    "topic": "工程系统",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "工程系统",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「大模型推理服务化框架对比（vLLM / SGLang / TGI / TensorRT-LLM）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「大模型推理服务化框架对比（vLLM / SGLang / TGI / TensorRT-LLM）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「大模型推理服务化框架对比（vLLM / SGLang / TGI / TensorRT-LLM）」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "vLLM 核心在于 PagedAttention 消除 KV 外部碎片 + Continuous Batching 提升有效吞吐"
+    ],
+    "reference_notes": [
+      "vLLM 核心在于 PagedAttention 消除 KV 外部碎片 + Continuous Batching 提升有效吞吐",
+      "SGLang 通过 RadixAttention 基数树自动复用多轮/Agent 共享前缀并加速结构化输出",
+      "生产选型需综合吞吐、TTFT/TPOT 延迟、量化支持与 K8s 运维生态"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/10-system.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/10-system.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/10-system.md",
+      "source_section": "Q02 · 服务化",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-10-system-q03",
+    "number": 243,
+    "kind": "knowledge",
+    "title": "Prefill / Decode（P/D）分离推理架构",
+    "slug": "handbook-docs-10-system-q03",
+    "category": "知识问答",
+    "topic": "工程系统",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "工程系统",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Prefill / Decode（P/D）分离推理架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Prefill / Decode（P/D）分离推理架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「Prefill / Decode（P/D）分离推理架构」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "Prefill 阶段并行处理整段 prompt 属算力密集型（Compute-bound），Decode 逐 token 生成属访存带宽密集型（Memory-bound）"
+    ],
+    "reference_notes": [
+      "Prefill 阶段并行处理整段 prompt 属算力密集型（Compute-bound），Decode 逐 token 生成属访存带宽密集型（Memory-bound）",
+      "同池混跑会导致长 Prefill 阻塞 Decode 造成 ITL 卡顿，或迁就延迟导致算力利用率低下",
+      "P/D 分离将两阶段部署在独立 GPU 池并通过高速互联（NVLink/RDMA）传输 KV Cache"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/10-system.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/10-system.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/10-system.md",
+      "source_section": "Q03 · P/D 分离（Prefill / Decode）",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-10-system-q04",
+    "number": 244,
+    "kind": "knowledge",
+    "title": "大模型推理 FLOPs 与每百万 Token 成本估算",
+    "slug": "handbook-docs-10-system-q04",
+    "category": "知识问答",
+    "topic": "工程系统",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "工程系统",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「大模型推理 FLOPs 与每百万 Token 成本估算」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「大模型推理 FLOPs 与每百万 Token 成本估算」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「大模型推理 FLOPs 与每百万 Token 成本估算」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "稠密模型单 token Decode 主干矩阵乘约 2 * P FLOPs（MoE 按每 token 激活参数计）"
+    ],
+    "reference_notes": [
+      "稠密模型单 token Decode 主干矩阵乘约 2 * P FLOPs（MoE 按每 token 激活参数计）",
+      "FLOPs 不能直接换算成 tokens/s，因小 batch Decode 受显存带宽限制",
+      "真实单价由 GPU 小时成本、并发有效吞吐、上下文长度分布与 SLA 约束共同决定"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/10-system.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/10-system.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/10-system.md",
+      "source_section": "Q04 · 推理成本估算",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-10-system-q05",
+    "number": 245,
+    "kind": "knowledge",
+    "title": "KV Cache 共享与 Prefix Caching 机制",
+    "slug": "handbook-docs-10-system-q05",
+    "category": "知识问答",
+    "topic": "工程系统",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "工程系统",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「KV Cache 共享与 Prefix Caching 机制」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「KV Cache 共享与 Prefix Caching 机制」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「KV Cache 共享与 Prefix Caching 机制」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "对共享 System Prompt、多轮历史或同一长文档问答持久化物理 KV 块，直接跳过重复 Prefill"
+    ],
+    "reference_notes": [
+      "对共享 System Prompt、多轮历史或同一长文档问答持久化物理 KV 块，直接跳过重复 Prefill",
+      "要求 token 级前缀严格一致，模型权重或影响 KV 的 LoRA 变更后缓存必须失效",
+      "多租户场景需按租户权限隔离 Cache Key，防范侧信道时延探测与越权复用"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/10-system.md · Q05",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/10-system.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/10-system.md",
+      "source_section": "Q05 · KV Cache 共享与 Prefix Cache",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-10-system-q06",
+    "number": 246,
+    "kind": "knowledge",
+    "title": "从 Roofline 算术强度到 TTFT / TPOT 延迟与吞吐权衡",
+    "slug": "handbook-docs-10-system-q06",
+    "category": "知识问答",
+    "topic": "工程系统",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "工程系统",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「从 Roofline 算术强度到 TTFT / TPOT 延迟与吞吐权衡」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「从 Roofline 算术强度到 TTFT / TPOT 延迟与吞吐权衡」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「从 Roofline 算术强度到 TTFT / TPOT 延迟与吞吐权衡」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "算术强度 I = FLOPs / Bytes；BF16 稠密 Decode 在 batch=B 时权重读取算术强度约为 B FLOP/Byte"
+    ],
+    "reference_notes": [
+      "算术强度 I = FLOPs / Bytes；BF16 稠密 Decode 在 batch=B 时权重读取算术强度约为 B FLOP/Byte",
+      "增大 batch 能摊薄权重访存提升总吞吐，但会推高排队与单请求 TPOT 延迟",
+      "基准测试必须区分开环（固定到达率）与闭环压测，联合报告有效吞吐与 TTFT/ITL 的 P50/P95/P99"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/10-system.md · Q06",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/10-system.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/10-system.md",
+      "source_section": "Q06 · 从算术强度到延迟与吞吐",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-99-frontier-q01",
+    "number": 247,
+    "kind": "knowledge",
+    "title": "Diffusion LLM（扩散大语言模型）原理与权衡",
+    "slug": "handbook-docs-99-frontier-q01",
+    "category": "知识问答",
+    "topic": "前沿架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "前沿架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Diffusion LLM（扩散大语言模型）原理与权衡」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Diffusion LLM（扩散大语言模型）原理与权衡」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「Diffusion LLM（扩散大语言模型）原理与权衡」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "将离散扩散过程用于文本生成：从全 Mask 序列出发，多步迭代并行去噪预测所有位置"
+    ],
+    "reference_notes": [
+      "将离散扩散过程用于文本生成：从全 Mask 序列出发，多步迭代并行去噪预测所有位置",
+      "优势是双向注意力上下文建模与步数可控，但多步全序列重算总 FLOPs 可能高于自回归",
+      "面临长度偏置、KV 难以像自回归一样静态增量复用等工程挑战"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/99-frontier.md · Q01",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/99-frontier.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/99-frontier.md",
+      "source_section": "Q01 · Diffusion LLM (DLM)",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-99-frontier-q02",
+    "number": 248,
+    "kind": "knowledge",
+    "title": "State Space Models（SSM / Mamba）与混合架构",
+    "slug": "handbook-docs-99-frontier-q02",
+    "category": "知识问答",
+    "topic": "前沿架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "前沿架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「State Space Models（SSM / Mamba）与混合架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「State Space Models（SSM / Mamba）与混合架构」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「State Space Models（SSM / Mamba）与混合架构」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "通过递推状态 h_t = A h_{t-1} + B x_t 实现 O(L) 线性复杂度与固定大小推理状态"
+    ],
+    "reference_notes": [
+      "通过递推状态 h_t = A h_{t-1} + B x_t 实现 O(L) 线性复杂度与固定大小推理状态",
+      "Mamba 引入 Selective 机制令步长 Delta 与 B、C 随输入动态变化，并用 Parallel Scan 并行训练",
+      "纯 SSM 精确内容召回（Copy/Needle）弱于全注意力，工业界主流采用 Attention + SSM 混合架构"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/99-frontier.md · Q02",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/99-frontier.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/99-frontier.md",
+      "source_section": "Q02 · State Space Models / Mamba",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-99-frontier-q03",
+    "number": 249,
+    "kind": "knowledge",
+    "title": "Inference-time Scaling（测试时计算扩展 / o1 / DeepSeek-R1）",
+    "slug": "handbook-docs-99-frontier-q03",
+    "category": "知识问答",
+    "topic": "前沿架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "前沿架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「Inference-time Scaling（测试时计算扩展 / o1 / DeepSeek-R1）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「Inference-time Scaling（测试时计算扩展 / o1 / DeepSeek-R1）」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「Inference-time Scaling（测试时计算扩展 / o1 / DeepSeek-R1）」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "将算力预算从预训练延伸至推理阶段：通过长思维链（Long CoT）、Best-of-N、树搜索与验证器提升复杂推理上限"
+    ],
+    "reference_notes": [
+      "将算力预算从预训练延伸至推理阶段：通过长思维链（Long CoT）、Best-of-N、树搜索与验证器提升复杂推理上限",
+      "DeepSeek-R1 证明基于可验证规则奖励（准确性+格式）的 GRPO 强化学习无需 PRM 也能涌现自我反思与长推理",
+      "扩展有效性受限于候选生成多样性与 Verifier/Reward Model 的判别准确率"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/99-frontier.md · Q03",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/99-frontier.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/99-frontier.md",
+      "source_section": "Q03 · Inference-time Scaling",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  },
+  {
+    "id": "handbook-docs-99-frontier-q04",
+    "number": 250,
+    "kind": "knowledge",
+    "title": "MoE 前沿演进：细粒度专家、共享专家与无辅助损失负载均衡",
+    "slug": "handbook-docs-99-frontier-q04",
+    "category": "知识问答",
+    "topic": "前沿架构",
+    "difficulty": "Medium",
+    "language": "口头回答",
+    "tags": [
+      "前沿架构",
+      "knowledge"
+    ],
+    "summary": "请用面试口述的方式解释「MoE 前沿演进：细粒度专家、共享专家与无辅助损失负载均衡」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "description": "请用面试口述的方式解释「MoE 前沿演进：细粒度专家、共享专家与无辅助损失负载均衡」。重点讲清核心定义或机制、为什么这样设计，以及一个适用边界或主要权衡；不要求背标准表述。",
+    "examples": [],
+    "constraints": [
+      "白板模式：不能运行代码、print 或使用 debugger。"
+    ],
+    "starter_code": "",
+    "review_points": [
+      {
+        "label": "核心概念",
+        "required": true,
+        "description": "准确说明定义与主要机制"
+      },
+      {
+        "label": "因果解释",
+        "required": true,
+        "description": "能解释为什么这样设计，而非只背结论"
+      },
+      {
+        "label": "适用边界",
+        "required": true,
+        "description": "说明成立条件、失败场景或例外"
+      },
+      {
+        "label": "权衡比较",
+        "required": true,
+        "description": "能讨论替代方案、收益与代价"
+      }
+    ],
+    "review_dimensions": [
+      "核心概念",
+      "因果解释",
+      "适用边界",
+      "权衡比较"
+    ],
+    "follow_ups": [
+      "为什么「MoE 前沿演进：细粒度专家、共享专家与无辅助损失负载均衡」要这样设计？",
+      "它的适用边界、主要代价和替代方案分别是什么？"
+    ],
+    "hints": [
+      "以 DeepSeek-V2/V3 为代表：拆分更细粒度的 Routed Experts 并剥离常驻激活的 Shared Experts 捕捉通用知识"
+    ],
+    "reference_notes": [
+      "以 DeepSeek-V2/V3 为代表：拆分更细粒度的 Routed Experts 并剥离常驻激活的 Shared Experts 捕捉通用知识",
+      "通过动态偏置调整（Auxiliary-loss-free）替代强干扰的传统负载均衡辅助损失",
+      "常与 MLA 低秩 KV 压缩、混合线性注意力及 FP8 训练/推理协同设计"
+    ],
+    "sources": [
+      {
+        "title": "LLM Interview Handbook · docs/99-frontier.md · Q04",
+        "url": "https://github.com/axiaoquan/llm-interview-handbook/blob/8a86e722dcdb77de472daefa9401a859deb96f63/docs/99-frontier.md",
+        "license": "MIT",
+        "note": "经 AIBaG 结构化、压缩或重写；保留上游归属。",
+        "upstream_updated_at": "2026-11-15T06:00:07Z"
+      }
+    ],
+    "license": {
+      "spdx": "MIT",
+      "copyright": "Copyright (c) 2026 axiaoquan",
+      "notice_file": "third_party/llm-interview-handbook-LICENSE"
+    },
+    "provenance": {
+      "origin": "axiaoquan/llm-interview-handbook",
+      "source_path": "docs/99-frontier.md",
+      "source_section": "Q04 · MoE 最新进展",
+      "upstream_commit": "8a86e722dcdb77de472daefa9401a859deb96f63",
+      "upstream_updated_at": "2026-11-15T06:00:07Z",
+      "imported_at": "2026-11-19"
+    }
+  }
+]

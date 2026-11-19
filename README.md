@@ -1,10 +1,32 @@
 # AIBaG · 本地优先的 AI 面试与算法训练场
 
-**简体中文** | [English](README_EN.md)
+<p align="left">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-0f766e.svg" alt="MIT License"></a>
+  <a href="https://github.com/yuanxiang02/AIBaG/releases"><img src="https://img.shields.io/badge/Release-v2.0.0-1d4ed8.svg" alt="Release v2.0.0"></a>
+  <img src="https://img.shields.io/badge/Problems-2%2C000-b45309.svg" alt="2,000 Problems">
+  <img src="https://img.shields.io/badge/Python-3.10%2B%20Stdlib-374151.svg" alt="Python 3 Stdlib Only">
+  <img src="https://img.shields.io/badge/Dependencies-Zero-059669.svg" alt="Zero Dependencies">
+</p>
 
-**AIBaG (Algorithm & AI Interview Lab)** 是一个零第三方依赖、本地优先的 AI 面试与算法训练工作台。内置 **1,000 道** AI Infra 算子实现、大模型简答八股与高频算法手撕题，并支持一键录入或批量导入个人专属面经（`自建面经`）。
+**简体中文** | [English](README_EN.md) · [版本更新日志](CHANGELOG.md) · [社区分享与推广文案](docs/PROMOTION.md)
+
+**AIBaG (Algorithm & AI Interview Lab)** 是一个**零第三方依赖、本地优先**的大模型算法与 AI Infra 面试训练工作台。内置 **2,000 道** 结构化面试真题（覆盖 **AI Infra 手撕算子 `480` 题**、**大模型全栈八股 `720` 题**、**经典力扣手撕 `800` 题**），每题均内置**毫秒级展开的持久化标准答案**，并支持一键录入或批量导入个人专属面经（`自建面经`）。
 
 不同于传统刷题网站只看“测试用例是否通过”或死记硬背标准八股文，AIBaG 模拟真实技术面试的白板推导与口述追问环节：先独立作答，再由 AI 面试官进行结构化诊断（Pass / Partial / Retry）、亮点提取与渐进式多轮追问。
+
+| 对比维度 | 静态八股文档 / PDF | 传统 OJ 刷题网站 | **AIBaG 本地训练场** |
+| :--- | :--- | :--- | :--- |
+| **核心考察方式** | 被动阅读，容易“一看就会、一问就卡” | 只判样例通过，忽略推导与追问 | **白板手撕 + 口述推演 + 面试官多轮追问** |
+| **AI Infra / LLM 深度** | 零散笔记，缺少可手撕代码骨架 | 几乎不覆盖 MHA / RoPE / MLA / RingAttn | **480 道 AI Infra 算子 + 720 道大模型八股** |
+| **八维面试追问视角** | 单一问答视角 | 单一代码题面 | **基础 / 边界 / 优化 / 证明 / 迁移 / 排障 / 对比 / 扩展** |
+| **无 Key / 离线体验** | 仅能阅读 | 需联网判题 | **2,000 题内置持久化标准答案 + 离线自评掌握度** |
+| **个人面经沉淀** | 散落在备忘录，难以复盘 | 不支持私有题目 | **一键录入/在线编辑自建面经 + JSON 导入导出** |
+
+```bash
+# 30 秒本地启动（仅需 Python 3 标准库，零 pip / npm 依赖）
+git clone https://github.com/yuanxiang02/AIBaG.git && cd AIBaG
+./start.sh
+```
 
 ---
 
@@ -29,10 +51,11 @@
 
 ## 核心特性
 
-1. **三大核心赛道 + 1,000 道结构化题库**
-   - **AI Infra (`200` 题)**：覆盖 Multi-Head Attention、FlashAttention 分块 Online Softmax、RoPE、KV Cache 量化、Ring AllReduce 等核心算子与系统实现。
-   - **简答八股 (`365` 题)**：覆盖大模型架构、分布式训练（ZeRO / TP / PP / EP）、推理加速与机器学习基础，内置 **PE (Proficiency Evaluation)** 掌握度评估状态机，拒绝死记硬背。
-   - **力扣手撕 (`435` 题)**：高频数据结构与算法白板推导，重点训练复杂度分析、循环不变量与边界条件。
+1. **三大核心赛道 + 2,000 道八维结构化题库**
+   - **AI Infra (`480` 题)**：覆盖 MHA / GQA / MQA / DeepSeek MLA、FlashAttention Online Softmax、RoPE / ALiBi、KV Cache INT8 量化、PagedAttention、投机采样、Ring Attention、TP/MoE 路由与 DPO/GRPO/SimPO 损失等核心实现。
+   - **简答八股 (`720` 题)**：覆盖大模型架构、预训练与分布式系统（ZeRO / TP / PP / EP / P-D 分离 / Roofline 算术强度）、对齐微调、RAG/Agent、评测去污染与前沿架构（Mamba / Diffusion LLM / Test-time Scaling），内置 **PE (Proficiency Evaluation)** 掌握度评估状态机。
+   - **力扣手撕 (`800` 题)**：完整覆盖数据结构、Hot100 与大厂面试真题变体，重点训练循环不变量、边界条件与时空复杂度权衡。
+   - **8 大真实面试追问视角**：250 道精选母题在运行时按 **基础标准题、边界诊断、复杂度与优化、原理与证明、场景迁移、故障排查、方案对比、规模扩展** 8 个维度展开为 2,000 道可溯源训练题。
 
 2. **自建面经闭环 (`Custom Interview Bank`)**
    - **单题快速录入与在线编辑**：在页面顶部或题库右上角点击「`+ 提交自建面经`」录入新题；对已有自建题支持在首页列表或作答页一键点击「`编辑`」随时补充考察要点、修正题面与个人复盘答案（保留原题目 ID 与练习记录）。
@@ -40,7 +63,7 @@
    - **隐私安全**：自建题目持久化保存在本机 `data/custom_problems.json`（默认加入 `.gitignore`，不会意外上传至公共仓库）。
 
 3. **高可用交互体验**
-   - **筛选队列感知与全键盘流切题**：首页筛选条件自动跨页保持，作答页顶部内置队列进度指示（如 `AI Infra 3 / 200`）及 `← 上一题`、`下一题 →`（支持 `Alt + ←/→`）与 `随机一题`，仅在当前筛选范围内无缝流转；编辑器支持 `⌘/Ctrl + Enter` 一键提交。
+   - **筛选队列感知与全键盘流切题**：首页筛选条件自动跨页保持，作答页顶部内置队列进度指示（如 `AI Infra 3 / 480`）及 `← 上一题`、`下一题 →`（支持 `Alt + ←/→`）与 `随机一题`，仅在当前筛选范围内无缝流转；编辑器支持 `⌘/Ctrl + Enter` 一键提交。
    - **结构化面试官诊断卡片**：每次提交后直观展示得分、核心亮点（Strengths）、当前待补全盲区（Focus Issue）与下一步追问。
    - **零延迟标准答案与离线自评闭环**：所有内置题均配备持久化标准答案，点击立即展开且无需等待模型生成，支持一键复制代码/解析，并可在未配置 API Key 或离线自习时直接标记掌握度（`✓ 已掌握` / `~ 待巩固` / `↻ 需重试`）。
    - **本地练习档案导入 / 导出**：在「做过的题」页面查看已练习题数、核心掌握数与平均得分，支持多维过滤以及练习记录 JSON 导出备份与跨设备导入合并。
@@ -129,16 +152,17 @@ AIBaG/
 ├── style.css                  # 全局排版与响应式样式
 ├── prompts/                   # AI 面试官评审 (judge) 与追问 (coach / PE) 提示词
 ├── data/
-│   ├── catalog/               # 200 道基础标准题分片数据
-│   ├── variant_templates.json # 4 组面试训练视角模板（运行时组合为 1,000 道题）
-│   ├── answers.json           # 持久化标准答案库（即时展示，零模型调用开销）
+│   ├── catalog/               # 250 道基础标准题分片数据（part-001 ~ part-005）
+│   ├── variant_templates.json # 7 组面试训练视角模板（运行时组合为 2,000 道题）
+│   ├── answers.json           # 250 道母题持久化标准答案库（含派生视角指导，零模型调用开销）
 │   └── custom_problems.json   # 用户本机自建面经数据（自动生成，Git 忽略）
 └── tests/test_server.py       # 题库完整性、启动性能、AI 评审与自建题库单元测试
 ```
 
 ### 致谢与开源许可
 
-- 内置题库中包含 200 道基础题与 4 组结构化训练变体（共 1,000 道练习题）。
+- 本项目代码采用 **[MIT License](LICENSE)** 开源，欢迎自由使用、修改与二次开发。
+- 内置题库中包含 250 道基础题与 7 组结构化训练变体（共 2,000 道练习题）。
 - 部分大模型八股与算法题目改编自 MIT 许可的开源项目 [axiaoquan/llm-interview-handbook](https://github.com/axiaoquan/llm-interview-handbook)（上游 commit `8a86e722dcdb77de472daefa9401a859deb96f63`）。
 - 完整版权声明与第三方许可请参见 [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) 与 [`third_party/llm-interview-handbook-LICENSE`](third_party/llm-interview-handbook-LICENSE)。
 

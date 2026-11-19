@@ -798,5 +798,205 @@
   "handbook-docs-08-multimodal-q07": {
     "answer": "### 核心思想\n\n学习**逐步去噪**的过程：从纯噪声开始，逐步生成清晰图像。\n\n### 前向过程（加噪）\n\n定义 $T$ 步噪声调度，每步：\n\n$$\nq(x_t \\mid x_{t-1}) = \\mathcal{N}(x_t; \\sqrt{1-\\beta_t} x_{t-1}, \\beta_t I)\n$$\n\n最终 $x_T$ 接近纯高斯噪声。\n\n前向链可以合并成一步采样：$x_t=\\sqrt{\\bar\\alpha_t}x_0+\\sqrt{1-\\bar\\alpha_t}\\epsilon$。因此训练时不必真的从 1 走到 $t$，可以随机采一个时间步直接构造 $x_t$；多步只发生在生成阶段。这也是扩散训练能够并行的关键。\n\n### 反向过程（去噪）\n\n训练神经网络 $\\epsilon_\\theta(x_t, t)$ 预测每步加的噪声：\n\n$$\nL = \\mathbb{E}_{x_0, t, \\epsilon}\\left[\\Vert\\epsilon - \\epsilon_\\theta(x_t, t)\\Vert^2\\right]\n$$\n\n推理时从纯噪声出发，反向走 $T$ 步生成图像。\n\n### 主要变体\n\n| 模型 | 关键创新 |\n|---|---|\n| **DDPM** | Diffusion 开山之作 |\n| **DDIM** | 确定性采样，加速生成 |\n| **Stable Diffusion** | Latent Diffusion，在 VAE 隐空间做扩散 |\n| **Flow Matching** | 用 ODE 替代 SDE，连续生成 |\n\n### Diffusion vs LLM\n\n| | Diffusion | LLM |\n|---|---|---|\n| 范式 | 并行去噪 | 串行下一 token |\n| 推理速度 | 慢（多步） | 自回归慢 |\n| 控制 | classifier-free guidance | prompting |\n| 用途 | 图、视频生成 | 文本生成 |\n\n> **DLM（Diffusion LLM）** = 把扩散思想用到文本生成，详见 [99 · Frontier](99-frontier.md)。\n\n---\n\n[⬅ 回到首页](../README.md)",
     "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/08-multimodal.md#Q07"
+  },
+  "implement-gqa": {
+    "answer": "参考实现：\n\n```python\nimport math, torch\nimport torch.nn as nn\nimport torch.nn.functional as F\n\nclass GroupedQueryAttention(nn.Module):\n    def __init__(self, d_model: int, n_q_heads: int, n_kv_heads: int):\n        super().__init__()\n        assert d_model % n_q_heads == 0 and n_q_heads % n_kv_heads == 0\n        self.n_q, self.n_kv = n_q_heads, n_kv_heads\n        self.groups = n_q_heads // n_kv_heads\n        self.d_k = d_model // n_q_heads\n        self.wq = nn.Linear(d_model, n_q_heads * self.d_k, bias=False)\n        self.wk = nn.Linear(d_model, n_kv_heads * self.d_k, bias=False)\n        self.wv = nn.Linear(d_model, n_kv_heads * self.d_k, bias=False)\n        self.wo = nn.Linear(d_model, d_model, bias=False)\n\n    def forward(self, x: torch.Tensor, mask: torch.Tensor | None = None) -> torch.Tensor:\n        B, L, _ = x.shape\n        q = self.wq(x).view(B, L, self.n_q, self.d_k).transpose(1, 2)\n        k = self.wk(x).view(B, L, self.n_kv, self.d_k).transpose(1, 2).repeat_interleave(self.groups, dim=1)\n        v = self.wv(x).view(B, L, self.n_kv, self.d_k).transpose(1, 2).repeat_interleave(self.groups, dim=1)\n        scores = (q @ k.transpose(-2, -1)) / math.sqrt(self.d_k)\n        if mask is not None:\n            scores = scores.masked_fill(mask == 0, float('-inf'))\n        attn = F.softmax(scores, dim=-1)\n        out = (attn @ v).transpose(1, 2).contiguous().view(B, L, -1)\n        return self.wo(out)\n```\n\n关键说明：\n- KV 组重复对齐 Q 头\n- 缩放点积与掩码处理\n- 显存优势分析",
+    "source": "aibag-curated:ai-infra#implement-gqa"
+  },
+  "implement-mqa": {
+    "answer": "参考实现：\n\n```python\nimport math, torch\nimport torch.nn as nn\nimport torch.nn.functional as F\n\nclass MultiQueryAttention(nn.Module):\n    def __init__(self, d_model: int, n_heads: int):\n        super().__init__()\n        self.n_heads = n_heads\n        self.d_k = d_model // n_heads\n        self.wq = nn.Linear(d_model, d_model, bias=False)\n        self.wk = nn.Linear(d_model, self.d_k, bias=False)\n        self.wv = nn.Linear(d_model, self.d_k, bias=False)\n        self.wo = nn.Linear(d_model, d_model, bias=False)\n\n    def forward(self, x: torch.Tensor) -> torch.Tensor:\n        B, L, D = x.shape\n        q = self.wq(x).view(B, L, self.n_heads, self.d_k).transpose(1, 2)\n        k = self.wk(x).unsqueeze(1)\n        v = self.wv(x).unsqueeze(1)\n        scores = (q @ k.transpose(-2, -1)) / math.sqrt(self.d_k)\n        out = (F.softmax(scores, dim=-1) @ v).transpose(1, 2).contiguous().view(B, L, D)\n        return self.wo(out)\n```\n\n关键说明：\n- 单头 KV 广播到多头 Q\n- 张量维度对齐\n- Decode 带宽收益",
+    "source": "aibag-curated:ai-infra#implement-mqa"
+  },
+  "implement-mla-kv-proj": {
+    "answer": "参考实现：\n\n```python\nimport torch\nimport torch.nn as nn\n\nclass MLAKVProjection(nn.Module):\n    def __init__(self, d_model: int, d_latent: int, n_heads: int, d_head: int):\n        super().__init__()\n        self.n_heads, self.d_head = n_heads, d_head\n        self.w_dkv = nn.Linear(d_model, d_latent, bias=False)\n        self.w_uk = nn.Linear(d_latent, n_heads * d_head, bias=False)\n        self.w_uv = nn.Linear(d_latent, n_heads * d_head, bias=False)\n\n    def forward(self, h: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:\n        B, L, _ = h.shape\n        c_kv = self.w_dkv(h)\n        k = self.w_uk(c_kv).view(B, L, self.n_heads, self.d_head).transpose(1, 2)\n        v = self.w_uv(c_kv).view(B, L, self.n_heads, self.d_head).transpose(1, 2)\n        return c_kv, k, v\n```\n\n关键说明：\n- 潜向量 c_kv 压缩\n- 上投影恢复 K/V\n- 推理仅缓存 c_kv 的原理",
+    "source": "aibag-curated:ai-infra#implement-mla-kv-proj"
+  },
+  "sliding-window-causal-mask": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef build_sliding_window_mask(seq_len: int, window_size: int) -> torch.Tensor:\n    idx = torch.arange(seq_len)\n    diff = idx.unsqueeze(1) - idx.unsqueeze(0)\n    return (diff >= 0) & (diff < window_size)\n```\n\n关键说明：\n- 因果上三角屏蔽\n- 窗口下边界屏蔽\n- 布尔掩码形状 [L, L]",
+    "source": "aibag-curated:ai-infra#sliding-window-causal-mask"
+  },
+  "online-softmax-1d": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef online_softmax(x: torch.Tensor) -> torch.Tensor:\n    m = torch.tensor(float('-inf'), device=x.device, dtype=x.dtype)\n    d = torch.tensor(0.0, device=x.device, dtype=x.dtype)\n    for val in x:\n        m_new = torch.maximum(m, val)\n        d = d * torch.exp(m - m_new) + torch.exp(val - m_new)\n        m = m_new\n    return torch.exp(x - m) / d\n```\n\n关键说明：\n- 运行最大值动态修正 exp(m_old - m_new)\n- 分母在线更新\n- 与标准 Softmax 等价性",
+    "source": "aibag-curated:ai-infra#online-softmax-1d"
+  },
+  "cosine-warmup-lr": {
+    "answer": "参考实现：\n\n```python\nimport math\n\ndef get_cosine_warmup_lr(step: int, warmup_steps: int, max_steps: int, max_lr: float, min_lr: float) -> float:\n    if step < warmup_steps:\n        return max_lr * (step / max(1, warmup_steps))\n    if step >= max_steps:\n        return min_lr\n    progress = (step - warmup_steps) / max(1, max_steps - warmup_steps)\n    return min_lr + 0.5 * (max_lr - min_lr) * (1.0 + math.cos(math.pi * progress))\n```\n\n关键说明：\n- Warmup 阶段线性增长\n- 余弦退火区间映射\n- 超出 max_steps 截断为 min_lr",
+    "source": "aibag-curated:ai-infra#cosine-warmup-lr"
+  },
+  "clip-grad-norm-manual": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef clip_grad_norm_manual(parameters, max_norm: float, eps: float = 1e-6) -> float:\n    grads = [p.grad for p in parameters if p.grad is not None]\n    if not grads:\n        return 0.0\n    total_norm = torch.sqrt(sum(torch.sum(g.detach().float() ** 2) for g in grads))\n    clip_coef = max_norm / (total_norm + eps)\n    if clip_coef < 1.0:\n        for g in grads:\n            g.mul_(clip_coef.to(g.dtype))\n    return float(total_norm.item())\n```\n\n关键说明：\n- 过滤无梯度参数\n- 全局 L2 范数聚合\n- clip_coef < 1 时原地缩放",
+    "source": "aibag-curated:ai-infra#clip-grad-norm-manual"
+  },
+  "adamw-single-step": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef adamw_step(param: torch.Tensor, grad: torch.Tensor, exp_avg: torch.Tensor, exp_avg_sq: torch.Tensor, step: int, lr: float = 1e-3, beta1: float = 0.9, beta2: float = 0.999, eps: float = 1e-8, weight_decay: float = 0.01) -> None:\n    param.mul_(1.0 - lr * weight_decay)\n    exp_avg.mul_(beta1).add_(grad, alpha=1.0 - beta1)\n    exp_avg_sq.mul_(beta2).addcmul_(grad, grad, value=1.0 - beta2)\n    bc1 = 1.0 - beta1 ** step\n    bc2 = 1.0 - beta2 ** step\n    step_size = lr / bc1\n    denom = (exp_avg_sq.sqrt() / (bc2 ** 0.5)).add_(eps)\n    param.addcdiv_(exp_avg, denom, value=-step_size)\n```\n\n关键说明：\n- 先执行解耦权重衰减\n- 一阶/二阶矩指数滑动平均\n- 偏差修正 bias correction",
+    "source": "aibag-curated:ai-infra#adamw-single-step"
+  },
+  "per-channel-int8-quant": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef quantize_per_channel_int8(weight: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:\n    max_val = weight.abs().amax(dim=-1, keepdim=True).clamp(min=1e-8)\n    scale = max_val / 127.0\n    q_weight = torch.clamp(torch.round(weight / scale), -127, 127).to(torch.int8)\n    return q_weight, scale.squeeze(-1)\n```\n\n关键说明：\n- 沿 in_features 维取绝对值最大\n- 除零保护与 round/clamp\n- 反量化乘法恢复",
+    "source": "aibag-curated:ai-infra#per-channel-int8-quant"
+  },
+  "kv-cache-int8-quant": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef quantize_kv_int8(kv: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:\n    scale = kv.abs().amax(dim=-1, keepdim=True).clamp(min=1e-8) / 127.0\n    q = torch.clamp(torch.round(kv / scale), -127, 127).to(torch.int8)\n    return q, scale\n\ndef dequantize_kv_int8(q_kv: torch.Tensor, scale: torch.Tensor) -> torch.Tensor:\n    return q_kv.to(scale.dtype) * scale\n```\n\n关键说明：\n- 沿最后一维 D 求 scale\n- 保持 [B, H, L, 1] 广播维度\n- 反量化精度恢复",
+    "source": "aibag-curated:ai-infra#kv-cache-int8-quant"
+  },
+  "speculative-sampling-accept": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef speculative_accept_step(p_draft: torch.Tensor, p_target: torch.Tensor, draft_tokens: torch.Tensor) -> list[int]:\n    accepted = []\n    for i, tok in enumerate(draft_tokens.tolist()):\n        ratio = p_target[i, tok] / torch.clamp(p_draft[i, tok], min=1e-12)\n        if torch.rand(()) < torch.minimum(torch.ones_like(ratio), ratio):\n            accepted.append(tok)\n        else:\n            residual = torch.clamp(p_target[i] - p_draft[i], min=0.0)\n            residual = residual / residual.sum()\n            resampled = int(torch.multinomial(residual, 1).item())\n            accepted.append(resampled)\n            break\n    return accepted\n```\n\n关键说明：\n- 接受率 min(1, p_target / p_draft)\n- 首次拒绝后从修正分布重采样\n- 分布无损性保证",
+    "source": "aibag-curated:ai-infra#speculative-sampling-accept"
+  },
+  "paged-kv-block-table": {
+    "answer": "参考实现：\n\n```python\ndef resolve_paged_kv_slot(block_table: list[int], pos: int, block_size: int) -> tuple[int, int]:\n    if pos < 0 or block_size <= 0:\n        raise ValueError('Invalid pos or block_size')\n    logical_block = pos // block_size\n    if logical_block >= len(block_table):\n        raise IndexError('Block table out of range')\n    return block_table[logical_block], pos % block_size\n```\n\n关键说明：\n- 逻辑块号 pos // block_size\n- 块内偏移 pos % block_size\n- 越界检查",
+    "source": "aibag-curated:ai-infra#paged-kv-block-table"
+  },
+  "sequence-packing-causal-mask": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef build_packed_causal_mask(doc_ids: torch.Tensor) -> torch.Tensor:\n    L = doc_ids.size(0)\n    same_doc = doc_ids.unsqueeze(1) == doc_ids.unsqueeze(0)\n    causal = torch.tril(torch.ones((L, L), dtype=torch.bool, device=doc_ids.device))\n    return same_doc & causal\n```\n\n关键说明：\n- 同文档匹配 doc_ids[:, None] == doc_ids[None, :]\n- 下三角因果约束\n- 时间复杂度与广播",
+    "source": "aibag-curated:ai-infra#sequence-packing-causal-mask"
+  },
+  "sft-masked-lm-loss": {
+    "answer": "参考实现：\n\n```python\nimport torch\nimport torch.nn.functional as F\n\ndef sft_causal_lm_loss(logits: torch.Tensor, labels: torch.Tensor, ignore_index: int = -100) -> torch.Tensor:\n    shift_logits = logits[:, :-1, :].contiguous()\n    shift_labels = labels[:, 1:].contiguous()\n    return F.cross_entropy(shift_logits.view(-1, shift_logits.size(-1)), shift_labels.view(-1), ignore_index=ignore_index)\n```\n\n关键说明：\n- logits[:-1] 与 labels[1:] 错位对齐\n- ignore_index 屏蔽 Prompt\n- 有效 token 均值归一化",
+    "source": "aibag-curated:ai-infra#sft-masked-lm-loss"
+  },
+  "simpo-reference-free-loss": {
+    "answer": "参考实现：\n\n```python\nimport torch\nimport torch.nn.functional as F\n\ndef simpo_loss(chosen_logps: torch.Tensor, chosen_lens: torch.Tensor, rejected_logps: torch.Tensor, rejected_lens: torch.Tensor, beta: float = 2.0, gamma: float = 0.5) -> torch.Tensor:\n    c_avg = chosen_logps / chosen_lens.clamp(min=1)\n    r_avg = rejected_logps / rejected_lens.clamp(min=1)\n    logits = beta * ((c_avg - r_avg) - gamma)\n    return -F.logsigmoid(logits).mean()\n```\n\n关键说明：\n- 按生成长度平均 logp\n- 减去 margin gamma\n- logsigmoid 数值稳定计算",
+    "source": "aibag-curated:ai-infra#simpo-reference-free-loss"
+  },
+  "kl-divergence-estimators": {
+    "answer": "参考实现：\n\n```python\nimport torch\n\ndef estimate_kl(log_pi: torch.Tensor, log_ref: torch.Tensor) -> dict[str, torch.Tensor]:\n    log_r = log_ref - log_pi\n    r = torch.exp(log_r)\n    return {'k1': -log_r, 'k2': 0.5 * (log_r ** 2), 'k3': (r - 1.0) - log_r}\n```\n\n关键说明：\n- k1 = log_pi - log_ref\n- k2 = 0.5 * (log_pi - log_ref)^2\n- k3 = (r - 1) - log(r) 非负无偏性质",
+    "source": "aibag-curated:ai-infra#kl-divergence-estimators"
+  },
+  "info-nce-contrastive-loss": {
+    "answer": "参考实现：\n\n```python\nimport torch\nimport torch.nn.functional as F\n\ndef symmetric_infonce_loss(z_a: torch.Tensor, z_b: torch.Tensor, tau: float = 0.07) -> torch.Tensor:\n    a = F.normalize(z_a, dim=-1)\n    b = F.normalize(z_b, dim=-1)\n    logits = (a @ b.T) / tau\n    labels = torch.arange(a.size(0), device=a.device)\n    return 0.5 * (F.cross_entropy(logits, labels) + F.cross_entropy(logits.T, labels))\n```\n\n关键说明：\n- L2 归一化余弦相似度矩阵\n- 温度缩放除以 tau\n- 行/列双向交叉熵平均",
+    "source": "aibag-curated:ai-infra#info-nce-contrastive-loss"
+  },
+  "tensor-parallel-col-row-linear": {
+    "answer": "参考实现：\n\n```python\nimport torch\nimport torch.nn.functional as F\n\ndef tp2_mlp_forward(x: torch.Tensor, w1: torch.Tensor, w2: torch.Tensor) -> torch.Tensor:\n    w1_0, w1_1 = torch.chunk(w1, 2, dim=-1)\n    w2_0, w2_1 = torch.chunk(w2, 2, dim=0)\n    y0 = F.gelu(x @ w1_0) @ w2_0\n    y1 = F.gelu(x @ w1_1) @ w2_1\n    return y0 + y1\n```\n\n关键说明：\n- w1 按列切分独立激活\n- w2 按行切分局部乘积\n- AllReduce 求和等价验证",
+    "source": "aibag-curated:ai-infra#tensor-parallel-col-row-linear"
+  },
+  "ring-attention-step": {
+    "answer": "参考实现：\n\n```python\nimport math, torch\n\ndef ring_attn_merge_block(q: torch.Tensor, k_block: torch.Tensor, v_block: torch.Tensor, out: torch.Tensor, lse: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:\n    d_k = q.size(-1)\n    scores = (q @ k_block.transpose(-2, -1)) / math.sqrt(d_k)\n    block_lse = torch.logsumexp(scores, dim=-1, keepdim=True)\n    block_out = torch.softmax(scores, dim=-1) @ v_block\n    new_lse = torch.logaddexp(lse, block_lse)\n    new_out = torch.exp(lse - new_lse) * out + torch.exp(block_lse - new_lse) * block_out\n    return new_out, new_lse\n```\n\n关键说明：\n- 块注意力得分与局部 lse\n- 全局新 lse 合并公式\n- 输出向量按指数权重重缩放",
+    "source": "aibag-curated:ai-infra#ring-attention-step"
+  },
+  "moe-capacity-token-drop": {
+    "answer": "参考实现：\n\n```python\nimport math, torch\n\ndef route_with_capacity(top1_expert: torch.Tensor, num_experts: int, capacity_factor: float = 1.25) -> tuple[torch.Tensor, int]:\n    num_tokens = top1_expert.numel()\n    capacity = math.ceil((num_tokens / num_experts) * capacity_factor)\n    counts = [0] * num_experts\n    accepted = torch.zeros_like(top1_expert, dtype=torch.bool)\n    for idx, exp in enumerate(top1_expert.view(-1).tolist()):\n        if counts[exp] < capacity:\n            accepted.view(-1)[idx] = True\n            counts[exp] += 1\n    return accepted, capacity\n```\n\n关键说明：\n- capacity = ceil(num_tokens / num_experts * factor)\n- 专家内累加计数\n- 超出 capacity 的 token 掩码",
+    "source": "aibag-curated:ai-infra#moe-capacity-token-drop"
+  },
+  "handbook-algorithms-10-hot100-lc049": {
+    "answer": "参考实现：\n\n```python\nfrom collections import defaultdict\n\nclass Solution:\n    def groupAnagrams(self, strs: list[str]) -> list[list[str]]:\n        d = defaultdict(list)\n        for s in strs:\n            cnt = [0] * 26\n            for c in s:\n                cnt[ord(c) - ord('a')] += 1\n            d[tuple(cnt)].append(s)\n        return list(d.values())\n```\n\n关键说明：\n- 判断异位词的标准：26 长度的字符计数 tuple 作为哈希表 key\n- list 不能直接作为 dict key，需转为 tuple，或使用 ''.join(sorted(s))",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#49"
+  },
+  "handbook-algorithms-10-hot100-lc128": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def longestConsecutive(self, nums: list[int]) -> int:\n        s = set(nums)\n        ans = 0\n        for x in s:\n            if x - 1 in s:\n                continue\n            cur = x\n            while cur + 1 in s:\n                cur += 1\n            ans = max(ans, cur - x + 1)\n        return ans\n```\n\n关键说明：\n- 先用 set 去重；遍历元素，只从序列起点开始计数（即 x - 1 不在 set 中）\n- 每个连续段只会被内层 while 遍历一次，整体时间复杂度 O(n)",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#128"
+  },
+  "handbook-algorithms-10-hot100-lc283": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def moveZeroes(self, nums: list[int]) -> None:\n        slow = 0\n        for fast in range(len(nums)):\n            if nums[fast] != 0:\n                nums[slow], nums[fast] = nums[fast], nums[slow]\n                slow += 1\n```\n\n关键说明：\n- 快慢指针：slow 维护非零区下一个写入位，fast 扫描数组\n- 遇到非零元素时交换 nums[slow] 与 nums[fast] 并令 slow += 1，保持相对顺序",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#283"
+  },
+  "handbook-algorithms-10-hot100-lc011": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def maxArea(self, h: list[int]) -> int:\n        l, r, ans = 0, len(h) - 1, 0\n        while l < r:\n            ans = max(ans, min(h[l], h[r]) * (r - l))\n            if h[l] < h[r]:\n                l += 1\n            else:\n                r -= 1\n        return ans\n```\n\n关键说明：\n- 容量由短板决定：min(h[l], h[r]) * (r - l)\n- 每次向内移动较短的一侧指针，因为底边缩小后只有提高短板才可能增大面积",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#11"
+  },
+  "handbook-algorithms-10-hot100-lc003": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        seen = set()\n        l = ans = 0\n        for r, c in enumerate(s):\n            while c in seen:\n                seen.remove(s[l])\n                l += 1\n            seen.add(c)\n            ans = max(ans, r - l + 1)\n        return ans\n```\n\n关键说明：\n- 滑动窗口维护窗口内无重复字符集合 seen\n- 右指针遇到重复字符时持续右移左指针并从 seen 移除，直到窗口恢复无重复不变量",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#3"
+  },
+  "handbook-algorithms-10-hot100-lc438": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def findAnagrams(self, s: str, p: str) -> list[int]:\n        if len(s) < len(p):\n            return []\n        need, cur = [0] * 26, [0] * 26\n        for c in p:\n            need[ord(c) - ord('a')] += 1\n        for c in s[:len(p)]:\n            cur[ord(c) - ord('a')] += 1\n        ans = [0] if cur == need else []\n        for i in range(len(p), len(s)):\n            cur[ord(s[i]) - ord('a')] += 1\n            cur[ord(s[i - len(p)]) - ord('a')] -= 1\n            if cur == need:\n                ans.append(i - len(p) + 1)\n        return ans\n```\n\n关键说明：\n- 维护长度为 len(p) 的定长滑动窗口与长度为 26 的频次数组\n- 每次右移一格同步增删进出窗口的字符计数并比对 cur == need",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#438"
+  },
+  "handbook-algorithms-10-hot100-lc560": {
+    "answer": "参考实现：\n\n```python\nfrom collections import defaultdict\n\nclass Solution:\n    def subarraySum(self, nums: list[int], k: int) -> int:\n        prefix = ans = 0\n        cnt = defaultdict(int, {0: 1})\n        for x in nums:\n            prefix += x\n            ans += cnt[prefix - k]\n            cnt[prefix] += 1\n        return ans\n```\n\n关键说明：\n- 数组含负数时无单调性，不能使用滑动窗口\n- 使用前缀和 + 哈希表统计 prefix - k 出现次数，初始化 cnt[0] = 1 处理从下标 0 开始的子数组",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#560"
+  },
+  "handbook-algorithms-10-hot100-lc076": {
+    "answer": "参考实现：\n\n```python\nfrom collections import Counter\n\nclass Solution:\n    def minWindow(self, s: str, t: str) -> str:\n        need = Counter(t)\n        have = {}\n        valid = l = 0\n        ans = (float('inf'), 0, 0)\n        for r, c in enumerate(s):\n            have[c] = have.get(c, 0) + 1\n            if c in need and have[c] == need[c]:\n                valid += 1\n            while valid == len(need):\n                if r - l + 1 < ans[0]:\n                    ans = (r - l + 1, l, r)\n                if s[l] in need and have[s[l]] == need[s[l]]:\n                    valid -= 1\n                have[s[l]] -= 1\n                l += 1\n        return s[ans[1]:ans[2] + 1] if ans[0] != float('inf') else ''\n```\n\n关键说明：\n- 用 need 和 have 两个哈希表加 valid 计数器跟踪已满足频次要求的字符种类数\n- 当 valid == len(need) 时持续收缩左边界更新最优子串",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#76"
+  },
+  "handbook-algorithms-10-hot100-lc056": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def merge(self, intervals: list[list[int]]) -> list[list[int]]:\n        intervals.sort()\n        ans = [intervals[0]]\n        for s, e in intervals[1:]:\n            if s <= ans[-1][1]:\n                ans[-1][1] = max(ans[-1][1], e)\n            else:\n                ans.append([s, e])\n        return ans\n```\n\n关键说明：\n- 先按区间左端点升序排序\n- 若当前区间起点 <= 结果末尾区间右端点则合并并取右端点 max，否则直接追加",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#56"
+  },
+  "handbook-algorithms-10-hot100-lc240": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def searchMatrix(self, matrix: list[list[int]], target: int) -> bool:\n        if not matrix or not matrix[0]:\n            return False\n        m, n = len(matrix), len(matrix[0])\n        i, j = 0, n - 1\n        while i < m and j >= 0:\n            if matrix[i][j] == target:\n                return True\n            if matrix[i][j] < target:\n                i += 1\n            else:\n                j -= 1\n        return False\n```\n\n关键说明：\n- 从右上角 (0, n-1) 出发，利用行递增、列递增的单调性做折线搜索\n- 当前值 < target 则行号 +1，> target 则列号 -1，复杂度 O(m + n)",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#240"
+  },
+  "handbook-algorithms-10-hot100-lc958": {
+    "answer": "参考实现：\n\n```python\nfrom collections import deque\n\nclass Solution:\n    def isCompleteTree(self, root) -> bool:\n        q = deque([root])\n        seen_null = False\n        while q:\n            node = q.popleft()\n            if node is None:\n                seen_null = True\n            else:\n                if seen_null:\n                    return False\n                q.append(node.left)\n                q.append(node.right)\n        return True\n```\n\n关键说明：\n- 层序遍历（BFS）将空子节点也入队\n- 一旦遇到第一个 None 节点后，后续出队若再出现非空节点则不是完全二叉树",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#958"
+  },
+  "handbook-algorithms-10-hot100-lc416": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def canPartition(self, nums: list[int]) -> bool:\n        s = sum(nums)\n        if s & 1:\n            return False\n        target = s // 2\n        dp = [True] + [False] * target\n        for x in nums:\n            for j in range(target, x - 1, -1):\n                dp[j] = dp[j] or dp[j - x]\n        return dp[target]\n```\n\n关键说明：\n- 转化为 0-1 背包：总和为奇数直接返回 False，否则判断能否凑出 target = sum // 2\n- 一维布尔 DP 必须从 target 到 x 逆序遍历，防止同一元素被重复使用",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#416"
+  },
+  "handbook-algorithms-10-hot100-lc075": {
+    "answer": "参考实现：\n\n```python\nclass Solution:\n    def sortColors(self, nums: list[int]) -> None:\n        l, i, r = 0, 0, len(nums) - 1\n        while i <= r:\n            if nums[i] == 0:\n                nums[l], nums[i] = nums[i], nums[l]\n                l += 1\n                i += 1\n            elif nums[i] == 2:\n                nums[r], nums[i] = nums[i], nums[r]\n                r -= 1\n            else:\n                i += 1\n```\n\n关键说明：\n- 荷兰国旗三指针：l 维护 0 区右边界，r 维护 2 区左边界，i 扫描未定区\n- 遇到 2 与 r 交换后 r -= 1 但 i 不能递增，因为换回来的元素尚未检查",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:algorithms/10-hot100.md#75"
+  },
+  "handbook-docs-09-evaluation-q01": {
+    "answer": "### 核心要点\n\n1. PPL 等于平均负对数似然的指数 exp(-1/N * sum log P(x_i | x_<i))\n2. 不能直接跨不同 tokenizer 比较（分词粒度改变 N），跨词表需使用 bits-per-byte\n3. PPL 低不代表指令遵循、校准度或安全性好\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「Perplexity 与局限」最容易踩的坑是什么？**\n  A：PPL 低不代表指令遵循、校准度或安全性好；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q01"
+  },
+  "handbook-docs-09-evaluation-q02": {
+    "answer": "### 核心要点\n\n1. MMLU 测多学科知识，GSM8K/MATH 测数学推理，HumanEval/MBPP 用 pass@k 测代码生成\n2. pass@k 无偏估计公式：1 - C(n-c, k) / C(n, k)，需固定温度与单测环境\n3. 防止刷分需结合近重复去污染、动态测试集与盲评\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「主流基准（MMLU / GSM8K / HumanEval / HELM）」最容易踩的坑是什么？**\n  A：防止刷分需结合近重复去污染、动态测试集与盲评；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q02"
+  },
+  "handbook-docs-09-evaluation-q03": {
+    "answer": "### 核心要点\n\n1. 四大典型偏差：位置偏好、冗长偏好、自我偏好、格式风格偏好\n2. 缓解方案：双向交换位置、匿名化模型身份、允许平局（Tie）、明确分项 Rubric\n3. 使用分层人工复核集计算胜/负/平混淆矩阵与一致率来校准 Judge\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「LLM-as-Judge 偏差与校准」最容易踩的坑是什么？**\n  A：使用分层人工复核集计算胜/负/平混淆矩阵与一致率来校准 Judge；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q03"
+  },
+  "handbook-docs-09-evaluation-q04": {
+    "answer": "### 核心要点\n\n1. 分为事实性幻觉、逻辑性幻觉与指令遵循幻觉\n2. 检测手段包括多采样自洽性（SelfCheckGPT）、外部检索验证、NLI 蕴含判断与语义熵\n3. 需区分开放域事实验证与给定 Context 的 RAG 忠实度验证\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「Hallucination 幻觉分类与检测」最容易踩的坑是什么？**\n  A：需区分开放域事实验证与给定 Context 的 RAG 忠实度验证；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q04"
+  },
+  "handbook-docs-09-evaluation-q05": {
+    "answer": "### 核心要点\n\n1. 模型对长上下文开头和结尾信息利用率高、中间位置显著下降，呈 U 型曲线\n2. 工程缓解：关键证据前置或后置、RAG 精选高相关 chunk 控制总长\n3. 评测不能只看大海捞针（Needle），还需测试多证据聚合与跨段推理\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「Lost in the Middle 长上下文位置偏差」最容易踩的坑是什么？**\n  A：评测不能只看大海捞针（Needle），还需测试多证据聚合与跨段推理；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q05"
+  },
+  "handbook-docs-09-evaluation-q06": {
+    "answer": "### 核心要点\n\n1. 在同一批题目上计算配对差值 d_i = b_i - a_i，消去题目难度方差\n2. 使用 Paired Bootstrap 或 McNemar 检验评估置信区间，重采样单位需对齐独立题目簇\n3. 汇报胜率与 pass@k 时必须明确平局、超时与解析失败的分母口径\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「评测提升是否可信：配对比较与置信区间」最容易踩的坑是什么？**\n  A：汇报胜率与 pass@k 时必须明确平局、超时与解析失败的分母口径；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q06"
+  },
+  "handbook-docs-09-evaluation-q07": {
+    "answer": "### 核心要点\n\n1. 污染包含原文重复、n-gram 重合、改写/翻译变体及测试集反馈回流\n2. 高频依据测试集挑 checkpoint 会造成选择性过拟合，必须隔离验证集与最终测试集\n3. 最小可复现报告需锁死模型/量化版本、prompt 模板、采样超参与评分器版本\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「数据去污染、模型选择与可复现评测报告」最容易踩的坑是什么？**\n  A：最小可复现报告需锁死模型/量化版本、prompt 模板、采样超参与评分器版本；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/09-evaluation.md#Q07"
+  },
+  "handbook-docs-10-system-q01": {
+    "answer": "### 核心要点\n\n1. 混合精度 AdamW 常驻状态约 16 bytes/param（FP16 参数2 + 梯度2 + FP32 主权重4 + 一二阶矩8）\n2. 推理显存主要由权重（2P）与 KV Cache（2 * B * S * H_kv * d_h * N * bytes）构成\n3. GQA 必须按 H_kv 而非 H_q 计算 KV 显存，峰值还需计入激活、通信 buffer 与碎片\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「GPU 训练与推理显存精确估算」最容易踩的坑是什么？**\n  A：GQA 必须按 H_kv 而非 H_q 计算 KV 显存，峰值还需计入激活、通信 buffer 与碎片；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/10-system.md#Q01"
+  },
+  "handbook-docs-10-system-q02": {
+    "answer": "### 核心要点\n\n1. vLLM 核心在于 PagedAttention 消除 KV 外部碎片 + Continuous Batching 提升有效吞吐\n2. SGLang 通过 RadixAttention 基数树自动复用多轮/Agent 共享前缀并加速结构化输出\n3. 生产选型需综合吞吐、TTFT/TPOT 延迟、量化支持与 K8s 运维生态\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「大模型推理服务化框架对比（vLLM / SGLang / TGI / TensorRT-LLM）」最容易踩的坑是什么？**\n  A：生产选型需综合吞吐、TTFT/TPOT 延迟、量化支持与 K8s 运维生态；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/10-system.md#Q02"
+  },
+  "handbook-docs-10-system-q03": {
+    "answer": "### 核心要点\n\n1. Prefill 阶段并行处理整段 prompt 属算力密集型（Compute-bound），Decode 逐 token 生成属访存带宽密集型（Memory-bound）\n2. 同池混跑会导致长 Prefill 阻塞 Decode 造成 ITL 卡顿，或迁就延迟导致算力利用率低下\n3. P/D 分离将两阶段部署在独立 GPU 池并通过高速互联（NVLink/RDMA）传输 KV Cache\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「Prefill / Decode（P/D）分离推理架构」最容易踩的坑是什么？**\n  A：P/D 分离将两阶段部署在独立 GPU 池并通过高速互联（NVLink/RDMA）传输 KV Cache；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/10-system.md#Q03"
+  },
+  "handbook-docs-10-system-q04": {
+    "answer": "### 核心要点\n\n1. 稠密模型单 token Decode 主干矩阵乘约 2 * P FLOPs（MoE 按每 token 激活参数计）\n2. FLOPs 不能直接换算成 tokens/s，因小 batch Decode 受显存带宽限制\n3. 真实单价由 GPU 小时成本、并发有效吞吐、上下文长度分布与 SLA 约束共同决定\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「大模型推理 FLOPs 与每百万 Token 成本估算」最容易踩的坑是什么？**\n  A：真实单价由 GPU 小时成本、并发有效吞吐、上下文长度分布与 SLA 约束共同决定；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/10-system.md#Q04"
+  },
+  "handbook-docs-10-system-q05": {
+    "answer": "### 核心要点\n\n1. 对共享 System Prompt、多轮历史或同一长文档问答持久化物理 KV 块，直接跳过重复 Prefill\n2. 要求 token 级前缀严格一致，模型权重或影响 KV 的 LoRA 变更后缓存必须失效\n3. 多租户场景需按租户权限隔离 Cache Key，防范侧信道时延探测与越权复用\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「KV Cache 共享与 Prefix Caching 机制」最容易踩的坑是什么？**\n  A：多租户场景需按租户权限隔离 Cache Key，防范侧信道时延探测与越权复用；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/10-system.md#Q05"
+  },
+  "handbook-docs-10-system-q06": {
+    "answer": "### 核心要点\n\n1. 算术强度 I = FLOPs / Bytes；BF16 稠密 Decode 在 batch=B 时权重读取算术强度约为 B FLOP/Byte\n2. 增大 batch 能摊薄权重访存提升总吞吐，但会推高排队与单请求 TPOT 延迟\n3. 基准测试必须区分开环（固定到达率）与闭环压测，联合报告有效吞吐与 TTFT/ITL 的 P50/P95/P99\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「从 Roofline 算术强度到 TTFT / TPOT 延迟与吞吐权衡」最容易踩的坑是什么？**\n  A：基准测试必须区分开环（固定到达率）与闭环压测，联合报告有效吞吐与 TTFT/ITL 的 P50/P95/P99；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/10-system.md#Q06"
+  },
+  "handbook-docs-99-frontier-q01": {
+    "answer": "### 核心要点\n\n1. 将离散扩散过程用于文本生成：从全 Mask 序列出发，多步迭代并行去噪预测所有位置\n2. 优势是双向注意力上下文建模与步数可控，但多步全序列重算总 FLOPs 可能高于自回归\n3. 面临长度偏置、KV 难以像自回归一样静态增量复用等工程挑战\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「Diffusion LLM（扩散大语言模型）原理与权衡」最容易踩的坑是什么？**\n  A：面临长度偏置、KV 难以像自回归一样静态增量复用等工程挑战；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/99-frontier.md#Q01"
+  },
+  "handbook-docs-99-frontier-q02": {
+    "answer": "### 核心要点\n\n1. 通过递推状态 h_t = A h_{t-1} + B x_t 实现 O(L) 线性复杂度与固定大小推理状态\n2. Mamba 引入 Selective 机制令步长 Delta 与 B、C 随输入动态变化，并用 Parallel Scan 并行训练\n3. 纯 SSM 精确内容召回（Copy/Needle）弱于全注意力，工业界主流采用 Attention + SSM 混合架构\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「State Space Models（SSM / Mamba）与混合架构」最容易踩的坑是什么？**\n  A：纯 SSM 精确内容召回（Copy/Needle）弱于全注意力，工业界主流采用 Attention + SSM 混合架构；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/99-frontier.md#Q02"
+  },
+  "handbook-docs-99-frontier-q03": {
+    "answer": "### 核心要点\n\n1. 将算力预算从预训练延伸至推理阶段：通过长思维链（Long CoT）、Best-of-N、树搜索与验证器提升复杂推理上限\n2. DeepSeek-R1 证明基于可验证规则奖励（准确性+格式）的 GRPO 强化学习无需 PRM 也能涌现自我反思与长推理\n3. 扩展有效性受限于候选生成多样性与 Verifier/Reward Model 的判别准确率\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「Inference-time Scaling（测试时计算扩展 / o1 / DeepSeek-R1）」最容易踩的坑是什么？**\n  A：扩展有效性受限于候选生成多样性与 Verifier/Reward Model 的判别准确率；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/99-frontier.md#Q03"
+  },
+  "handbook-docs-99-frontier-q04": {
+    "answer": "### 核心要点\n\n1. 以 DeepSeek-V2/V3 为代表：拆分更细粒度的 Routed Experts 并剥离常驻激活的 Shared Experts 捕捉通用知识\n2. 通过动态偏置调整（Auxiliary-loss-free）替代强干扰的传统负载均衡辅助损失\n3. 常与 MLA 低秩 KV 压缩、混合线性注意力及 FP8 训练/推理协同设计\n\n### 面试常见追问\n\n- **Q：在实际工程或实验中，围绕「MoE 前沿演进：细粒度专家、共享专家与无辅助损失负载均衡」最容易踩的坑是什么？**\n  A：常与 MLA 低秩 KV 压缩、混合线性注意力及 FP8 训练/推理协同设计；面试回答时应先给出定量或机制层面的判断依据，再结合业务约束说明取舍。",
+    "source": "axiaoquan/llm-interview-handbook@8a86e72:docs/99-frontier.md#Q04"
   }
 }
