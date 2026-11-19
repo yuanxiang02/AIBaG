@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="AIBaG 算法题作答工作台" />
+    <meta name="description" content="AIBaG 算法与 AI 面试作答工作台" />
     <title>题目作答 · AIBaG</title>
-    <link rel="stylesheet" href="/style.css?v=20261118-4" />
+    <link rel="stylesheet" href="/style.css?v=20261119-1" />
   </head>
   <body class="problem-page">
-    <div class="floating-chrome">
+    <div class="workbench-chrome">
       <header class="site-header">
         <a class="wordmark" href="/" aria-label="返回 AIBaG 题库">
           <span class="wordmark-main">AIBaG</span>
@@ -17,6 +17,7 @@
         <nav class="site-nav" aria-label="主导航">
           <a href="/">题库</a>
           <a href="/completed.html">做过的题</a>
+          <a class="nav-action-link" href="/?custom=1">+ 自建面经</a>
         </nav>
         <div class="api-badge">
           <span id="api-dot" class="status-dot"></span>
@@ -24,7 +25,14 @@
         </div>
       </header>
       <div class="problem-topbar">
-        <a class="text-button" href="/">← 返回题库</a>
+        <div class="topbar-left">
+          <a class="text-button" href="/">← 返回题库</a>
+          <div class="problem-nav-group" role="group" aria-label="题目切换">
+            <button id="prev-problem" class="small-button" type="button" title="上一题 (Alt + ←)">← 上一题</button>
+            <button id="next-problem" class="small-button" type="button" title="下一题 (Alt + →)">下一题 →</button>
+            <button id="random-problem" class="small-button" type="button" title="随机抽一题">随机一题</button>
+          </div>
+        </div>
         <div class="problem-identity">
           <span id="problem-number" class="problem-number">--</span>
           <div>
@@ -33,6 +41,7 @@
           </div>
         </div>
         <div class="problem-meta">
+          <span id="problem-custom-badge" class="custom-pill" hidden>自建面经</span>
           <span id="problem-difficulty" class="difficulty-pill">—</span>
           <span id="problem-language" class="language-pill">—</span>
         </div>
@@ -55,20 +64,20 @@
             <p id="mode-note-text">不能运行代码、不能 print、不能使用 debugger。请直接推导 shape、边界条件和算法不变量。</p>
           </aside>
 
-          <section>
+          <section id="examples-section">
             <h2><span>01</span> 示例</h2>
             <div id="problem-examples" class="examples"></div>
           </section>
 
           <section>
-            <h2><span>02</span> 约束</h2>
+            <h2><span>02</span> 约束与考察要求</h2>
             <ul id="problem-constraints" class="constraint-list"></ul>
           </section>
 
           <section>
             <h2><span>03</span> 训练目标</h2>
             <div id="problem-tags" class="tag-list"></div>
-            <p class="training-note">不需要背标准说法。只要核心实现成立，你用自己的方式解释就可以。</p>
+            <p class="training-note">不需要背标准说法。只要核心实现或逻辑链条成立，你用自己的方式解释就可以。</p>
           </section>
 
           <section class="source-section">
@@ -78,7 +87,7 @@
 
           <section class="answer-reveal-section">
             <h2><span>05</span> 标准答案</h2>
-            <p>完成练习后，可以在这里查看一份完整实现。</p>
+            <p>完成独立思考或练习后，可以在这里对照完整参考实现与核心要点。</p>
             <button id="show-answer" class="primary-button" type="button">查看标准答案</button>
             <div id="reference-answer" class="reference-answer" hidden>
               <div class="reference-answer-heading">
@@ -86,7 +95,10 @@
                   <span class="eyebrow">STANDARD SOLUTION</span>
                   <h3>标准答案实现</h3>
                 </div>
-                <button id="close-answer" class="small-button" type="button">收起</button>
+                <div class="reference-answer-actions">
+                  <button id="copy-answer" class="small-button" type="button">复制答案</button>
+                  <button id="close-answer" class="small-button" type="button">收起</button>
+                </div>
               </div>
               <pre id="reference-answer-content"></pre>
             </div>
@@ -98,10 +110,11 @@
             <div>
               <span class="editor-dot red"></span><span class="editor-dot amber"></span><span class="editor-dot green"></span>
               <strong id="answer-filename">solution.py</strong>
+              <span class="shortcut-badge" title="快捷键 Cmd/Ctrl + Enter 直接提交">⌘/Ctrl + Enter 提交</span>
             </div>
             <div class="editor-actions">
               <span id="draft-status">本地草稿</span>
-              <button id="reset-code" class="small-button">重置</button>
+              <button id="reset-code" class="small-button" type="button">重置</button>
             </div>
           </div>
           <div class="code-editor-wrap">
@@ -110,7 +123,7 @@
           </div>
           <div class="submit-bar">
             <p id="submit-note">白板模式：只做静态推理，不运行代码。</p>
-            <button id="submit-code" class="primary-button">请面试官看一下</button>
+            <button id="submit-code" class="primary-button" type="button">请面试官看一下</button>
           </div>
 
           <div class="coach-panel">
@@ -119,24 +132,27 @@
                 <span class="eyebrow">DEEPSEEK INTERVIEWER</span>
                 <h2>和面试官聊聊</h2>
               </div>
-              <span id="review-state" class="review-state">还没提交</span>
+              <div class="coach-heading-actions">
+                <span id="review-state" class="review-state">还没提交</span>
+                <button id="clear-coach" class="small-button" type="button" title="清空当前题目的面试对话记录">清空对话</button>
+              </div>
             </div>
             <div id="coach-log" class="coach-log">
               <p id="coach-empty" class="coach-empty">你可以直接写代码，也可以先要一点提示。面试官会顺着你的思路聊，不要求“标准答案腔”。</p>
             </div>
             <div class="coach-quick-actions">
-              <button data-action="hint">给我一点提示</button>
-              <button id="optimize-action" data-action="optimize">这块还能怎么改？</button>
-              <button id="follow-up-action" data-action="follow_up">继续问我</button>
+              <button data-action="hint" type="button">给我一点提示</button>
+              <button id="optimize-action" data-action="optimize" type="button">这块还能怎么改？</button>
+              <button id="follow-up-action" data-action="follow_up" type="button">继续问我</button>
             </div>
             <div class="coach-input-row">
               <input id="coach-input" type="text" maxlength="2000" placeholder="比如：我这里想先拆 head，这样可以吗？" />
-              <button id="send-coach" class="small-button dark">发送</button>
+              <button id="send-coach" class="small-button dark" type="button">发送</button>
             </div>
           </div>
         </section>
       </div>
     </main>
-    <script src="/problem.js?v=20261118-3" defer></script>
+    <script src="/problem.js?v=20261119-1" defer></script>
   </body>
 </html>

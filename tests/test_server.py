@@ -269,3 +269,81 @@ class ModelFlowTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CustomProblemBankTests(unittest.TestCase):
+    def test_add_load_and_delete_custom_problems(self):
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            custom_path = Path(tmpdir) / "custom_problems.json"
+            created = server.add_custom_problems(
+                {
+                    "title": "DeepSeek MLA 低秩 KV 压缩推导",
+                    "kind": "knowledge",
+                    "difficulty": "Hard",
+                    "category": "大模型推理",
+                    "tags": "MLA, KV Cache, DeepSeek",
+                    "description": "请推导 MLA 的低秩联合压缩与矩阵吸收机制。",
+                    "review_points": "低秩投影\n矩阵吸收\nDecoupled RoPE",
+                    "answer": "通过将 KV 压缩到低维潜向量并在注意力计算时吸收解压矩阵，大幅降低显存占用。",
+                },
+                path=custom_path,
+            )
+            self.assertEqual(len(created), 1)
+            item = created[0]
+            self.assertTrue(item["is_custom"])
+            self.assertEqual(item["number"], len(server.PROBLEMS) + 1)
+            self.assertEqual(item["kind"], "knowledge")
+            self.assertIn("自建面经", item["tags"])
+            self.assertEqual(len(item["review_points"]), 3)
+
+            loaded = server.load_custom_problems(path=custom_path)
+            self.assertEqual(len(loaded), 1)
+            self.assertEqual(loaded[0]["id"], item["id"])
+
+            found = server.get_problem_by_id(item["id"], path=custom_path)
+            self.assertIsNotNone(found)
+            ans = server.reference_answer(found)
+            self.assertEqual(ans["source"], "user-custom")
+            self.assertIn("吸收解压矩阵", ans["answer"])
+
+            all_summaries = server.all_public_problem_summaries(path=custom_path)
+            self.assertEqual(len(all_summaries), len(server.PROBLEMS) + 1)
+            self.assertTrue(all_summaries[-1]["is_custom"])
+
+            deleted = server.delete_custom_problem(item["id"], path=custom_path)
+            self.assertTrue(deleted)
+            self.assertEqual(len(server.load_custom_problems(path=custom_path)), 0)
+
+    def test_batch_custom_import_deduplicates_ids_and_generates_fallback_answer(self):
+        import tempfile
+        from pathlib import Path
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            custom_path = Path(tmpdir) / "custom_problems.json"
+            created = server.add_custom_problems(
+                {
+                    "problems": [
+                        {
+                            "id": "my-attn",
+                            "title": "手撕 FlashAttention Tiling",
+                            "kind": "AI Infra",
+                            "description": "用 PyTorch 模拟分块 Online Softmax。",
+                        },
+                        {
+                            "id": "my-attn",
+                            "title": "手撕 FlashAttention Tiling 二面变体",
+                            "kind": "coding",
+                            "description": "加上 causal mask 处理。",
+                        },
+                    ]
+                },
+                path=custom_path,
+            )
+            self.assertEqual(len(created), 2)
+            self.assertNotEqual(created[0]["id"], created[1]["id"])
+            self.assertEqual(created[0]["kind"], "coding")
+            fallback = server.reference_answer(created[0])
+            self.assertIn("自建面经参考要点", fallback["answer"])

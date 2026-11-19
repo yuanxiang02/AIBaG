@@ -4,8 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="AIBaG - AI Infra 与经典算法面试训练场" />
-    <title>AIBaG · Algorithm Interview Lab</title>
-    <link rel="stylesheet" href="/style.css?v=20261118-4" />
+    <title>AIBaG · AI 面试与算法训练场</title>
+    <link rel="stylesheet" href="/style.css?v=20261119-1" />
   </head>
   <body>
     <header class="site-header">
@@ -16,6 +16,7 @@
       <nav class="site-nav" aria-label="主导航">
         <a class="active" href="/">题库</a>
         <a href="/completed.html">做过的题</a>
+        <button id="nav-open-custom" class="nav-action-btn" type="button">+ 自建面经</button>
       </nav>
       <div class="api-badge">
         <span id="api-dot" class="status-dot"></span>
@@ -26,17 +27,27 @@
     <main class="catalog-view catalog-simple">
       <section class="home-hero">
         <div class="home-hero-copy">
-          <span class="eyebrow">LOCAL-FIRST AI INTERVIEW LAB</span>
+          <span class="eyebrow">AI INTERVIEW WORKBENCH</span>
           <h1>把面试练习，<br />变成一场真实对话。</h1>
-          <p>1,000 道 AI Infra、简答八股与力扣手撕题。先独立作答，再让 AI 面试官根据你的当前状态给提示、反问和追问。</p>
+          <p>覆盖 AI Infra 算子实现、大模型简答八股与高频算法手撕，并支持一键导入个人专属面经。先独立作答，再由 AI 面试官动态追问与点评。</p>
           <div class="home-hero-actions">
             <a class="primary-button" href="#problem-library">开始练习</a>
+            <button id="hero-open-custom" class="secondary-button" type="button">+ 提交自建面经</button>
             <a class="secondary-link" href="/completed.html">查看做过的题 →</a>
           </div>
-          <dl class="home-stats">
-            <div><dt>1,000</dt><dd>训练题目</dd></div>
-            <div><dt>PE</dt><dd>状态判断</dd></div>
-            <div><dt>&lt; 5s</dt><dd>题库加载</dd></div>
+          <dl class="home-stats" aria-label="你的练习概览">
+            <div>
+              <dt id="stat-practiced">0</dt>
+              <dd>已练习题目</dd>
+            </div>
+            <div>
+              <dt id="stat-pass">0</dt>
+              <dd>核心已掌握</dd>
+            </div>
+            <div>
+              <dt id="stat-custom">0</dt>
+              <dd>自建面经</dd>
+            </div>
           </dl>
         </div>
 
@@ -75,31 +86,68 @@ scores = q @ k.transpose(-2, -1)
         </div>
       </section>
 
-      <section class="catalog-intro">
-        <div>
-          <span class="eyebrow">INTERVIEW PRACTICE</span>
-          <h1>题库</h1>
-        </div>
-        <p><strong id="problem-count">1000</strong> 道题 · AI Review · 多轮追问</p>
-      </section>
-
-      <nav class="track-tabs" aria-label="题目方向">
-        <button class="active" data-kind="">全部</button>
-        <button data-kind="coding">AI Infra 类</button>
-        <button data-kind="knowledge">简答八股</button>
-        <button data-kind="algorithm">力扣手撕</button>
-      </nav>
-
       <section id="problem-library" class="problem-library">
-        <div class="section-heading">
+        <div class="library-header">
           <div>
-            <span class="eyebrow">PROBLEM SET</span>
-            <h2 id="track-title">全部题目</h2>
+            <span class="eyebrow">INTERVIEW QUESTION BANK</span>
+            <div class="library-title-row">
+              <h2 id="track-title">全部题目</h2>
+              <span id="filtered-summary" class="filtered-summary">正在加载题库…</span>
+            </div>
           </div>
-          <div class="filters">
+          <div class="library-actions">
+            <button id="pick-random" class="secondary-button" type="button" title="从当前筛选范围随机抽一题">随机抽一题</button>
+            <button id="open-custom-modal" class="primary-button" type="button">+ 提交自建面经</button>
+          </div>
+        </div>
+
+        <div class="control-bar">
+          <nav class="track-tabs" aria-label="题目方向">
+            <button class="active" data-kind="" type="button">
+              <span>全部</span>
+              <em id="count-all" class="tab-count">1000</em>
+            </button>
+            <button data-kind="coding" type="button">
+              <span>AI Infra</span>
+              <em id="count-coding" class="tab-count">200</em>
+            </button>
+            <button data-kind="knowledge" type="button">
+              <span>简答八股</span>
+              <em id="count-knowledge" class="tab-count">365</em>
+            </button>
+            <button data-kind="algorithm" type="button">
+              <span>力扣手撕</span>
+              <em id="count-algorithm" class="tab-count">435</em>
+            </button>
+            <button data-kind="custom" type="button">
+              <span>我的自建面经</span>
+              <em id="count-custom" class="tab-count">0</em>
+            </button>
+          </nav>
+
+          <div class="filters" aria-label="多维筛选">
+            <label class="filter-field">
+              <span>难度</span>
+              <select id="difficulty-filter">
+                <option value="">全部难度</option>
+                <option value="Easy">Easy · 基础</option>
+                <option value="Medium">Medium · 进阶</option>
+                <option value="Hard">Hard · 深入</option>
+              </select>
+            </label>
+            <label class="filter-field">
+              <span>练习状态</span>
+              <select id="status-filter">
+                <option value="">全部状态</option>
+                <option value="todo">未练习</option>
+                <option value="pass">已掌握 (Pass)</option>
+                <option value="partial">待巩固 (Partial)</option>
+                <option value="retry">需重试 (Retry)</option>
+              </select>
+            </label>
             <label class="search-field">
               <span>搜索</span>
-              <input id="problem-search" type="search" placeholder="题目 / 标签" />
+              <input id="problem-search" type="search" placeholder="搜索题号、标题或标签…" />
             </label>
           </div>
         </div>
@@ -116,7 +164,7 @@ scores = q @ k.transpose(-2, -1)
               </tr>
             </thead>
             <tbody id="problem-list">
-              <tr class="loading-row"><td colspan="5">正在读取 JSON 题库…</td></tr>
+              <tr class="loading-row"><td colspan="5">正在准备题库…</td></tr>
             </tbody>
           </table>
         </div>
@@ -124,9 +172,119 @@ scores = q @ k.transpose(-2, -1)
       </section>
     </main>
 
+    <dialog id="custom-modal" class="custom-modal" aria-labelledby="custom-modal-title">
+      <div class="modal-card">
+        <header class="modal-header">
+          <div>
+            <span class="eyebrow">CUSTOM INTERVIEW BANK</span>
+            <h2 id="custom-modal-title">提交自建 AI 面经 / 自定义题目</h2>
+          </div>
+          <button id="close-custom-modal" class="modal-close" type="button" aria-label="关闭窗口">✕</button>
+        </header>
+
+        <div class="modal-tabs" role="tablist">
+          <button class="active" data-tab="single" type="button">单题快速录入</button>
+          <button data-tab="batch" type="button">JSON 批量导入 / 导出</button>
+        </div>
+
+        <form id="custom-single-form" class="modal-body">
+          <div class="form-row-grid">
+            <label class="form-field">
+              <span>题目标题 <em>*</em></span>
+              <input id="custom-title" type="text" required maxlength="120" placeholder="例如：追问 DeepSeek MLA 的 KV Cache 压缩机制" />
+            </label>
+            <label class="form-field">
+              <span>题目方向 <em>*</em></span>
+              <select id="custom-kind">
+                <option value="knowledge">简答八股（口述与追问）</option>
+                <option value="coding">AI Infra（算子与系统实现）</option>
+                <option value="algorithm">力扣手撕（算法与数据结构）</option>
+              </select>
+            </label>
+            <label class="form-field">
+              <span>难度级别</span>
+              <select id="custom-difficulty">
+                <option value="Easy">Easy</option>
+                <option value="Medium" selected>Medium</option>
+                <option value="Hard">Hard</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="form-row-grid two-cols">
+            <label class="form-field">
+              <span>所属专题 / 分类</span>
+              <input id="custom-category" type="text" maxlength="40" placeholder="例如：推理加速 / 字节跳动一面 / 分布式训练" />
+            </label>
+            <label class="form-field">
+              <span>标签（逗号分隔）</span>
+              <input id="custom-tags" type="text" maxlength="120" placeholder="例如：MLA, KV Cache, 真实面经" />
+            </label>
+          </div>
+
+          <label class="form-field">
+            <span>面试真题描述 / 提问背景 <em>*</em></span>
+            <textarea id="custom-description" rows="4" required placeholder="写下你在实际面试中遇到的提问、背景条件或手撕要求…"></textarea>
+          </label>
+
+          <label id="custom-starter-wrap" class="form-field" hidden>
+            <span>初始代码模板（可选，代码题适用）</span>
+            <textarea id="custom-starter" class="mono-textarea" rows="4" placeholder="def solve(...):\n    # 候选人初始代码模板\n    pass"></textarea>
+          </label>
+
+          <div class="form-row-grid two-cols">
+            <label class="form-field">
+              <span>AI 面试官重点考察点（每行一条，可选）</span>
+              <textarea id="custom-review-points" rows="4" placeholder="低秩联合压缩的数学形式\nRoPE 解耦（Decoupled RoPE）的原因\n相比 MQA/GQA 的显存与通信权衡"></textarea>
+            </label>
+            <label class="form-field">
+              <span>参考标准答案 / 个人复盘笔记（可选）</span>
+              <textarea id="custom-answer" rows="4" placeholder="填入你的理想回答或标准代码。练习时点击「查看标准答案」可直接对照，不填也会自动根据考察点生成提纲。"></textarea>
+            </label>
+          </div>
+
+          <div id="custom-form-feedback" class="form-feedback" hidden></div>
+
+          <footer class="modal-footer">
+            <span class="modal-hint">保存于本机 <code>data/custom_problems.json</code>，立即加入 AI 面试官训练流。</span>
+            <div class="modal-footer-actions">
+              <button id="cancel-custom-modal" class="secondary-button" type="button">取消</button>
+              <button id="submit-custom-single" class="primary-button" type="submit">保存并加入题库</button>
+            </div>
+          </footer>
+        </form>
+
+        <div id="custom-batch-panel" class="modal-body" hidden>
+          <div class="batch-toolbar">
+            <p>支持一次粘贴多道 JSON 题目（数组或含 <code>problems</code> 字段的对象），或上传本地 <code>.json</code> 文件。</p>
+            <div class="batch-toolbar-actions">
+              <button id="fill-batch-example" class="small-button" type="button">填入示例模板</button>
+              <label class="small-button file-upload-btn">
+                选择 JSON 文件
+                <input id="custom-file-input" type="file" accept=".json,application/json" hidden />
+              </label>
+              <button id="export-custom-json" class="small-button" type="button">导出我的自建题库</button>
+            </div>
+          </div>
+          <label class="form-field">
+            <span>JSON 题库内容</span>
+            <textarea id="custom-batch-json" class="mono-textarea" rows="11" placeholder='[\n  {\n    "title": "FlashAttention 为什么能减少 HBM 访问？",\n    "kind": "knowledge",\n    "difficulty": "Medium",\n    "category": "AI Infra 面经",\n    "tags": ["FlashAttention", "CUDA"],\n    "description": "请从 GPU 存储层次出发，解释标准 Attention 的 IO 瓶颈以及 Online Softmax 的作用。",\n    "review_points": ["SRAM 与 HBM 带宽差异", "不落地 N×N 注意力矩阵", "Online Softmax 递推更新"],\n    "answer": "标准 Attention 需要将 S=QK^T 和 P=softmax(S) 写回 HBM，产生 O(N^2) 访存…"\n  }\n]'></textarea>
+          </label>
+          <div id="custom-batch-feedback" class="form-feedback" hidden></div>
+          <footer class="modal-footer">
+            <span class="modal-hint">单次最多支持导入 200 道题目。</span>
+            <div class="modal-footer-actions">
+              <button id="submit-custom-batch" class="primary-button" type="button">批量导入题库</button>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </dialog>
+
     <footer class="site-footer">
-      <span>AIBaG · Local-first interview practice</span>
+      <span>AIBaG · 本地优先的 AI 面试与算法训练工作台</span>
+      <span>练习记录与自建面经均安全保存在本机</span>
     </footer>
-    <script src="/app.js?v=20261118-3" defer></script>
+    <script src="/app.js?v=20261119-1" defer></script>
   </body>
 </html>

@@ -8,6 +8,7 @@ import json
 import os
 import re
 import sys
+import threading
 import time
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
@@ -23,8 +24,15 @@ PROBLEMS_PATH = ROOT / "data" / "problems.json"
 CATALOG_DIR = ROOT / "data" / "catalog"
 VARIANTS_PATH = ROOT / "data" / "variant_templates.json"
 ANSWERS_PATH = ROOT / "data" / "answers.json"
+CUSTOM_PROBLEMS_PATH = Path(
+    os.getenv("AIBAG_CUSTOM_PROBLEMS_PATH", str(ROOT / "data" / "custom_problems.json"))
+)
+CUSTOM_LOCK = threading.RLock()
 MAX_REQUEST_BYTES = 1_000_000
+MAX_CUSTOM_IMPORT_ITEMS = 200
 CATALOG_LOAD_LIMIT_SECONDS = 5.0
+VALID_KINDS = {"coding", "knowledge", "algorithm"}
+VALID_DIFFICULTIES = {"Easy", "Medium", "Hard"}
 INTERVIEW_MODE = {
     "code_execution": False,
     "debugger": False,
@@ -183,6 +191,7 @@ def public_problem(problem: dict[str, Any]) -> dict[str, Any]:
         "hints",
         "follow_ups",
         "answer_addendum",
+        "answer",
     }
     return {key: value for key, value in problem.items() if key not in hidden}
 
@@ -200,7 +209,11 @@ def public_problem_summary(problem: dict[str, Any]) -> dict[str, Any]:
         "tags",
         "summary",
     )
-    return {field: problem[field] for field in fields}
+    summary = {field: problem[field] for field in fields}
+    summary["is_custom"] = bool(
+        problem.get("is_custom") or problem.get("provenance", {}).get("origin") == "user-custom"
+    )
+    return summary
 
 
 PUBLIC_PROBLEM_SUMMARIES = [public_problem_summary(problem) for problem in PROBLEMS]
@@ -214,6 +227,282 @@ if CATALOG_LOAD_SECONDS > CATALOG_LOAD_LIMIT_SECONDS:
         f"Catalog startup exceeded {CATALOG_LOAD_LIMIT_SECONDS:.1f}s "
         f"while building the public index ({CATALOG_LOAD_SECONDS:.3f}s)"
     )
+
+
+def slugify_custom_id(text: str, index: int) -> str:
+    ascii_slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    if ascii_slug:
+        return f"custom-{ascii_slug[:48]}"
+    return f"custom-item-{int(time.time() * 1000)}-{index}"
+
+
+def default_review_points_for_kind(kind: str, raw_points: Any) -> list[dict[str, Any]]:
+    points: list[dict[str, Any]] = []
+    if isinstance(raw_points, str):
+        raw_points = [item.strip() for item in re.split(r"[\n;；]+", raw_points) if item.strip()]
+    if isinstance(raw_points, list):
+        for item in raw_points[:8]:
+            if isinstance(item, str) and item.strip():
+                text = item.strip()[:240]
+                points.append({"label": text[:40], "required": True, "description": text})
+            elif isinstance(item, dict):
+                label = str(item.get("label") or item.get("description") or "").strip()[:60]
+                desc = str(item.get("description") or label).strip()[:240]
+                if label:
+                    points.append({"label": label, "required": bool(item.get("required", True)), "description": desc})
+    if points:
+        return points
+    if kind == "knowledge":
+        return [
+            {"label": "核心概念与机制", "required": True, "description": "准确讲清核心定义与底层工作原理"},
+            {"label": "设计原因与因果逻辑", "required": True, "description": "解释为什么这样设计，解决什么痛点"},
+            {"label": "适用边界与工程权衡", "required": True, "description": "说明开销、局限性或替代方案对比"},
+        ]
+    if kind == "coding":
+        return [
+            {"label": "核心算子与模块实现", "required": True, "description": "主干计算逻辑与关键步骤完整"},
+            {"label": "Tensor Shape 与维度变换", "required": True, "description": "各步维度对齐、广播与返回形状正确"},
+            {"label": "数值稳定与边界处理", "required": True, "description": "处理缩放、mask、精度或极端输入"},
+        ]
+    return [
+        {"label": "核心算法思路", "required": True, "description": "数据结构选择与主循环/递归不变量正确"},
+        {"label": "边界条件覆盖", "required": True, "description": "空输入、单元素、重复值或越界处理稳健"},
+        {"label": "时间与空间复杂度", "required": True, "description": "复杂度满足面试要求并能清晰推导"},
+    ]
+
+
+def normalize_custom_problem(
+    raw: dict[str, Any], number: int, existing_ids: set[str] | None = None
+) -> dict[str, Any]:
+    if not isinstance(raw, dict):
+        raise ValueError("每道自定义题目必须是 JSON 对象")
+    title = str(raw.get("title", "")).strip()[:120]
+    if not title:
+        raise ValueError("题目标题（title）不能为空")
+    kind = str(raw.get("kind", "knowledge")).strip().lower()
+    if kind not in VALID_KINDS:
+        kind_map = {
+            "ai infra": "coding",
+            "infra": "coding",
+            "简答八股": "knowledge",
+            "八股": "knowledge",
+            "面经": "knowledge",
+            "力扣手撕": "algorithm",
+            "手撕": "algorithm",
+            "算法": "algorithm",
+        }
+        kind = kind_map.get(kind, "knowledge")
+    description = str(raw.get("description") or raw.get("prompt") or "").strip()[:8_000]
+    if not description:
+        raise ValueError(f"题目「{title}」缺少题面描述（description）")
+    difficulty_raw = str(raw.get("difficulty", "Medium")).strip().capitalize()
+    difficulty = difficulty_raw if difficulty_raw in VALID_DIFFICULTIES else "Medium"
+    default_category = {
+        "coding": "AI Infra",
+        "knowledge": "自建面经",
+        "algorithm": "算法手撕",
+    }[kind]
+    category = str(raw.get("category") or default_category).strip()[:40] or default_category
+    topic = str(raw.get("topic") or category).strip()[:40] or category
+    default_language = "口头回答" if kind == "knowledge" else "Python / PyTorch" if kind == "coding" else "Python"
+    language = str(raw.get("language") or default_language).strip()[:40] or default_language
+
+    raw_tags = raw.get("tags", [])
+    if isinstance(raw_tags, str):
+        tags = [t.strip()[:30] for t in re.split(r"[,，;；\s]+", raw_tags) if t.strip()]
+    elif isinstance(raw_tags, list):
+        tags = [str(t).strip()[:30] for t in raw_tags if str(t).strip()]
+    else:
+        tags = []
+    if "自建面经" not in tags:
+        tags.append("自建面经")
+    tags = tags[:8]
+
+    starter_code = str(raw.get("starter_code", ""))[:8_000]
+    if kind == "knowledge":
+        starter_code = ""
+    elif not starter_code.strip():
+        starter_code = "def solution(*args, **kwargs):\n    # 在此编写核心实现\n    pass\n"
+
+    answer = str(raw.get("answer") or raw.get("reference_answer") or "").strip()[:16_000]
+    review_points = default_review_points_for_kind(kind, raw.get("review_points"))
+    review_dimensions = [point["label"] for point in review_points]
+
+    raw_notes = raw.get("reference_notes", [])
+    if isinstance(raw_notes, str):
+        reference_notes = [n.strip()[:240] for n in re.split(r"[\n;；]+", raw_notes) if n.strip()]
+    elif isinstance(raw_notes, list):
+        reference_notes = [str(n).strip()[:240] for n in raw_notes if str(n).strip()]
+    else:
+        reference_notes = []
+    if not reference_notes and answer:
+        reference_notes = [line.strip()[:200] for line in answer.splitlines() if line.strip()][:4]
+
+    raw_constraints = raw.get("constraints", [])
+    if isinstance(raw_constraints, str):
+        constraints = [c.strip()[:200] for c in re.split(r"[\n;；]+", raw_constraints) if c.strip()]
+    elif isinstance(raw_constraints, list):
+        constraints = [str(c).strip()[:200] for c in raw_constraints if str(c).strip()]
+    else:
+        constraints = []
+    if not constraints:
+        constraints = [
+            "面试口述模式：用自己的话讲清核心机制、原因与工程权衡。"
+            if kind == "knowledge"
+            else "白板模式：静态推导关键数据结构、维度变化与边界条件。"
+        ]
+
+    raw_examples = raw.get("examples", [])
+    examples: list[dict[str, str]] = []
+    if isinstance(raw_examples, list):
+        for ex in raw_examples[:4]:
+            if isinstance(ex, dict) and (ex.get("input") or ex.get("output")):
+                examples.append(
+                    {
+                        "input": str(ex.get("input", "")).strip()[:400],
+                        "output": str(ex.get("output", "")).strip()[:400],
+                        "explanation": str(ex.get("explanation", "")).strip()[:400],
+                    }
+                )
+
+    raw_id = str(raw.get("id", "")).strip()
+    if raw_id and re.fullmatch(r"[A-Za-z0-9_-]{3,80}", raw_id):
+        candidate_id = raw_id if raw_id.startswith("custom-") else f"custom-{raw_id}"
+    else:
+        candidate_id = slugify_custom_id(title, number)
+    if existing_ids is not None:
+        base_candidate = candidate_id
+        suffix = 2
+        while candidate_id in existing_ids:
+            candidate_id = f"{base_candidate}-{suffix}"
+            suffix += 1
+        existing_ids.add(candidate_id)
+
+    summary = str(raw.get("summary") or description.splitlines()[0]).strip()[:160]
+    imported_at = str(raw.get("imported_at") or time.strftime("%Y-%m-%d"))
+    follow_ups = [
+        f"围绕「{title}」，最关键的设计权衡或边界条件是什么？",
+        f"如果在生产环境中落地「{title}」，最容易踩的坑在哪里？",
+    ]
+    return {
+        "id": candidate_id,
+        "number": number,
+        "kind": kind,
+        "title": title,
+        "slug": candidate_id,
+        "category": category,
+        "topic": topic,
+        "difficulty": difficulty,
+        "language": language,
+        "tags": tags,
+        "summary": summary,
+        "description": description,
+        "examples": examples,
+        "constraints": constraints,
+        "starter_code": starter_code,
+        "review_points": review_points,
+        "review_dimensions": review_dimensions,
+        "follow_ups": follow_ups,
+        "hints": [follow_ups[0]],
+        "reference_notes": reference_notes,
+        "answer": answer,
+        "is_custom": True,
+        "sources": [
+            {
+                "title": str(raw.get("source_title") or "用户自建 AI 面经题库").strip()[:120],
+                "url": "local://custom-problem-bank",
+                "license": "User-Custom",
+                "note": "保存在本机 data/custom_problems.json，可随时查看或删除。",
+            }
+        ],
+        "license": {"spdx": "LicenseRef-User-Custom", "notice": "User-submitted local problem."},
+        "provenance": {
+            "origin": "user-custom",
+            "imported_at": imported_at,
+        },
+    }
+
+
+def load_custom_problems(path: Path | None = None) -> list[dict[str, Any]]:
+    target = path or CUSTOM_PROBLEMS_PATH
+    if not target.exists():
+        return []
+    try:
+        raw_list = json.loads(target.read_bytes())
+    except Exception:
+        return []
+    if not isinstance(raw_list, list):
+        return []
+    seen_ids = set(PROBLEM_INDEX)
+    result: list[dict[str, Any]] = []
+    base_count = len(PROBLEMS)
+    for offset, item in enumerate(raw_list, start=1):
+        if not isinstance(item, dict):
+            continue
+        try:
+            normalized = normalize_custom_problem(item, base_count + len(result) + 1, seen_ids)
+            result.append(normalized)
+        except ValueError:
+            continue
+    return result
+
+
+def save_custom_problems(items: list[dict[str, Any]], path: Path | None = None) -> None:
+    target = path or CUSTOM_PROBLEMS_PATH
+    target.parent.mkdir(parents=True, exist_ok=True)
+    base_count = len(PROBLEMS)
+    for idx, item in enumerate(items, start=1):
+        item["number"] = base_count + idx
+    serialized = json.dumps(items, ensure_ascii=False, indent=2).encode("utf-8")
+    tmp_path = target.with_suffix(".json.tmp")
+    tmp_path.write_bytes(serialized)
+    tmp_path.replace(target)
+
+
+def add_custom_problems(payload: dict[str, Any], path: Path | None = None) -> list[dict[str, Any]]:
+    with CUSTOM_LOCK:
+        existing = load_custom_problems(path)
+        seen_ids = set(PROBLEM_INDEX) | {item["id"] for item in existing}
+        raw_items = payload.get("problems") if isinstance(payload.get("problems"), list) else [payload]
+        if not raw_items:
+            raise ValueError("请提供至少一道题目")
+        if len(raw_items) > MAX_CUSTOM_IMPORT_ITEMS:
+            raise ValueError(f"单次最多导入 {MAX_CUSTOM_IMPORT_ITEMS} 道题目")
+        created: list[dict[str, Any]] = []
+        base_number = len(PROBLEMS) + len(existing)
+        for offset, raw_item in enumerate(raw_items, start=1):
+            normalized = normalize_custom_problem(raw_item, base_number + offset, seen_ids)
+            existing.append(normalized)
+            created.append(normalized)
+        save_custom_problems(existing, path)
+        return created
+
+
+def delete_custom_problem(problem_id: str, path: Path | None = None) -> bool:
+    with CUSTOM_LOCK:
+        existing = load_custom_problems(path)
+        kept = [item for item in existing if item["id"] != problem_id]
+        if len(kept) == len(existing):
+            return False
+        save_custom_problems(kept, path)
+        return True
+
+
+def get_problem_by_id(problem_id: str, path: Path | None = None) -> dict[str, Any] | None:
+    built_in = PROBLEM_INDEX.get(problem_id)
+    if built_in is not None:
+        return built_in
+    for item in load_custom_problems(path):
+        if item["id"] == problem_id:
+            return item
+    return None
+
+
+def all_public_problem_summaries(path: Path | None = None) -> list[dict[str, Any]]:
+    custom = load_custom_problems(path)
+    if not custom:
+        return PUBLIC_PROBLEM_SUMMARIES
+    return [*PUBLIC_PROBLEM_SUMMARIES, *(public_problem_summary(item) for item in custom)]
 
 
 def resolve_api_key() -> str:
@@ -474,6 +763,18 @@ def coach_reply(problem: dict[str, Any], payload: dict[str, Any]) -> dict[str, A
 
 def reference_answer(problem: dict[str, Any]) -> dict[str, str]:
     """Return a persisted answer immediately; derived items reuse their base answer."""
+    if problem.get("is_custom") or problem.get("provenance", {}).get("origin") == "user-custom":
+        custom_ans = str(problem.get("answer", "")).strip()
+        if not custom_ans:
+            points = "\n".join(
+                f"- {pt['label']}：{pt.get('description', '')}"
+                for pt in problem.get("review_points", [])
+            )
+            custom_ans = (
+                f"【自建面经参考要点】\n{points}\n\n"
+                "提示：你可以在创建题目时填入专属参考答案，或直接与右侧 AI 面试官进行多轮追问演练。"
+            )
+        return {"answer": custom_ans, "source": "user-custom"}
     provenance = problem.get("provenance", {})
     base_id = str(provenance.get("derived_from", problem["id"]))
     stored = STANDARD_ANSWERS.get(base_id)
@@ -526,12 +827,18 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def send_catalog(self) -> None:
+        custom = load_custom_problems()
         use_gzip = "gzip" in self.headers.get("Accept-Encoding", "")
-        body = PUBLIC_CATALOG_GZIP if use_gzip else PUBLIC_CATALOG_JSON
+        if not custom:
+            body = PUBLIC_CATALOG_GZIP if use_gzip else PUBLIC_CATALOG_JSON
+        else:
+            combined = [*PUBLIC_PROBLEM_SUMMARIES, *(public_problem_summary(item) for item in custom)]
+            raw_bytes = json.dumps(combined, ensure_ascii=False, separators=(",", ":")).encode("utf-8")
+            body = gzip.compress(raw_bytes, compresslevel=5) if use_gzip else raw_bytes
         self.send_response(HTTPStatus.OK)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
-        self.send_header("Cache-Control", "private, max-age=60")
+        self.send_header("Cache-Control", "no-store")
         self.send_header("Vary", "Accept-Encoding")
         if use_gzip:
             self.send_header("Content-Encoding", "gzip")
@@ -553,10 +860,12 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
         if path == "/api/health":
+            custom_count = len(load_custom_problems())
             self.send_json(
                 {
                     "ok": True,
-                    "problems": len(PROBLEMS),
+                    "problems": len(PROBLEMS) + custom_count,
+                    "custom_problems": custom_count,
                     "catalog_load_ms": round(CATALOG_LOAD_SECONDS * 1_000, 2),
                     "catalog_load_limit_ms": int(CATALOG_LOAD_LIMIT_SECONDS * 1_000),
                     "catalog_within_budget": CATALOG_LOAD_SECONDS <= CATALOG_LOAD_LIMIT_SECONDS,
@@ -570,9 +879,12 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
         if path == "/api/problems":
             self.send_catalog()
             return
+        if path == "/api/custom-problems":
+            self.send_json({"problems": load_custom_problems()})
+            return
         if path == "/api/problem":
             problem_id = parse_qs(urlsplit(self.path).query).get("id", [""])[0]
-            problem = PROBLEM_INDEX.get(problem_id)
+            problem = get_problem_by_id(problem_id)
             if problem is None:
                 self.send_json({"error": "Unknown problem id"}, HTTPStatus.NOT_FOUND)
                 return
@@ -593,13 +905,39 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self) -> None:  # noqa: N802
         path = urlsplit(self.path).path
-        if path not in {"/api/judge", "/api/chat", "/api/answer"}:
+        if path not in {
+            "/api/judge",
+            "/api/chat",
+            "/api/answer",
+            "/api/custom-problems",
+            "/api/custom-problems/delete",
+        }:
             self.send_json({"error": "Not found"}, HTTPStatus.NOT_FOUND)
             return
         try:
             payload = self.read_json()
+            if path == "/api/custom-problems":
+                created = add_custom_problems(payload)
+                self.send_json(
+                    {
+                        "created": [public_problem_summary(item) for item in created],
+                        "count": len(created),
+                    },
+                    HTTPStatus.CREATED,
+                )
+                return
+            if path == "/api/custom-problems/delete":
+                target_id = str(payload.get("id") or payload.get("problem_id") or "").strip()
+                if not target_id:
+                    raise ValueError("Missing problem id")
+                deleted = delete_custom_problem(target_id)
+                if not deleted:
+                    self.send_json({"error": "Custom problem not found"}, HTTPStatus.NOT_FOUND)
+                    return
+                self.send_json({"deleted": target_id})
+                return
             problem_id = str(payload.get("problem_id", ""))
-            problem = PROBLEM_INDEX.get(problem_id)
+            problem = get_problem_by_id(problem_id)
             if problem is None:
                 self.send_json({"error": "Unknown problem_id"}, HTTPStatus.NOT_FOUND)
                 return

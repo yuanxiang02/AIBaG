@@ -6,7 +6,14 @@ const state = {
 const elements = {
   list: document.querySelector("#completed-list"),
   count: document.querySelector("#completed-count"),
+  passCount: document.querySelector("#completed-pass"),
+  avgScore: document.querySelector("#completed-avg"),
+  filteredSummary: document.querySelector("#completed-filtered-summary"),
+  kindFilter: document.querySelector("#completed-kind-filter"),
+  verdictFilter: document.querySelector("#completed-verdict-filter"),
   search: document.querySelector("#completed-search"),
+  exportBtn: document.querySelector("#export-progress"),
+  clearBtn: document.querySelector("#clear-progress"),
   apiDot: document.querySelector("#api-dot"),
   apiStatus: document.querySelector("#api-status"),
 };
@@ -19,7 +26,8 @@ async function request(endpoint) {
 }
 
 function direction(problem) {
-  return { coding: "AI Infra", knowledge: "简答八股", algorithm: "力扣手撕" }[problem.kind] || problem.category;
+  const base = { coding: "AI Infra", knowledge: "简答八股", algorithm: "力扣手撕" }[problem.kind] || problem.category;
+  return problem.is_custom ? `${base} · 自建` : base;
 }
 
 function renderEmpty(message) {
@@ -35,13 +43,38 @@ function renderEmpty(message) {
 
 function render() {
   const query = elements.search.value.trim().toLowerCase();
+  const kindVal = elements.kindFilter?.value || "";
+  const verdictVal = elements.verdictFilter?.value || "";
   const completed = state.problems.filter((problem) => state.progress[problem.id]);
+
   elements.count.textContent = String(completed.length);
-  const visible = completed.filter((problem) =>
-    `${problem.title} ${problem.topic} ${(problem.tags || []).join(" ")}`.toLowerCase().includes(query)
-  );
+  const passItems = completed.filter((p) => state.progress[p.id]?.verdict === "pass");
+  if (elements.passCount) elements.passCount.textContent = String(passItems.length);
+  if (elements.avgScore) {
+    const totalScore = completed.reduce((acc, p) => acc + (Number(state.progress[p.id]?.score) || 0), 0);
+    elements.avgScore.textContent = completed.length ? String(Math.round(totalScore / completed.length)) : "0";
+  }
+
+  const visible = completed.filter((problem) => {
+    const rec = state.progress[problem.id];
+    if (kindVal === "custom") {
+      if (!problem.is_custom) return false;
+    } else if (kindVal && problem.kind !== kindVal) {
+      return false;
+    }
+    if (verdictVal && rec?.verdict !== verdictVal) return false;
+    if (!query) return true;
+    return `${problem.number} ${problem.title} ${problem.topic} ${(problem.tags || []).join(" ")}`
+      .toLowerCase()
+      .includes(query);
+  });
+
+  if (elements.filteredSummary) {
+    elements.filteredSummary.textContent = `当前筛选共 ${visible.length} 条记录`;
+  }
+
   if (!visible.length) {
-    renderEmpty(completed.length ? "没有符合搜索条件的记录。" : "还没有做过的题，先去题库练一道吧。");
+    renderEmpty(completed.length ? "没有符合筛选条件的记录。" : "还没有做过的题，先去题库练一道吧。");
     return;
   }
   elements.list.replaceChildren();
@@ -59,7 +92,13 @@ function render() {
     link.className = "problem-link";
     link.href = destination;
     const title = document.createElement("strong");
-    title.textContent = `${String(problem.number).padStart(3, "0")}. ${problem.title}`;
+    title.textContent = `${String(problem.number).padStart(2, "0")}. ${problem.title}`;
+    if (problem.is_custom) {
+      const badge = document.createElement("span");
+      badge.className = "custom-pill";
+      badge.textContent = "自建";
+      title.appendChild(badge);
+    }
     const summary = document.createElement("span");
     summary.textContent = problem.summary;
     link.append(title, summary);
@@ -98,6 +137,29 @@ async function initialize() {
 }
 
 elements.search.addEventListener("input", render);
+elements.kindFilter?.addEventListener("change", render);
+elements.verdictFilter?.addEventListener("change", render);
+elements.exportBtn?.addEventListener("click", () => {
+  const blob = new Blob([JSON.stringify(state.progress, null, 2)], {
+    type: "application/json;charset=utf-8",
+  });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = "aibag-practice-progress.json";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+});
+elements.clearBtn?.addEventListener("click", () => {
+  if (!Object.keys(state.progress).length) return;
+  if (!window.confirm("确定清空当前浏览器的全部练习记录吗？此操作不可撤销。")) return;
+  state.progress = {};
+  localStorage.removeItem("aibag_code_progress_v1");
+  render();
+});
+
 window.addEventListener("pageshow", () => {
   state.progress = JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}");
   if (state.problems.length) render();

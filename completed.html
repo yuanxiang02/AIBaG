@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="AIBaG 做过的题" />
+    <meta name="description" content="AIBaG 做过的题与本机练习记录" />
     <title>做过的题 · AIBaG</title>
-    <link rel="stylesheet" href="/style.css?v=20261118-4" />
+    <link rel="stylesheet" href="/style.css?v=20261119-1" />
   </head>
   <body>
     <header class="site-header">
@@ -16,6 +16,7 @@
       <nav class="site-nav" aria-label="主导航">
         <a href="/">题库</a>
         <a class="active" href="/completed.html">做过的题</a>
+        <a class="nav-action-link" href="/?custom=1">+ 自建面经</a>
       </nav>
       <div class="api-badge">
         <span id="api-dot" class="status-dot"></span>
@@ -29,22 +30,65 @@
           <span class="eyebrow">LOCAL PROGRESS</span>
           <h1>做过的题</h1>
         </div>
-        <p><strong id="completed-count">0</strong> 道已练习</p>
+        <div class="completed-overview">
+          <div class="completed-stat">
+            <strong id="completed-count">0</strong>
+            <span>已练习题目</span>
+          </div>
+          <div class="completed-stat">
+            <strong id="completed-pass">0</strong>
+            <span>核心已掌握</span>
+          </div>
+          <div class="completed-stat">
+            <strong id="completed-avg">0</strong>
+            <span>平均得分</span>
+          </div>
+        </div>
       </section>
 
       <section class="problem-library completed-library">
-        <div class="section-heading">
+        <div class="library-header">
           <div>
             <span class="eyebrow">PRACTICE HISTORY</span>
-            <h2>本机记录</h2>
+            <div class="library-title-row">
+              <h2>本机练习档案</h2>
+              <span id="completed-filtered-summary" class="filtered-summary">共 0 条记录</span>
+            </div>
           </div>
+          <div class="library-actions">
+            <button id="export-progress" class="secondary-button" type="button">导出练习记录</button>
+            <button id="clear-progress" class="secondary-button danger-text" type="button">清空记录</button>
+          </div>
+        </div>
+
+        <div class="control-bar">
           <div class="filters">
+            <label class="filter-field">
+              <span>方向</span>
+              <select id="completed-kind-filter">
+                <option value="">全部方向</option>
+                <option value="coding">AI Infra</option>
+                <option value="knowledge">简答八股</option>
+                <option value="algorithm">力扣手撕</option>
+                <option value="custom">自建面经</option>
+              </select>
+            </label>
+            <label class="filter-field">
+              <span>掌握状态</span>
+              <select id="completed-verdict-filter">
+                <option value="">全部状态</option>
+                <option value="pass">方向没问题 (Pass)</option>
+                <option value="partial">还差一点 (Partial)</option>
+                <option value="retry">需要重试 (Retry)</option>
+              </select>
+            </label>
             <label class="search-field">
               <span>搜索</span>
-              <input id="completed-search" type="search" placeholder="题目 / 标签" />
+              <input id="completed-search" type="search" placeholder="搜索题号、标题或标签…" />
             </label>
           </div>
         </div>
+
         <div class="problem-table-wrap">
           <table class="problem-table">
             <thead>
@@ -63,7 +107,10 @@
         </div>
       </section>
     </main>
-    <footer class="site-footer"><span>AIBaG · 练习记录仅保存在当前浏览器</span></footer>
-    <script src="/completed.js?v=20261118-3" defer></script>
+    <footer class="site-footer">
+      <span>AIBaG · 练习记录仅保存在当前浏览器</span>
+      <span>支持随时导出备份或继续复盘</span>
+    </footer>
+    <script src="/completed.js?v=20261119-1" defer></script>
   </body>
 </html>

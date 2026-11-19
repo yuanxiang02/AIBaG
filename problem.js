@@ -1,5 +1,6 @@
 const state = {
   problem: null,
+  catalog: [],
   latestReview: null,
   conversation: [],
   busy: false,
@@ -10,12 +11,17 @@ const state = {
 const elements = {
   apiDot: document.querySelector("#api-dot"),
   apiStatus: document.querySelector("#api-status"),
+  prevProblem: document.querySelector("#prev-problem"),
+  nextProblem: document.querySelector("#next-problem"),
+  randomProblem: document.querySelector("#random-problem"),
   number: document.querySelector("#problem-number"),
   category: document.querySelector("#problem-category"),
   title: document.querySelector("#problem-title"),
+  customBadge: document.querySelector("#problem-custom-badge"),
   difficulty: document.querySelector("#problem-difficulty"),
   language: document.querySelector("#problem-language"),
   description: document.querySelector("#problem-description"),
+  examplesSection: document.querySelector("#examples-section"),
   examples: document.querySelector("#problem-examples"),
   constraints: document.querySelector("#problem-constraints"),
   tags: document.querySelector("#problem-tags"),
@@ -29,6 +35,7 @@ const elements = {
   draftStatus: document.querySelector("#draft-status"),
   reset: document.querySelector("#reset-code"),
   showAnswer: document.querySelector("#show-answer"),
+  copyAnswer: document.querySelector("#copy-answer"),
   closeAnswer: document.querySelector("#close-answer"),
   referenceAnswer: document.querySelector("#reference-answer"),
   referenceAnswerContent: document.querySelector("#reference-answer-content"),
@@ -36,6 +43,7 @@ const elements = {
   submitNote: document.querySelector("#submit-note"),
   coachLog: document.querySelector("#coach-log"),
   reviewState: document.querySelector("#review-state"),
+  clearCoach: document.querySelector("#clear-coach"),
   coachInput: document.querySelector("#coach-input"),
   sendCoach: document.querySelector("#send-coach"),
   quickActions: document.querySelector(".coach-quick-actions"),
@@ -43,6 +51,35 @@ const elements = {
   optimizeAction: document.querySelector("#optimize-action"),
   followUpAction: document.querySelector("#follow-up-action"),
 };
+
+function sessionKey(problemId) {
+  return `aibag_session_chat_${problemId}`;
+}
+
+function saveSessionChat() {
+  if (!state.problem) return;
+  try {
+    sessionStorage.setItem(
+      sessionKey(state.problem.id),
+      JSON.stringify({
+        conversation: state.conversation,
+        latestReview: state.latestReview,
+      })
+    );
+  } catch (_err) {
+    // Ignore sessionStorage quota issues
+  }
+}
+
+function loadSessionChat(problemId) {
+  try {
+    const raw = sessionStorage.getItem(sessionKey(problemId));
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch (_err) {
+    return null;
+  }
+}
 
 async function request(endpoint, options = {}) {
   const response = await fetch(endpoint, {
@@ -62,6 +99,20 @@ function appendDefinition(list, term, description) {
   list.append(dt, dd);
 }
 
+function updateNavigationButtons() {
+  if (!state.problem || !state.catalog.length) return;
+  const idx = state.catalog.findIndex((item) => item.id === state.problem.id);
+  if (elements.prevProblem) {
+    elements.prevProblem.disabled = idx <= 0;
+    elements.prevProblem.dataset.targetId = idx > 0 ? state.catalog[idx - 1].id : "";
+  }
+  if (elements.nextProblem) {
+    elements.nextProblem.disabled = idx < 0 || idx >= state.catalog.length - 1;
+    elements.nextProblem.dataset.targetId =
+      idx >= 0 && idx < state.catalog.length - 1 ? state.catalog[idx + 1].id : "";
+  }
+}
+
 function renderProblem(problem) {
   state.problem = problem;
   const isKnowledge = problem.kind === "knowledge";
@@ -70,6 +121,9 @@ function renderProblem(problem) {
   elements.number.textContent = String(problem.number).padStart(2, "0");
   elements.category.textContent = problem.category.toUpperCase();
   elements.title.textContent = problem.title;
+  if (elements.customBadge) {
+    elements.customBadge.hidden = !problem.is_custom;
+  }
   elements.difficulty.textContent = problem.difficulty;
   elements.difficulty.className = `difficulty-pill difficulty ${problem.difficulty.toLowerCase()}`;
   elements.language.textContent = problem.language;
@@ -81,10 +135,10 @@ function renderProblem(problem) {
     : "不能运行代码、不能 print、不能使用 debugger。请直接推导 shape、边界条件和算法不变量。";
   elements.answerFilename.textContent = isKnowledge ? "answer.txt" : "solution.py";
   elements.editor.setAttribute("aria-label", isKnowledge ? "口头回答草稿" : "代码编辑器");
-  elements.editor.placeholder = isKnowledge ? "用自己的话写下核心回答…" : "";
+  elements.editor.placeholder = isKnowledge ? "用自己的话写下核心回答（支持 Cmd/Ctrl + Enter 提交）…" : "";
   elements.submitNote.textContent = isKnowledge
-    ? "面试口述模式：讲清核心即可，不要求标准答案腔。"
-    : "白板模式：只做静态推理，不运行代码。";
+    ? "面试口述模式：讲清核心即可，支持 Cmd/Ctrl + Enter 快速提交。"
+    : "白板模式：只做静态推理，不运行代码（Cmd/Ctrl + Enter 提交）。";
   elements.submit.textContent = isKnowledge ? "请面试官听一下" : "请面试官看一下";
   elements.reset.textContent = isKnowledge ? "清空" : "重置";
   elements.showAnswer.textContent = isKnowledge ? "查看标准回答" : "查看标准答案";
@@ -98,7 +152,11 @@ function renderProblem(problem) {
   elements.referenceAnswerContent.textContent = "";
 
   elements.examples.replaceChildren();
-  (problem.examples || []).forEach((example, index) => {
+  const exampleItems = problem.examples || [];
+  if (elements.examplesSection) {
+    elements.examplesSection.hidden = exampleItems.length === 0;
+  }
+  exampleItems.forEach((example, index) => {
     const card = document.createElement("div");
     card.className = "example-card";
     const list = document.createElement("dl");
@@ -141,6 +199,30 @@ function renderProblem(problem) {
 
   elements.editor.value = state.drafts[problem.id] ?? problem.starter_code;
   updateLineNumbers();
+  updateNavigationButtons();
+
+  const cachedSession = loadSessionChat(problem.id);
+  if (cachedSession && (cachedSession.latestReview || cachedSession.conversation?.length)) {
+    state.latestReview = cachedSession.latestReview || null;
+    state.conversation = cachedSession.conversation || [];
+    if (state.latestReview) {
+      renderReview(state.latestReview, false);
+    }
+    state.conversation.forEach((turn) => {
+      appendCoachMessage(
+        turn.role === "user" ? "我" : "面试官",
+        turn.content,
+        turn.role === "user" ? "user-turn" : "interviewer-turn"
+      );
+    });
+  } else {
+    const prevRecord = state.progress[problem.id];
+    if (prevRecord) {
+      const labels = { pass: "上次：方向没问题", partial: "上次：待巩固", retry: "上次：需重试" };
+      elements.reviewState.textContent = `${labels[prevRecord.verdict] || "已练习"} (${prevRecord.score ?? 0}分)`;
+      elements.reviewState.className = `review-state ${prevRecord.verdict || ""}`;
+    }
+  }
 }
 
 function updateLineNumbers() {
@@ -179,13 +261,49 @@ function appendCoachMessage(label, message, className = "") {
   return block;
 }
 
-function renderReview(review) {
+function renderReviewSummaryCard(review) {
+  ensureCoachLog();
+  const card = document.createElement("div");
+  card.className = "coach-message review-summary";
+  const scoreBadge = document.createElement("span");
+  scoreBadge.className = "score";
+  scoreBadge.textContent = `${review.score ?? 0} 分`;
+  const heading = document.createElement("h3");
+  const verdictTitles = {
+    pass: "面试官评估：核心已掌握 (Pass)",
+    partial: "面试官评估：方向正确，细节待补全 (Partial)",
+    retry: "面试官评估：建议调整核心思路 (Retry)",
+  };
+  heading.textContent = verdictTitles[review.verdict] || "面试官评估";
+  card.append(scoreBadge, heading);
+
+  const list = document.createElement("ul");
+  (review.strengths || []).forEach((item) => {
+    const li = document.createElement("li");
+    li.textContent = `亮点：${item}`;
+    list.appendChild(li);
+  });
+  if (review.focus_issue) {
+    const li = document.createElement("li");
+    li.textContent = `当前聚焦：${review.focus_issue}`;
+    list.appendChild(li);
+  }
+  if (list.children.length) {
+    card.appendChild(list);
+  }
+  elements.coachLog.appendChild(card);
+  elements.coachLog.scrollTop = elements.coachLog.scrollHeight;
+}
+
+function renderReview(review, persistSession = true) {
+  renderReviewSummaryCard(review);
   appendCoachMessage("面试官", review.interviewer_response, "interviewer-turn");
   if (review.nudge) appendCoachMessage("给你一个小方向", review.nudge, "nudge-turn");
   if (review.follow_up) appendCoachMessage("接着聊一个问题", review.follow_up, "follow-up-turn");
   const labels = { pass: "方向没问题", partial: "再补一点", retry: "先调一下思路" };
-  elements.reviewState.textContent = labels[review.verdict] || "看过了";
+  elements.reviewState.textContent = `${labels[review.verdict] || "看过了"} · ${review.score ?? 0}分`;
   elements.reviewState.className = `review-state ${review.verdict}`;
+  if (persistSession) saveSessionChat();
 }
 
 function renderProficiency(pe) {
@@ -215,7 +333,9 @@ function setBusy(busy) {
   elements.submit.disabled = busy;
   elements.sendCoach.disabled = busy;
   elements.showAnswer.disabled = busy;
-  elements.quickActions.querySelectorAll("button").forEach((button) => { button.disabled = busy; });
+  elements.quickActions.querySelectorAll("button").forEach((button) => {
+    button.disabled = busy;
+  });
 }
 
 async function toggleReferenceAnswer() {
@@ -266,9 +386,10 @@ async function submitCode() {
       verdict: review.verdict,
       score: review.score,
       attempts: (state.progress[state.problem.id]?.attempts || 0) + 1,
+      updated_at: new Date().toISOString(),
     };
     localStorage.setItem("aibag_code_progress_v1", JSON.stringify(state.progress));
-    renderReview(review);
+    renderReview(review, true);
   } catch (error) {
     pending.remove();
     showRequestError(error);
@@ -312,12 +433,35 @@ async function sendCoach(action = "chat") {
     appendCoachMessage("面试官", result.reply, "interviewer-turn");
     if (result.pe) renderProficiency(result.pe);
     state.conversation.push({ role: "assistant", content: result.reply });
+    saveSessionChat();
   } catch (error) {
     pending.remove();
     showRequestError(error);
   } finally {
     setBusy(false);
   }
+}
+
+function clearCoachSession() {
+  if (!state.problem || state.busy) return;
+  state.conversation = [];
+  state.latestReview = null;
+  try {
+    sessionStorage.removeItem(sessionKey(state.problem.id));
+  } catch (_err) {
+    // ignore
+  }
+  elements.coachLog.replaceChildren();
+  const empty = document.createElement("p");
+  empty.id = "coach-empty";
+  empty.className = "coach-empty";
+  empty.textContent =
+    state.problem.kind === "knowledge"
+      ? "对话已清空。你可以先用自己的话回答，也可以要一点提示。"
+      : "对话已清空。你可以直接写代码，也可以先要一点提示。";
+  elements.coachLog.appendChild(empty);
+  elements.reviewState.textContent = "还没提交";
+  elements.reviewState.className = "review-state";
 }
 
 async function initialize() {
@@ -327,10 +471,12 @@ async function initialize() {
     return;
   }
   try {
-    const [problem, config] = await Promise.all([
+    const [problem, config, catalog] = await Promise.all([
       request(`/api/problem?id=${encodeURIComponent(problemId)}`),
       request("/api/config"),
+      request("/api/problems").catch(() => []),
     ]);
+    state.catalog = Array.isArray(catalog) ? catalog : [];
     const provider = new URL(config.base_url).host;
     elements.apiStatus.textContent = `${config.model} · ${provider}`;
     elements.apiDot.className = config.has_api_key ? "status-dot ok" : "status-dot warn";
@@ -343,9 +489,19 @@ async function initialize() {
   }
 }
 
-elements.editor.addEventListener("input", () => { updateLineNumbers(); scheduleDraftSave(); });
-elements.editor.addEventListener("scroll", () => { elements.lineNumbers.scrollTop = elements.editor.scrollTop; });
+elements.editor.addEventListener("input", () => {
+  updateLineNumbers();
+  scheduleDraftSave();
+});
+elements.editor.addEventListener("scroll", () => {
+  elements.lineNumbers.scrollTop = elements.editor.scrollTop;
+});
 elements.editor.addEventListener("keydown", (event) => {
+  if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {
+    event.preventDefault();
+    submitCode();
+    return;
+  }
   if (event.key !== "Tab") return;
   event.preventDefault();
   const start = elements.editor.selectionStart;
@@ -355,7 +511,11 @@ elements.editor.addEventListener("keydown", (event) => {
   scheduleDraftSave();
 });
 elements.reset.addEventListener("click", () => {
-  if (!state.problem || !window.confirm(state.problem.kind === "knowledge" ? "清空当前回答草稿？" : "将当前草稿恢复为初始模板？")) return;
+  if (
+    !state.problem ||
+    !window.confirm(state.problem.kind === "knowledge" ? "清空当前回答草稿？" : "将当前草稿恢复为初始模板？")
+  )
+    return;
   elements.editor.value = state.problem.starter_code;
   delete state.drafts[state.problem.id];
   localStorage.setItem("aibag_code_drafts_v1", JSON.stringify(state.drafts));
@@ -363,8 +523,25 @@ elements.reset.addEventListener("click", () => {
   updateLineNumbers();
 });
 elements.showAnswer.addEventListener("click", toggleReferenceAnswer);
-elements.closeAnswer.addEventListener("click", () => { elements.referenceAnswer.hidden = true; });
+elements.copyAnswer?.addEventListener("click", async () => {
+  const text = elements.referenceAnswerContent.textContent;
+  if (!text) return;
+  try {
+    await navigator.clipboard.writeText(text);
+    const prev = elements.copyAnswer.textContent;
+    elements.copyAnswer.textContent = "已复制 ✓";
+    setTimeout(() => {
+      elements.copyAnswer.textContent = prev;
+    }, 1200);
+  } catch (_err) {
+    // ignore clipboard failure
+  }
+});
+elements.closeAnswer.addEventListener("click", () => {
+  elements.referenceAnswer.hidden = true;
+});
 elements.submit.addEventListener("click", submitCode);
+elements.clearCoach?.addEventListener("click", clearCoachSession);
 elements.quickActions.addEventListener("click", (event) => {
   const action = event.target.closest("button")?.dataset.action;
   if (action) sendCoach(action);
@@ -374,6 +551,34 @@ elements.coachInput.addEventListener("keydown", (event) => {
   if (event.key === "Enter") {
     event.preventDefault();
     sendCoach("chat");
+  }
+});
+
+elements.prevProblem?.addEventListener("click", () => {
+  const target = elements.prevProblem.dataset.targetId;
+  if (target) window.location.assign(`/problem.html?id=${encodeURIComponent(target)}`);
+});
+elements.nextProblem?.addEventListener("click", () => {
+  const target = elements.nextProblem.dataset.targetId;
+  if (target) window.location.assign(`/problem.html?id=${encodeURIComponent(target)}`);
+});
+elements.randomProblem?.addEventListener("click", () => {
+  if (!state.catalog.length) return;
+  const pool = state.catalog.filter((item) => item.id !== state.problem?.id);
+  const picked = (pool.length ? pool : state.catalog)[
+    Math.floor(Math.random() * (pool.length || state.catalog.length))
+  ];
+  if (picked) window.location.assign(`/problem.html?id=${encodeURIComponent(picked.id)}`);
+});
+
+window.addEventListener("keydown", (event) => {
+  if (!event.altKey) return;
+  if (event.key === "ArrowLeft" && elements.prevProblem?.dataset.targetId) {
+    event.preventDefault();
+    window.location.assign(`/problem.html?id=${encodeURIComponent(elements.prevProblem.dataset.targetId)}`);
+  } else if (event.key === "ArrowRight" && elements.nextProblem?.dataset.targetId) {
+    event.preventDefault();
+    window.location.assign(`/problem.html?id=${encodeURIComponent(elements.nextProblem.dataset.targetId)}`);
   }
 });
 
