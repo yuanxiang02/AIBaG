@@ -171,7 +171,7 @@ button { cursor: pointer; }
 .tag { padding: 5px 8px; border: 1px solid var(--border); border-radius: 3px; color: var(--rust); background: var(--paper-code); font: 600 10px/1 var(--mono); }
 .training-note { color: var(--ink-soft); line-height: 1.7; }
 .source-card { margin-top: 10px; padding: 12px 14px; border: 1px solid var(--border-soft); background: var(--paper-soft); }
-.source-card a { color: var(--blue); font-weight: 700; }
+.source-card a, .source-card strong { color: var(--blue); font-weight: 700; }
 .source-card p { margin: 6px 0 0; color: var(--muted); font: 11px/1.55 var(--sans); }
 
 .coding-panel { min-width: 0; height: 100%; min-height: 0; overflow-y: auto; background: #f1eee5; }

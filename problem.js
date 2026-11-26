@@ -4,6 +4,7 @@ const state = {
   latestReview: null,
   conversation: [],
   busy: false,
+  aiAvailable: true,
   progress: JSON.parse(localStorage.getItem("aibag_code_progress_v1") || "{}"),
   drafts: JSON.parse(localStorage.getItem("aibag_code_drafts_v1") || "{}"),
 };
@@ -247,14 +248,17 @@ function renderProblem(problem) {
   (problem.sources || []).forEach((source) => {
     const card = document.createElement("div");
     card.className = "source-card";
-    const link = document.createElement("a");
-    link.href = source.url;
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    link.textContent = source.title;
+    const isExternalSource = /^https?:\/\//i.test(source.url || "");
+    const sourceTitle = document.createElement(isExternalSource ? "a" : "strong");
+    sourceTitle.textContent = source.title;
+    if (isExternalSource) {
+      sourceTitle.href = source.url;
+      sourceTitle.target = "_blank";
+      sourceTitle.rel = "noreferrer";
+    }
     const note = document.createElement("p");
     note.textContent = `${source.license} · ${source.note}`;
-    card.append(link, note);
+    card.append(sourceTitle, note);
     elements.sources.appendChild(card);
   });
 
@@ -392,12 +396,41 @@ function renderProficiency(pe) {
 
 function setBusy(busy) {
   state.busy = busy;
-  elements.submit.disabled = busy;
-  elements.sendCoach.disabled = busy;
+  const aiDisabled = !state.aiAvailable;
+  elements.submit.disabled = busy || aiDisabled;
+  elements.sendCoach.disabled = busy || aiDisabled;
+  elements.coachInput.disabled = busy || aiDisabled;
   elements.showAnswer.disabled = busy;
   elements.quickActions.querySelectorAll("button").forEach((button) => {
-    button.disabled = busy;
+    button.disabled = busy || aiDisabled;
   });
+}
+
+function configureAIAvailability(config) {
+  state.aiAvailable = config.ai_available ?? config.has_api_key;
+  elements.apiStatus.textContent = state.aiAvailable
+    ? "AI 面试官已就绪"
+    : "标准答案可用 · AI 点评未配置";
+  elements.apiStatus.title = state.aiAvailable
+    ? "可以使用 AI 点评与追问"
+    : "仍可查看标准答案并使用离线自评";
+  elements.apiDot.className = state.aiAvailable ? "status-dot ok" : "status-dot warn";
+
+  const unavailableHint = "请先在 .env 中配置 AI 服务；标准答案与自评功能仍可正常使用。";
+  elements.submit.title = state.aiAvailable ? "" : unavailableHint;
+  elements.sendCoach.title = state.aiAvailable ? "" : unavailableHint;
+  elements.coachInput.title = state.aiAvailable ? "" : unavailableHint;
+  elements.quickActions.querySelectorAll("button").forEach((button) => {
+    button.title = state.aiAvailable ? "" : unavailableHint;
+  });
+  if (!state.aiAvailable) {
+    elements.submitNote.textContent = "AI 点评尚未配置；你仍可查看标准答案，并记录自评掌握度。";
+    if (elements.coachLog.querySelector(".coach-empty")) {
+      elements.coachEmpty.textContent =
+        "AI 追问尚未配置。你可以先完成作答，再通过标准答案与自评掌握度进行离线训练。";
+    }
+  }
+  setBusy(false);
 }
 
 async function toggleReferenceAnswer() {
@@ -541,11 +574,8 @@ async function initialize() {
       request("/api/problems").catch(() => []),
     ]);
     state.catalog = Array.isArray(catalog) ? catalog : [];
-    const provider = new URL(config.base_url).host;
-    elements.apiStatus.textContent = `${config.model} · ${provider}`;
-    elements.apiDot.className = config.has_api_key ? "status-dot ok" : "status-dot warn";
-    if (!config.has_api_key) elements.apiStatus.textContent += " · key missing";
     renderProblem(problem);
+    configureAIAvailability(config);
   } catch (error) {
     elements.apiDot.className = "status-dot error";
     elements.apiStatus.textContent = "本地后端不可用";

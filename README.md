@@ -74,15 +74,31 @@ git clone https://github.com/yuanxiang02/AIBaG.git && cd AIBaG
 
 项目仅依赖 **Python 3 标准库**，无需安装任何第三方 `pip` 或 `npm` 包。
 
-### 1. 配置模型 API Key
+### 1. 零配置启动基础训练
 
-首次使用时复制环境变量模板：
+```bash
+git clone https://github.com/yuanxiang02/AIBaG.git
+cd AIBaG
+./start.sh
+```
+
+启动后访问 <http://127.0.0.1:8787>。未配置模型服务时，完整题库、筛选与随机抽题、持久化标准答案、自评掌握度、自建面经以及本机练习档案均可正常使用。
+
+也可以直接运行本地服务：
+
+```bash
+python3 server.py
+```
+
+### 2. 按需启用 AI 面试官
+
+如需使用结构化 AI 点评、动态追问与对话式提示，再复制环境变量模板：
 
 ```bash
 cp .env.example .env
 ```
 
-编辑 `.env` 并填入兼容 OpenAI Chat Completions 接口的 API Key（默认支持 DeepSeek）：
+编辑 `.env`，填入兼容 OpenAI Chat Completions 接口的模型配置（默认支持 DeepSeek），然后重新启动服务：
 
 ```ini
 AIBAG_API_KEY=your_api_key_here
@@ -92,18 +108,6 @@ AIBAG_PORT=8787
 ```
 
 > **安全说明**：API Key 仅由本地后端从 `.env` 或私有凭据文件读取，绝不会通过前端接口暴露，也不会被 Git 跟踪。
-
-### 2. 一键启动服务
-
-```bash
-./start.sh
-```
-
-脚本会自动启动本地服务并打开浏览器访问 <http://127.0.0.1:8787>。你也可以直接运行：
-
-```bash
-python3 server.py
-```
 
 ---
 

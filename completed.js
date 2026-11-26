@@ -126,9 +126,14 @@ async function initialize() {
   try {
     const [problems, config] = await Promise.all([request("/api/problems"), request("/api/config")]);
     state.problems = problems;
-    const provider = new URL(config.base_url).host;
-    elements.apiStatus.textContent = `${config.model} · ${provider}`;
-    elements.apiDot.className = config.has_api_key ? "status-dot ok" : "status-dot warn";
+    const aiAvailable = config.ai_available ?? config.has_api_key;
+    elements.apiStatus.textContent = aiAvailable
+      ? "AI 面试官已就绪"
+      : "标准答案可用 · AI 点评未配置";
+    elements.apiStatus.title = aiAvailable
+      ? "可以使用 AI 点评与追问"
+      : "练习记录与离线训练不受影响";
+    elements.apiDot.className = aiAvailable ? "status-dot ok" : "status-dot warn";
     render();
   } catch (error) {
     elements.apiDot.className = "status-dot error";

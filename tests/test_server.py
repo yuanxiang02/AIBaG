@@ -40,7 +40,7 @@ class ProblemBankTests(unittest.TestCase):
             self.assertGreaterEqual(len(result["answer"]), 20, problem["id"])
             self.assertNotEqual(result["source"], "deepseek-generated")
 
-    def test_catalog_has_one_thousand_problems(self):
+    def test_catalog_has_two_thousand_problems(self):
         self.assertEqual(len(server.PROBLEMS), 2_000)
 
     def test_problem_ids_are_unique(self):
@@ -193,6 +193,24 @@ class ReviewNormalizationTests(unittest.TestCase):
 
 
 class ModelFlowTests(unittest.TestCase):
+    def test_ai_availability_accepts_local_provider_without_key(self):
+        with patch.dict(
+            server.os.environ,
+            {"AIBAG_BASE_URL": "http://127.0.0.1:11434/v1", "AIBAG_API_KEY": ""},
+            clear=False,
+        ), patch("server.resolve_api_key", return_value=""):
+            self.assertTrue(server.ai_is_available())
+            self.assertTrue(server.api_config()["ai_available"])
+
+    def test_ai_availability_requires_key_for_remote_provider(self):
+        with patch.dict(
+            server.os.environ,
+            {"AIBAG_BASE_URL": "https://api.deepseek.com", "AIBAG_API_KEY": ""},
+            clear=False,
+        ), patch("server.resolve_api_key", return_value=""):
+            self.assertFalse(server.ai_is_available())
+            self.assertFalse(server.api_config()["ai_available"])
+
     @patch("server.call_llm")
     def test_judge_flow_returns_normalized_review(self, call_llm):
         call_llm.return_value = {

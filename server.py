@@ -545,11 +545,20 @@ def resolve_api_key() -> str:
     return match.group(1).strip() if match else ""
 
 
+def ai_is_available() -> bool:
+    """Return whether the configured provider can serve AI review requests."""
+    base_url = os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    hostname = urlsplit(base_url).hostname or ""
+    is_local_provider = hostname in {"127.0.0.1", "localhost", "::1"}
+    return bool(resolve_api_key()) or is_local_provider
+
+
 def api_config() -> dict[str, Any]:
     return {
         "model": os.getenv("AIBAG_MODEL", "deepseek-flash"),
         "base_url": os.getenv("AIBAG_BASE_URL", "https://api.deepseek.com"),
         "has_api_key": bool(resolve_api_key()),
+        "ai_available": ai_is_available(),
     }
 
 
