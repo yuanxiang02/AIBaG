@@ -28,6 +28,7 @@ CUSTOM_PROBLEMS_PATH = Path(
     os.getenv("AIBAG_CUSTOM_PROBLEMS_PATH", str(ROOT / "data" / "custom_problems.json"))
 )
 CUSTOM_LOCK = threading.RLock()
+CUSTOM_LOAD_FAILURE: dict[str, str] | None = None
 MAX_REQUEST_BYTES = 1_000_000
 MAX_CUSTOM_IMPORT_ITEMS = 200
 CATALOG_LOAD_LIMIT_SECONDS = 5.0
@@ -424,12 +425,25 @@ def normalize_custom_problem(
 
 
 def load_custom_problems(path: Path | None = None) -> list[dict[str, Any]]:
+    global CUSTOM_LOAD_FAILURE
     target = path or CUSTOM_PROBLEMS_PATH
+    CUSTOM_LOAD_FAILURE = None
     if not target.exists():
         return []
     try:
         raw_list = json.loads(target.read_bytes())
-    except Exception:
+    except (ValueError, OSError) as error:
+        # An unreadable bank must not look like an empty bank: the next save
+        # would otherwise replace the user's data with a single new entry.
+        CUSTOM_LOAD_FAILURE = {
+            "path": str(target),
+            "error": f"{type(error).__name__}: {error}",
+        }
+        print(
+            f"Custom problem bank is unreadable and must not be overwritten: "
+            f"{target} ({error})",
+            file=sys.stderr,
+        )
         return []
     if not isinstance(raw_list, list):
         return []
@@ -447,9 +461,42 @@ def load_custom_problems(path: Path | None = None) -> list[dict[str, Any]]:
     return result
 
 
+def custom_bank_status(path: Path | None = None) -> dict[str, Any]:
+    """Report whether the custom bank on disk is readable, without mutating it."""
+    target = path or CUSTOM_PROBLEMS_PATH
+    if not target.exists():
+        return {"path": str(target), "exists": False, "ok": True, "error": None}
+    try:
+        json.loads(target.read_bytes())
+    except (ValueError, OSError) as error:
+        return {
+            "path": str(target),
+            "exists": True,
+            "ok": False,
+            "error": f"{type(error).__name__}: {error}",
+        }
+    return {"path": str(target), "exists": True, "ok": True, "error": None}
+
+
+def quarantine_unreadable_bank(target: Path) -> Path | None:
+    """Move a corrupt bank aside so a later save cannot destroy it."""
+    if not target.exists():
+        return None
+    try:
+        json.loads(target.read_bytes())
+        return None
+    except (ValueError, OSError) as error:
+        stamp = time.strftime("%Y%m%d-%H%M%S")
+        backup = target.with_name(f"{target.stem}.corrupt-{stamp}{target.suffix}")
+        target.replace(backup)
+        print(f"Preserved unreadable custom bank as {backup}: {error}", file=sys.stderr)
+        return backup
+
+
 def save_custom_problems(items: list[dict[str, Any]], path: Path | None = None) -> None:
     target = path or CUSTOM_PROBLEMS_PATH
     target.parent.mkdir(parents=True, exist_ok=True)
+    quarantine_unreadable_bank(target)
     base_count = len(PROBLEMS)
     for idx, item in enumerate(items, start=1):
         item["number"] = base_count + idx
@@ -909,6 +956,7 @@ class AIBaGHandler(SimpleHTTPRequestHandler):
                     "catalog_load_ms": round(CATALOG_LOAD_SECONDS * 1_000, 2),
                     "catalog_load_limit_ms": int(CATALOG_LOAD_LIMIT_SECONDS * 1_000),
                     "catalog_within_budget": CATALOG_LOAD_SECONDS <= CATALOG_LOAD_LIMIT_SECONDS,
+                    "custom_bank": custom_bank_status(),
                     **api_config(),
                 }
             )

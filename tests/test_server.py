@@ -422,5 +422,60 @@ class CustomProblemBankTests(unittest.TestCase):
             self.assertEqual(server.reference_answer(reloaded)["answer"], "def kernel(x):\n    return x * 2")
 
 
+class CustomBankSafetyTests(unittest.TestCase):
+    """A corrupt bank must survive until someone can look at it."""
+
+    PAYLOAD = {
+        "title": "题目",
+        "kind": "knowledge",
+        "difficulty": "Easy",
+        "category": "一面",
+        "tags": "TagA",
+        "description": "描述内容足够长",
+        "review_points": "要点1",
+        "answer": "答案内容",
+    }
+
+    def test_missing_bank_reports_healthy(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            bank = Path(tmpdir) / "custom_problems.json"
+            status = server.custom_bank_status(bank)
+            self.assertEqual(status, {"path": str(bank), "exists": False, "ok": True, "error": None})
+            self.assertEqual(server.load_custom_problems(bank), [])
+
+    def test_unreadable_bank_is_preserved_before_overwrite(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            bank = Path(tmpdir) / "custom_problems.json"
+            original = b'{"broken": '
+            bank.write_bytes(original)
+
+            self.assertEqual(server.load_custom_problems(bank), [])
+            self.assertIsNotNone(server.CUSTOM_LOAD_FAILURE)
+            self.assertFalse(server.custom_bank_status(bank)["ok"])
+            self.assertEqual(bank.read_bytes(), original, "loading must not touch the file")
+
+            server.add_custom_problems(dict(self.PAYLOAD), path=bank)
+
+            backups = sorted(Path(tmpdir).glob("custom_problems.corrupt-*.json"))
+            self.assertEqual(len(backups), 1)
+            self.assertEqual(backups[0].read_bytes(), original)
+            self.assertEqual(len(json.loads(bank.read_bytes())), 1)
+            self.assertEqual(server.custom_bank_status(bank)["ok"], True)
+
+    def test_readable_bank_is_not_quarantined(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            bank = Path(tmpdir) / "custom_problems.json"
+            bank.write_text("[]", encoding="utf-8")
+            server.save_custom_problems([], path=bank)
+            self.assertEqual(list(Path(tmpdir).glob("*.corrupt-*.json")), [])
+            self.assertEqual(json.loads(bank.read_bytes()), [])
+
+
 if __name__ == "__main__":
     unittest.main()
